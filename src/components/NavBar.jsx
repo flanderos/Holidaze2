@@ -3,8 +3,7 @@ import styled from "styled-components";
 
 const StyledNavBar = styled.nav`
   display: flex;
-  flex-direction: row;
-  margin-right: 150px;
+  justify-content: center;
 `;
 
 const StyledList = styled.ul`
