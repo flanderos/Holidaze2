@@ -3,7 +3,6 @@ import styled from "styled-components";
 import HeroImage from "../assets/images/landingpageimage.png";
 
 const StyledHeroImage = styled.section`
-  /* margin-top: 100px; */
   background-image: url(${HeroImage});
   background-size: cover;
   background-position: center;

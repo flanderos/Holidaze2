@@ -6,9 +6,8 @@ import placeholder3 from "../assets/images/placeholder3.png";
 import AllVenuesButton from "./buttons/LinkToAllVenues";
 
 const StyledContainer = styled.section`
-  margin-top: 100px;
-  margin-left: 10px;
-  margin-right: 10px;
+  padding: 20px;
+  background-color: #fff;
 `;
 
 const StyledParagraph = styled.p`

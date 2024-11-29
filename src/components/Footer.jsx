@@ -13,6 +13,7 @@ const StyledDiv = styled.div`
 `;
 const StyledH1 = styled.h1`
   font-size: 100px;
+  text-align: center;
 `;
 
 const FooterNavBar = styled(NavBar)`

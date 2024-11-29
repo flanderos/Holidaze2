@@ -12,7 +12,7 @@ const Button = styled.button`
   transition: 0.6s;
   display: block;
   margin: 0 auto;
-  margin-top: 30px;
+  margin-top: 50px;
 
   &:hover {
     cursor: pointer;
