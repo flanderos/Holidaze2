@@ -1,12 +1,28 @@
-import logo from "./logo.svg";
+import React from "react";
 import "./App.css";
+import Header from "./components/Header";
+import { Fonts } from "./styles/Fonts";
+import { Colors } from "./styles/Colors";
+import HeroSection from "./components/HeroSection";
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link,
+  useParams,
+} from "react-router-dom";
 
-function App() {
+const App = () => {
   return (
-    <div className="App">
-      <h1>Hello!</h1>
+    <div>
+      <Fonts />
+      <div className="App">
+        <Colors />
+        <Header title="Holidaze" />
+        <HeroSection />
+      </div>
     </div>
   );
-}
+};
 
 export default App;
