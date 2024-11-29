@@ -3,6 +3,7 @@ import Header from "../components/Header";
 import HeroSection from "../components/HeroSection";
 import TopVenues from "../components/TopVenuesForLandingPage";
 import Reviews from "../components/Reviews";
+import Footer from "../components/Footer";
 
 const LandingPage = () => {
   return (
@@ -11,6 +12,7 @@ const LandingPage = () => {
       <HeroSection />
       <TopVenues />
       <Reviews />
+      <Footer />
     </div>
   );
 };
