@@ -1,0 +1,5 @@
+README.md
+package-lock.json
+package.json
+public/manifest.json
+src/*.css
