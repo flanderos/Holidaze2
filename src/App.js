@@ -11,16 +11,14 @@ import {
   Link,
   useParams,
 } from "react-router-dom";
+import LandingPage from "./pages/LandingPage";
 
 const App = () => {
   return (
     <div>
       <Fonts />
-      <div className="App">
-        <Colors />
-        <Header title="Holidaze" />
-        <HeroSection />
-      </div>
+      <Colors />
+      <LandingPage />
     </div>
   );
 };
