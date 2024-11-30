@@ -10,15 +10,22 @@ import {
   Route,
   Link,
   useParams,
+  Routes,
 } from "react-router-dom";
 import LandingPage from "./pages/LandingPage";
+import RegisterPage from "./pages/RegisterPage";
 
 const App = () => {
   return (
     <div>
-      <Fonts />
-      <Colors />
-      <LandingPage />
+      <Router>
+        <Fonts />
+        <Colors />
+        <Routes>
+          <Route path="/" element={<LandingPage />} />
+          <Route path="/register" element={<RegisterPage />} />
+        </Routes>
+      </Router>
     </div>
   );
 };

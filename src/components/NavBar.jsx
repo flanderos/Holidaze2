@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { Link } from "react-router-dom";
 
 const StyledNavBar = styled.nav`
   display: flex;
@@ -12,7 +13,7 @@ const StyledList = styled.ul`
   gap: 60px;
 `;
 
-const StyledLink = styled.li`
+const StyledLink = styled(Link)`
   color: black;
   text-decoration: none;
   padding: 5px;
@@ -29,10 +30,10 @@ const NavBar = () => {
   return (
     <StyledNavBar>
       <StyledList>
-        <StyledLink>Home</StyledLink>
-        <StyledLink>Venues</StyledLink>
-        <StyledLink>Bookings</StyledLink>
-        <StyledLink>Log in</StyledLink>
+        <StyledLink to="/">Home</StyledLink>
+        <StyledLink to="/venues">Venues</StyledLink>
+        <StyledLink to="/bookings">Bookings</StyledLink>
+        <StyledLink to="/register">Login</StyledLink>
       </StyledList>
     </StyledNavBar>
   );
