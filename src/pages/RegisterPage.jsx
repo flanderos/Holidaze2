@@ -45,22 +45,25 @@ const StyledLabel = styled.label`
 
 const StyledButton = styled.button`
   padding: 10px;
-  background-color: var(--color-primary, blue);
-  color: white;
+  background-color: var(--color-green, blue);
+  color: black;
   border: none;
   border-radius: 5px;
-  font-size: 16px;
+  font-size: 20px;
   cursor: pointer;
+  width: 100%;
+  margin-top: 20px;
+  transition: 0.3s;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 
   &:hover {
-    background-color: var(--color-dark, darkblue);
+    background-color: var(--color-grey, darkblue);
   }
 `;
 
 const ErrorMessage = styled.p`
   color: red;
   font-size: 12px;
-  margin: -10px 0 10px 0;
 `;
 
 const RegisterPage = () => {
