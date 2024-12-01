@@ -117,17 +117,7 @@ const RegisterPage = () => {
     setErrors(newErrors);
 
     if (Object.keys(newErrors).length === 0) {
-      console.log({
-        name,
-        email,
-        password,
-        bio,
-        avatarUrl,
-        bannerUrl,
-        isVenueManager,
-      });
-      alert("Form submitted successfully!");
-      form.reset(); // Reset form after successful submission
+      return;
     }
   };
 
