@@ -37,6 +37,7 @@ const StyledInput = styled.input`
   border: 1px solid #ccc;
   border-radius: 5px;
   font-size: 16px;
+  font-family: michroma;
 `;
 
 const StyledTextarea = styled.textarea`
@@ -49,6 +50,7 @@ const StyledTextarea = styled.textarea`
 const StyledLabel = styled.label`
   font-size: 14px;
   font-weight: bold;
+  padding: 5px;
 `;
 
 const StyledButton = styled.button`
