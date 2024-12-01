@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 
 const StyledContainer = styled.div`
   background-color: #fff;
@@ -67,57 +68,85 @@ const ErrorMessage = styled.p`
 `;
 
 const RegisterPage = () => {
+  const navigate = useNavigate();
+
   const [errors, setErrors] = useState({});
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const form = e.target;
 
-    const name = form.username.value.trim();
-    const email = form.email.value.trim();
-    const password = form.password.value.trim();
-    const bio = form.bio.value.trim();
-    const avatarUrl = form.avatarUrl?.value.trim();
-    const bannerUrl = form.bannerUrl?.value.trim();
-    const isVenueManager = form.venuemananger.checked;
+    // Bygg opp requestData med kun felt som har verdier
+    const requestData = {
+      name: form.username.value.trim(),
+      email: form.email.value.trim(),
+      password: form.password.value.trim(),
+      ...(form.bio.value.trim() && { bio: form.bio.value.trim() }), // Legg til bio hvis den har en verdi
+      ...(form.avatarUrl.value.trim() && {
+        avatar: {
+          url: form.avatarUrl.value.trim(),
+          alt: "Default avatar alt text", // Juster etter behov
+        },
+      }),
+      ...(form.bannerUrl.value.trim() && {
+        banner: {
+          url: form.bannerUrl.value.trim(),
+          alt: "Default banner alt text", // Juster etter behov
+        },
+      }),
+      venueManager: form.venuemananger.checked,
+    };
+
+    navigate("/");
 
     const newErrors = {};
 
-    // Name validation
-    if (!/^[a-zA-Z0-9_]+$/.test(name)) {
+    // Validering
+    if (!/^[a-zA-Z0-9_]+$/.test(requestData.name)) {
       newErrors.username =
         "Name can only contain letters, numbers, and underscores (_).";
     }
 
-    // Email validation
-    if (!/^[a-zA-Z0-9._%+-]+@stud\.noroff\.no$/.test(email)) {
+    if (!/^[a-zA-Z0-9._%+-]+@stud\.noroff\.no$/.test(requestData.email)) {
       newErrors.email = "Email must be a valid stud.noroff.no email address.";
     }
 
-    // Password validation
-    if (password.length < 8) {
+    if (requestData.password.length < 8) {
       newErrors.password = "Password must be at least 8 characters.";
-    }
-
-    // Bio validation
-    if (bio && bio.length > 160) {
-      newErrors.bio = "Bio must be less than 160 characters.";
-    }
-
-    // Avatar URL validation
-    if (avatarUrl && !/^https?:\/\/[^\s$.?#].[^\s]*$/.test(avatarUrl)) {
-      newErrors.avatarUrl = "Avatar URL must be valid and accessible.";
-    }
-
-    // Banner URL validation
-    if (bannerUrl && !/^https?:\/\/[^\s$.?#].[^\s]*$/.test(bannerUrl)) {
-      newErrors.bannerUrl = "Banner URL must be valid and accessible.";
     }
 
     setErrors(newErrors);
 
-    if (Object.keys(newErrors).length === 0) {
-      return;
+    if (Object.keys(newErrors).length > 0) {
+      return; // Avbryt innsending hvis det er valideringsfeil
+    }
+
+    try {
+      const API_URL = process.env.REACT_APP_API_URL;
+      const response = await fetch(`${API_URL}/auth/register`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(requestData),
+      });
+
+      if (!response.ok) {
+        const errorResponse = await response.json();
+        console.error("API Response Error:", errorResponse);
+        throw new Error("Failed to register. Please try again.");
+      }
+
+      const responseData = await response.json();
+      console.log("Registration successful:", responseData);
+
+      // Lagre respons og variable for innlogget bruker i localStorage
+      localStorage.setItem("userProfile", JSON.stringify(responseData.data));
+      localStorage.setItem("isLoggedIn", "true");
+
+      alert("Registration successful!");
+      form.reset(); // Nullstill skjema etter vellykket innsending
+    } catch (error) {
+      console.error("Error:", error);
+      alert("An error occurred while registering. Please try again.");
     }
   };
 
@@ -160,27 +189,13 @@ const RegisterPage = () => {
             name="bio"
             rows="4"
             placeholder="Tell us about yourself..."
-            isInvalid={!!errors.bio}
           />
-          {errors.bio && <ErrorMessage>{errors.bio}</ErrorMessage>}
 
           <StyledLabel htmlFor="avatarUrl">Avatar URL</StyledLabel>
-          <StyledInput
-            type="url"
-            id="avatarUrl"
-            name="avatarUrl"
-            isInvalid={!!errors.avatarUrl}
-          />
-          {errors.avatarUrl && <ErrorMessage>{errors.avatarUrl}</ErrorMessage>}
+          <StyledInput type="url" id="avatarUrl" name="avatarUrl" />
 
           <StyledLabel htmlFor="bannerUrl">Banner URL</StyledLabel>
-          <StyledInput
-            type="url"
-            id="bannerUrl"
-            name="bannerUrl"
-            isInvalid={!!errors.bannerUrl}
-          />
-          {errors.bannerUrl && <ErrorMessage>{errors.bannerUrl}</ErrorMessage>}
+          <StyledInput type="url" id="bannerUrl" name="bannerUrl" />
 
           <StyledLabel>
             <StyledInput
