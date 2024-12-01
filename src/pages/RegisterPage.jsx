@@ -1,18 +1,7 @@
-import React from "react";
+import React, { useState } from "react";
 import Header from "../components/Header";
-import HeroSection from "../components/HeroSection";
-import TopVenues from "../components/TopVenuesForLandingPage";
-import Reviews from "../components/Reviews";
 import Footer from "../components/Footer";
 import styled from "styled-components";
-
-//Username (Required)
-//Email (Required)
-//Password  (Required)
-//Bio (Optional)
-//Avatar
-//Banner
-//Venuemanger true or false
 
 const StyledContainer = styled.div`
   background-color: #fff;
@@ -32,9 +21,10 @@ const StyledForm = styled.form`
   padding: 20px;
   border-radius: 10px;
 `;
+
 const StyledInput = styled.input`
   padding: 10px;
-  border: 1px solid #ccc;
+  border: 1px solid ${(props) => (props.isInvalid ? "red" : "#ccc")};
   border-radius: 5px;
   font-size: 16px;
   font-family: michroma;
@@ -42,7 +32,7 @@ const StyledInput = styled.input`
 
 const StyledTextarea = styled.textarea`
   padding: 10px;
-  border: 1px solid #ccc;
+  border: 1px solid ${(props) => (props.isInvalid ? "red" : "#ccc")};
   border-radius: 5px;
   font-size: 16px;
 `;
@@ -66,29 +56,110 @@ const StyledButton = styled.button`
     background-color: var(--color-dark, darkblue);
   }
 `;
-//Username (Required)
-//Email (Required)
-//Password  (Required)
-//Bio (Optional)
-//Avatar
-//Banner
-//Venuemanger true or false
+
+const ErrorMessage = styled.p`
+  color: red;
+  font-size: 12px;
+  margin: -10px 0 10px 0;
+`;
 
 const RegisterPage = () => {
+  const [errors, setErrors] = useState({});
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const form = e.target;
+
+    const name = form.username.value.trim();
+    const email = form.email.value.trim();
+    const password = form.password.value.trim();
+    const bio = form.bio.value.trim();
+    const avatarUrl = form.avatarUrl?.value.trim();
+    const bannerUrl = form.bannerUrl?.value.trim();
+    const isVenueManager = form.venuemananger.checked;
+
+    const newErrors = {};
+
+    // Name validation
+    if (!/^[a-zA-Z0-9_]+$/.test(name)) {
+      newErrors.username =
+        "Name can only contain letters, numbers, and underscores (_).";
+    }
+
+    // Email validation
+    if (!/^[a-zA-Z0-9._%+-]+@stud\.noroff\.no$/.test(email)) {
+      newErrors.email = "Email must be a valid stud.noroff.no email address.";
+    }
+
+    // Password validation
+    if (password.length < 8) {
+      newErrors.password = "Password must be at least 8 characters.";
+    }
+
+    // Bio validation
+    if (bio && bio.length > 160) {
+      newErrors.bio = "Bio must be less than 160 characters.";
+    }
+
+    // Avatar URL validation
+    if (avatarUrl && !/^https?:\/\/[^\s$.?#].[^\s]*$/.test(avatarUrl)) {
+      newErrors.avatarUrl = "Avatar URL must be valid and accessible.";
+    }
+
+    // Banner URL validation
+    if (bannerUrl && !/^https?:\/\/[^\s$.?#].[^\s]*$/.test(bannerUrl)) {
+      newErrors.bannerUrl = "Banner URL must be valid and accessible.";
+    }
+
+    setErrors(newErrors);
+
+    if (Object.keys(newErrors).length === 0) {
+      console.log({
+        name,
+        email,
+        password,
+        bio,
+        avatarUrl,
+        bannerUrl,
+        isVenueManager,
+      });
+      alert("Form submitted successfully!");
+      form.reset(); // Reset form after successful submission
+    }
+  };
+
   return (
     <div>
       <Header title="Holidaze" />
       <StyledContainer>
         <h1>Register User</h1>
-        <StyledForm>
+        <StyledForm onSubmit={handleSubmit}>
           <StyledLabel htmlFor="username">Username (Required)</StyledLabel>
-          <StyledInput type="text" id="username" name="username" required />
+          <StyledInput
+            type="text"
+            id="username"
+            name="username"
+            isInvalid={!!errors.username}
+          />
+          {errors.username && <ErrorMessage>{errors.username}</ErrorMessage>}
 
           <StyledLabel htmlFor="email">Email (Required)</StyledLabel>
-          <StyledInput type="email" id="email" name="email" required />
+          <StyledInput
+            type="email"
+            id="email"
+            name="email"
+            isInvalid={!!errors.email}
+          />
+          {errors.email && <ErrorMessage>{errors.email}</ErrorMessage>}
 
           <StyledLabel htmlFor="password">Password (Required)</StyledLabel>
-          <StyledInput type="password" id="password" name="password" required />
+          <StyledInput
+            type="password"
+            id="password"
+            name="password"
+            isInvalid={!!errors.password}
+          />
+          {errors.password && <ErrorMessage>{errors.password}</ErrorMessage>}
 
           <StyledLabel htmlFor="bio">Bio (Optional)</StyledLabel>
           <StyledTextarea
@@ -96,13 +167,27 @@ const RegisterPage = () => {
             name="bio"
             rows="4"
             placeholder="Tell us about yourself..."
+            isInvalid={!!errors.bio}
           />
+          {errors.bio && <ErrorMessage>{errors.bio}</ErrorMessage>}
 
-          <StyledLabel htmlFor="avatar">Avatar</StyledLabel>
-          <StyledInput type="file" id="avatar" name="avatar" />
+          <StyledLabel htmlFor="avatarUrl">Avatar URL</StyledLabel>
+          <StyledInput
+            type="url"
+            id="avatarUrl"
+            name="avatarUrl"
+            isInvalid={!!errors.avatarUrl}
+          />
+          {errors.avatarUrl && <ErrorMessage>{errors.avatarUrl}</ErrorMessage>}
 
-          <StyledLabel htmlFor="banner">Banner</StyledLabel>
-          <StyledInput type="file" id="banner" name="banner" />
+          <StyledLabel htmlFor="bannerUrl">Banner URL</StyledLabel>
+          <StyledInput
+            type="url"
+            id="bannerUrl"
+            name="bannerUrl"
+            isInvalid={!!errors.bannerUrl}
+          />
+          {errors.bannerUrl && <ErrorMessage>{errors.bannerUrl}</ErrorMessage>}
 
           <StyledLabel>
             <StyledInput
