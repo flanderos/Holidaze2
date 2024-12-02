@@ -31,8 +31,9 @@ const StyledH1 = styled.h1`
 const StyledCtaButton = styled.button`
   height: 50px;
   width: 250px;
-  background-color: transparent;
-  color: #fff;
+  background-color: #fff;
+  color: black;
+  font-weight: bold;
   border-radius: 25px;
   border: 1px solid white;
   font-family: "Michroma", sans-serif;

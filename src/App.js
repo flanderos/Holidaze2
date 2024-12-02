@@ -10,15 +10,27 @@ import {
   Route,
   Link,
   useParams,
+  Routes,
 } from "react-router-dom";
+import { AuthProvider } from "./context/AuthContext";
 import LandingPage from "./pages/LandingPage";
+import RegisterPage from "./pages/RegisterPage";
+import LoginPage from "./pages/LoginPage";
 
 const App = () => {
   return (
     <div>
-      <Fonts />
-      <Colors />
-      <LandingPage />
+      <AuthProvider>
+        <Router>
+          <Fonts />
+          <Colors />
+          <Routes>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/login" element={<LoginPage />} />
+          </Routes>
+        </Router>
+      </AuthProvider>
     </div>
   );
 };
