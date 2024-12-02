@@ -12,20 +12,25 @@ import {
   useParams,
   Routes,
 } from "react-router-dom";
+import { AuthProvider } from "./context/AuthContext";
 import LandingPage from "./pages/LandingPage";
 import RegisterPage from "./pages/RegisterPage";
+import LoginPage from "./pages/LoginPage";
 
 const App = () => {
   return (
     <div>
-      <Router>
-        <Fonts />
-        <Colors />
-        <Routes>
-          <Route path="/" element={<LandingPage />} />
-          <Route path="/register" element={<RegisterPage />} />
-        </Routes>
-      </Router>
+      <AuthProvider>
+        <Router>
+          <Fonts />
+          <Colors />
+          <Routes>
+            <Route path="/" element={<LandingPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+            <Route path="/login" element={<LoginPage />} />
+          </Routes>
+        </Router>
+      </AuthProvider>
     </div>
   );
 };
