@@ -61,8 +61,9 @@ const ErrorMessage = styled.p`
 
 const LoginForm = () => {
   const navigate = useNavigate();
-  const { logIn } = useAuth(); // Hent logIn-funksjonen fra AuthContext
+  const { logIn } = useAuth();
   const [errors, setErrors] = useState({});
+  const [apiError, setApiError] = useState("");
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -87,7 +88,7 @@ const LoginForm = () => {
     setErrors(newErrors);
 
     if (Object.keys(newErrors).length > 0) {
-      return; // Avbryt innsending hvis det er valideringsfeil
+      return;
     }
 
     try {
@@ -107,15 +108,15 @@ const LoginForm = () => {
       const responseData = await response.json();
       console.log("Login successful:", responseData);
 
-      // Oppdater Context-tilstanden med logIn
+      // Oppdater AuthContext og naviger til hovedsiden
       logIn();
-
-      // Nullstill skjema og naviger til hovedsiden
       form.reset();
+      setErrors({});
+      setApiError(""); // Nullstill API-feilmeldinger
       navigate("/");
     } catch (error) {
       console.error("Error:", error);
-      alert("An error occurred while logging in. Please try again.");
+      setApiError("Failed to log in. Please try again.");
     }
   };
 
@@ -123,6 +124,8 @@ const LoginForm = () => {
     <StyledContainer>
       <h1>Log In</h1>
       <StyledForm onSubmit={handleSubmit}>
+        {apiError && <ErrorMessage>{apiError}</ErrorMessage>}{" "}
+        {/* Viser API-feilmeldinger */}
         <StyledLabel htmlFor="email">Email (Required)</StyledLabel>
         <StyledInput
           type="email"
@@ -131,7 +134,6 @@ const LoginForm = () => {
           isInvalid={!!errors.email}
         />
         {errors.email && <ErrorMessage>{errors.email}</ErrorMessage>}
-
         <StyledLabel htmlFor="password">Password (Required)</StyledLabel>
         <StyledInput
           type="password"
@@ -140,7 +142,6 @@ const LoginForm = () => {
           isInvalid={!!errors.password}
         />
         {errors.password && <ErrorMessage>{errors.password}</ErrorMessage>}
-
         <StyledButton type="submit">Submit</StyledButton>
       </StyledForm>
     </StyledContainer>

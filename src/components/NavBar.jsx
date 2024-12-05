@@ -1,7 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
-import { useAuth } from "../context/AuthContext"; // Importer useAuth
+import { useAuth } from "../context/AuthContext";
 
 const StyledNavBar = styled.nav`
   display: flex;
@@ -38,6 +38,7 @@ const NavBar = () => {
         <StyledLink to="/">Home</StyledLink>
         <StyledLink to="/venues">Venues</StyledLink>
         <StyledLink to="/bookings">Bookings</StyledLink>
+        <StyledLink to="/profile">Profile</StyledLink>
         {isLoggedIn ? (
           <StyledLink onClick={logOut} isLogout>
             Log Out
