@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../context/AuthContext"; // Importer useAuth
+import { useAuth } from "../context/AuthContext";
 
 const StyledContainer = styled.div`
   background-color: #fff;
@@ -76,10 +76,12 @@ const LoginForm = () => {
 
     const newErrors = {};
 
-    // Validering
+    // Email-regex and validation
     if (!/^[a-zA-Z0-9._%+-]+@stud\.noroff\.no$/.test(requestData.email)) {
       newErrors.email = "Email must be a valid stud.noroff.no email address.";
     }
+
+    //password validation
 
     if (requestData.password.length < 8) {
       newErrors.password = "Password must be at least 8 characters.";
@@ -92,7 +94,7 @@ const LoginForm = () => {
     }
 
     try {
-      const API_URL = process.env.REACT_APP_API_URL;
+      const API_URL = "https://v2.api.noroff.dev";
       const response = await fetch(`${API_URL}/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -108,11 +110,10 @@ const LoginForm = () => {
       const responseData = await response.json();
       console.log("Login successful:", responseData);
 
-      // Oppdater AuthContext og naviger til hovedsiden
       logIn();
       form.reset();
       setErrors({});
-      setApiError(""); // Nullstill API-feilmeldinger
+      setApiError("");
       navigate("/");
     } catch (error) {
       console.error("Error:", error);
@@ -125,7 +126,7 @@ const LoginForm = () => {
       <h1>Log In</h1>
       <StyledForm onSubmit={handleSubmit}>
         {apiError && <ErrorMessage>{apiError}</ErrorMessage>}{" "}
-        {/* Viser API-feilmeldinger */}
+        {/* Errormsg from the API */}
         <StyledLabel htmlFor="email">Email (Required)</StyledLabel>
         <StyledInput
           type="email"

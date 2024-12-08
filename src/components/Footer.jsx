@@ -12,7 +12,7 @@ const StyledDiv = styled.div`
   display:;
 `;
 const StyledH1 = styled.h1`
-  font-size: 100px;
+  font-size: 3rem;
   text-align: center;
 `;
 

@@ -3,6 +3,7 @@ import styled from "styled-components";
 
 const MainContainer = styled.div`
   display: flex;
+  flex-direction: column;
   gap: 20px;
   padding: 20px;
   align-items: flex-start; /* Sørger for at innholdet justeres fra toppen */
@@ -98,7 +99,8 @@ const VenueList = () => {
   useEffect(() => {
     const fetchVenues = async () => {
       try {
-        const API_URL = process.env.REACT_APP_API_URL || "https://example.com";
+        const API_URL =
+          process.env.REACT_APP_API_URL || " https://v2.api.noroff.dev";
         const response = await fetch(`${API_URL}/holidaze/venues`);
         if (!response.ok) {
           throw new Error("Failed to fetch venues");

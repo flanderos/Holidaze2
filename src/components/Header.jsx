@@ -9,23 +9,27 @@ const StyledHeader = styled.header`
   align-items: flex-end;
   box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 13px 0px;
   padding: 10px 20px;
+
+  @media (max-width: 1100px) {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
 `;
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: flex-start;
-  align-items: flex-start;
+  align-items: center;
 `;
 
 const StyledH1 = styled.h1`
   font-family: "Michroma";
-  margin-left: 150px;
 `;
 
 const StyledSubtitle = styled.h2`
   font-size: 20px;
-  margin-left: 150px;
   font-family: "Edu AU VIC WA NT Hand";
   font-weight: 400;
 `;
