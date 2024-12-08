@@ -1,6 +1,7 @@
 import React from "react";
 import styled from "styled-components";
 import HeroImage from "../assets/images/landingpageimage.png";
+import { Link } from "react-router-dom";
 
 const StyledHeroImage = styled.section`
   background-image: url(${HeroImage});
@@ -28,12 +29,15 @@ const StyledH1 = styled.h1`
   margin: 0;
 `;
 
-const StyledCtaButton = styled.button`
-  height: 50px;
-  width: 250px;
+const StyledCtaButton = styled(Link)`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+  padding: 10px 20px 10px 20px;
   background-color: #fff;
   color: black;
-  font-weight: bold;
+  font-size: 16px;
   border-radius: 25px;
   border: 1px solid white;
   font-family: "Michroma", sans-serif;
@@ -42,7 +46,6 @@ const StyledCtaButton = styled.button`
   &:hover {
     cursor: pointer;
     box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 13px 0px;
-    backdrop-filter: blur(4px);
   }
 `;
 
@@ -57,7 +60,7 @@ const HeroSection = () => {
             sleepover—way too big, but hey, at least there’s space for the
             pizza.
           </p>
-          <StyledCtaButton>See our venues</StyledCtaButton>
+          <StyledCtaButton to="/venues">See our venues</StyledCtaButton>
         </TextContainer>
       </StyledHeroImage>
     </div>
