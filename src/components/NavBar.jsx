@@ -34,7 +34,7 @@ const StyledList = styled.ul`
     border-radius: 5px;
     transform: ${({ open }) => (open ? "translateX(0)" : "translateX(100%)")};
     transition: transform 0.3s ease-in-out;
-    z-index: 1;
+    z-index: 2;
   }
 `;
 
@@ -46,7 +46,7 @@ const StyledLink = styled(Link)`
   border-radius: 5px;
 
   &:hover {
-    color: white; /* Fargejustering for lesbarhet */
+    color: white;
     background-color: ${(props) =>
       props.isLogout ? "red" : "var(--color-black)"};
   }
@@ -64,6 +64,7 @@ const Hamburger = styled.div`
   align-items: center;
   cursor: pointer;
   z-index: 3;
+  border-radius: 10px;
 
   span {
     width: 25px;
@@ -78,6 +79,23 @@ const Hamburger = styled.div`
   }
 `;
 
+// this is for the dark and blurry background when the menu is activated
+const Backdrop = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(2px);
+  z-index: 1;
+  opacity: ${({ open }) => (open ? 1 : 0)};
+  visibility: ${({ open }) => (open ? "visible" : "hidden")};
+  transition:
+    opacity 0.3s ease-in-out,
+    visibility 0.3s ease-in-out;
+`;
+
 const NavBar = () => {
   const { isLoggedIn, logOut } = useAuth();
   const [menuOpen, setMenuOpen] = useState(false);
@@ -85,29 +103,32 @@ const NavBar = () => {
   const toggleMenu = () => setMenuOpen((prev) => !prev);
 
   return (
-    <StyledNavBar>
-      <Hamburger onClick={toggleMenu}>
-        <span />
-        <span />
-        <span />
-      </Hamburger>
-      <StyledList open={menuOpen}>
-        <StyledLink to="/">Home</StyledLink>
-        <StyledLink to="/venues">Venues</StyledLink>
-        <StyledLink to="/bookings">Bookings</StyledLink>
-        <StyledLink to="/profile">Profile</StyledLink>
-        {isLoggedIn ? (
-          <StyledLink onClick={logOut} isLogout>
-            Log Out
+    <>
+      <StyledNavBar>
+        <Hamburger onClick={toggleMenu}>
+          <span />
+          <span />
+          <span />
+        </Hamburger>
+        <StyledList open={menuOpen}>
+          <StyledLink to="/">Home</StyledLink>
+          <StyledLink to="/venues">Venues</StyledLink>
+          <StyledLink to="/bookings">Bookings</StyledLink>
+          <StyledLink to="/profile">Profile</StyledLink>
+          {isLoggedIn ? (
+            <StyledLink onClick={logOut} isLogout>
+              Log Out
+            </StyledLink>
+          ) : (
+            <StyledLink to="/login">Log In</StyledLink>
+          )}
+          <StyledLink to="/register" hidden={isLoggedIn}>
+            Register
           </StyledLink>
-        ) : (
-          <StyledLink to="/login">Log In</StyledLink>
-        )}
-        <StyledLink to="/register" hidden={isLoggedIn}>
-          Register
-        </StyledLink>
-      </StyledList>
-    </StyledNavBar>
+        </StyledList>
+      </StyledNavBar>
+      <Backdrop open={menuOpen} onClick={() => setMenuOpen(false)} />
+    </>
   );
 };
 
