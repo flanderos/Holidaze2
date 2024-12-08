@@ -126,7 +126,7 @@ const LoginForm = () => {
       <h1>Log In</h1>
       <StyledForm onSubmit={handleSubmit}>
         {apiError && <ErrorMessage>{apiError}</ErrorMessage>}{" "}
-        {/* Viser API-feilmeldinger */}
+        {/* Errormsg from the API */}
         <StyledLabel htmlFor="email">Email (Required)</StyledLabel>
         <StyledInput
           type="email"
