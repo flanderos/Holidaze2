@@ -98,7 +98,8 @@ const VenueList = () => {
   useEffect(() => {
     const fetchVenues = async () => {
       try {
-        const API_URL = process.env.REACT_APP_API_URL || "https://example.com";
+        const API_URL =
+          process.env.REACT_APP_API_URL || " https://v2.api.noroff.dev";
         const response = await fetch(`${API_URL}/holidaze/venues`);
         if (!response.ok) {
           throw new Error("Failed to fetch venues");
