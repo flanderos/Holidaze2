@@ -4,6 +4,8 @@ import HeroImage from "../assets/images/landingpageimage.png";
 import { Link } from "react-router-dom";
 
 const StyledHeroImage = styled.section`
+  margin: 0 auto;
+  box-sizing: border-box;
   background-image: url(${HeroImage});
   background-size: cover;
   background-position: center;
@@ -22,6 +24,11 @@ const TextContainer = styled.div`
   flex-direction: column;
   align-items: flex-start;
   margin-right: 50px;
+
+  @media (max-width: 744px) {
+    padding: 10px;
+    align-items: center;
+  }
 `;
 
 const StyledH1 = styled.h1`
