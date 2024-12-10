@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 
 export const StyledLink = styled(Link)`
-  color: #fff;
+  color: ${({ color }) => color || "white"};
   max-width: 250px;
   padding: 15px;
   background-color: ${({ bgColor }) => bgColor || "black"};

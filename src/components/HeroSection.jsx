@@ -2,6 +2,7 @@ import React from "react";
 import styled from "styled-components";
 import HeroImage from "../assets/images/landingpageimage.png";
 import { Link } from "react-router-dom";
+import { StyledLink } from "./globalcomponents/StyledLink";
 
 const StyledHeroImage = styled.section`
   margin: 0 auto;
@@ -67,7 +68,9 @@ const HeroSection = () => {
             sleepover—way too big, but hey, at least there’s space for the
             pizza.
           </p>
-          <StyledCtaButton to="/venues">See our venues</StyledCtaButton>
+          <StyledLink to="/venues" bgColor="white" color="black">
+            See our venues
+          </StyledLink>
         </TextContainer>
       </StyledHeroImage>
     </div>
