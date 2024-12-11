@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import { StyledLink } from "./globalcomponents/StyledLink";
 
 const MainContainer = styled.div`
   display: flex;
@@ -54,13 +55,19 @@ const VenueCard = styled.div`
   border: 1px solid #ddd;
   border-radius: 10px;
   padding: 20px;
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px;
   display: flex;
   flex-direction: column;
   align-items: center;
+  justify-content: space-between;
   text-align: center;
   width: 350px;
-  height: 650px;
+  height: 450px;
+  transition: 0.3s;
+
+  &:hover {
+    cursor: pointer;
+    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px;
+  }
 `;
 
 const VenueImage = styled.img`
@@ -74,6 +81,8 @@ const VenueImage = styled.img`
 const VenueDetails = styled.div`
   font-size: 14px;
   color: #555;
+  display: flex;
+  flex-direction: column;
 
   h4 {
     font-size: 16px;
@@ -83,6 +92,12 @@ const VenueDetails = styled.div`
   p {
     margin: 5px 0;
   }
+`;
+
+const InsideVenueDetails = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
 `;
 
 const VenueList = () => {
@@ -187,10 +202,19 @@ const VenueList = () => {
               alt={venue.name}
             />
             <VenueDetails>
-              <h4>{venue.name}</h4>
-              <p>{venue.description}</p>
-              <p>Price: ${venue.price}</p>
-              <p>Max Guests: {venue.maxGuests}</p>
+              <InsideVenueDetails>
+                <h4>{venue.name}</h4>
+                <p>
+                  {venue.description && venue.description.length > 40
+                    ? `${venue.description.substring(0, 40)}...`
+                    : venue.description || "No description available"}
+                </p>
+                <p>Price: ${venue.price}</p>
+                <p>Max Guests: {venue.maxGuests}</p>
+              </InsideVenueDetails>
+              <StyledLink bgColor="#E0E0E0" color="black">
+                Visit
+              </StyledLink>
             </VenueDetails>
           </VenueCard>
         ))}

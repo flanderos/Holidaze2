@@ -3,9 +3,10 @@ import { Link } from "react-router-dom";
 
 export const StyledLink = styled(Link)`
   color: ${({ color }) => color || "white"};
-  max-width: 250px;
+
   padding: 15px;
   background-color: ${({ bgColor }) => bgColor || "black"};
+  width: 200px;
   border-radius: 25px;
   font-family: "Michroma", sans-serif;
   transition: 0.6s;
