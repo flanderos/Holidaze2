@@ -2,6 +2,12 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faHome } from "@fortawesome/free-solid-svg-icons";
+import { faStar } from "@fortawesome/free-solid-svg-icons";
+import { faCalendarCheck } from "@fortawesome/free-solid-svg-icons";
+import { faUser } from "@fortawesome/free-solid-svg-icons";
+import { faPersonWalkingArrowRight } from "@fortawesome/free-solid-svg-icons";
 
 const StyledNavBar = styled.nav`
   display: flex;
@@ -111,13 +117,22 @@ const NavBar = () => {
           <span />
         </Hamburger>
         <StyledList open={menuOpen}>
-          <StyledLink to="/">Home</StyledLink>
-          <StyledLink to="/venues">Venues</StyledLink>
-          <StyledLink to="/bookings">Bookings</StyledLink>
-          <StyledLink to="/profile">Profile</StyledLink>
+          <StyledLink to="/">
+            Home <FontAwesomeIcon icon={faHome} />
+          </StyledLink>
+          <StyledLink to="/venues">
+            Venues
+            <FontAwesomeIcon icon={faStar} />
+          </StyledLink>
+          <StyledLink to="/bookings">
+            Bookings <FontAwesomeIcon icon={faCalendarCheck} />
+          </StyledLink>
+          <StyledLink to="/profile">
+            Profile <FontAwesomeIcon icon={faUser} />
+          </StyledLink>
           {isLoggedIn ? (
             <StyledLink onClick={logOut} isLogout>
-              Log Out
+              Log Out <FontAwesomeIcon icon={faPersonWalkingArrowRight} />
             </StyledLink>
           ) : (
             <StyledLink to="/login">Log In</StyledLink>

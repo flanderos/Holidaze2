@@ -43,7 +43,9 @@ const TopVenues = () => {
         <StyledImage src={placeholder2} alt="Top Venue 2" />
         <StyledImage src={placeholder3} alt="Top Venue 3" />
       </GridContainer>
-      <StyledLink to={"/venues"}>See our venues</StyledLink>
+      <StyledLink to={"/venues"} bgColor="#E0E0E0" color="black">
+        See our venues
+      </StyledLink>
     </StyledContainer>
   );
 };
