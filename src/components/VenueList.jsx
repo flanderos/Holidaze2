@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import { StyledLink } from "./globalcomponents/StyledLink";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faForward } from "@fortawesome/free-solid-svg-icons";
 
 const MainContainer = styled.div`
   display: flex;
@@ -213,7 +215,7 @@ const VenueList = () => {
                 <p>Max Guests: {venue.maxGuests}</p>
               </InsideVenueDetails>
               <StyledLink bgColor="#E0E0E0" color="black">
-                Visit
+                Take a look
               </StyledLink>
             </VenueDetails>
           </VenueCard>
