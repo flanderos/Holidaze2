@@ -24,6 +24,7 @@ const Modal = styled.div`
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
   max-width: 700px;
   width: 90%;
+  height: 90vh;
   z-index: 1001;
 `;
 
@@ -33,7 +34,7 @@ const CloseButton = styled.button`
   right: 10px;
   background: transparent;
   border: none;
-  font-size: 20px;
+  font-size: 30px;
   cursor: pointer;
 `;
 
@@ -45,6 +46,7 @@ const ModalContent = styled.div`
   img {
     width: 100%;
     height: auto;
+    max-height: 400px;
     border-radius: 10px;
   }
 `;
