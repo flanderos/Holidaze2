@@ -3,13 +3,52 @@ import styled from "styled-components";
 import { StyledLink } from "./globalcomponents/StyledLink";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faForward } from "@fortawesome/free-solid-svg-icons";
+import VenueModal from "./Modal";
 
+// Modal styled components
+const Overlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(5px);
+  display: ${({ isOpen }) => (isOpen ? "block" : "none")};
+  z-index: 1000;
+`;
+
+const Modal = styled.div`
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: #fff;
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+  max-width: 500px;
+  width: 90%;
+  z-index: 1001;
+`;
+
+const CloseButton = styled.button`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background: transparent;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+`;
+
+// Existing styled components
 const MainContainer = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
   padding: 20px;
-  align-items: flex-start; /* Sørger for at innholdet justeres fra toppen */
+  align-items: flex-start;
 `;
 
 const FilterContainer = styled.div`
@@ -29,26 +68,16 @@ const CardGrid = styled.div`
   align-items: start;
   justify-items: center;
 
-  // Responsive design:
   @media (max-width: 1340px) {
-    grid-template-columns: repeat(
-      3,
-      1fr
-    ); // Three columns for large tablets and smaller screens
+    grid-template-columns: repeat(3, 1fr);
   }
 
   @media (max-width: 1024px) {
-    grid-template-columns: repeat(2, 1fr); // Two columns for medium screens
+    grid-template-columns: repeat(2, 1fr);
   }
 
   @media (max-width: 768px) {
-    grid-template-columns: 1fr; // A column for small screens
-  }
-
-  @media (max-width: 480px) {
-    grid-template-columns: 1fr; // A column for extra small screens
-    gap: 5px;
-    padding: 5px;
+    grid-template-columns: 1fr;
   }
 `;
 
@@ -96,28 +125,17 @@ const VenueDetails = styled.div`
   }
 `;
 
-const InsideVenueDetails = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: flex-start;
-`;
-
 const VenueList = () => {
   const [venues, setVenues] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const [filters, setFilters] = useState({
-    wifi: false,
-    parking: false,
-    breakfast: false,
-    pets: false,
-  });
+  const [selectedVenue, setSelectedVenue] = useState(null);
 
   useEffect(() => {
     const fetchVenues = async () => {
       try {
         const API_URL =
-          process.env.REACT_APP_API_URL || " https://v2.api.noroff.dev";
+          process.env.REACT_APP_API_URL || "https://v2.api.noroff.dev";
         const response = await fetch(`${API_URL}/holidaze/venues`);
         if (!response.ok) {
           throw new Error("Failed to fetch venues");
@@ -125,7 +143,6 @@ const VenueList = () => {
         const data = await response.json();
         setVenues(data.data);
       } catch (err) {
-        console.error(err);
         setError("An error occurred while fetching venues");
       } finally {
         setLoading(false);
@@ -135,92 +152,55 @@ const VenueList = () => {
     fetchVenues();
   }, []);
 
-  const handleFilterChange = (e) => {
-    const { name, checked } = e.target;
-    setFilters((prev) => ({
-      ...prev,
-      [name]: checked,
-    }));
-  };
-
-  const filteredVenues = venues.filter((venue) => {
-    return Object.keys(filters).every((filterKey) => {
-      if (filters[filterKey]) {
-        return venue.meta?.[filterKey];
+  const fetchVenueDetails = async (id) => {
+    try {
+      const API_URL =
+        process.env.REACT_APP_API_URL || "https://v2.api.noroff.dev";
+      const response = await fetch(`${API_URL}/holidaze/venues/${id}`);
+      if (!response.ok) {
+        throw new Error("Failed to fetch venue details");
       }
-      return true;
-    });
-  });
+      const data = await response.json();
+      setSelectedVenue(data.data);
+    } catch (err) {
+      setError("Failed to load venue details");
+    }
+  };
 
   if (loading) return <p>Loading venues...</p>;
   if (error) return <p>{error}</p>;
 
   return (
     <MainContainer>
-      <FilterContainer>
-        <h3>Filter by Amenities</h3>
-        <label>
-          <input
-            type="checkbox"
-            name="wifi"
-            checked={filters.wifi}
-            onChange={handleFilterChange}
-          />
-          Wifi
-        </label>
-        <label>
-          <input
-            type="checkbox"
-            name="parking"
-            checked={filters.parking}
-            onChange={handleFilterChange}
-          />
-          Parking
-        </label>
-        <label>
-          <input
-            type="checkbox"
-            name="breakfast"
-            checked={filters.breakfast}
-            onChange={handleFilterChange}
-          />
-          Breakfast
-        </label>
-        <label>
-          <input
-            type="checkbox"
-            name="pets"
-            checked={filters.pets}
-            onChange={handleFilterChange}
-          />
-          Pets
-        </label>
-      </FilterContainer>
       <CardGrid>
-        {filteredVenues.map((venue) => (
-          <VenueCard key={venue.id}>
+        {venues.map((venue) => (
+          <VenueCard key={venue.id} onClick={() => fetchVenueDetails(venue.id)}>
             <VenueImage
               src={venue.media?.[0]?.url || "https://via.placeholder.com/300"}
               alt={venue.name}
             />
             <VenueDetails>
-              <InsideVenueDetails>
-                <h4>{venue.name}</h4>
-                <p>
-                  {venue.description && venue.description.length > 40
-                    ? `${venue.description.substring(0, 40)}...`
-                    : venue.description || "No description available"}
-                </p>
-                <p>Price: ${venue.price}</p>
-                <p>Max Guests: {venue.maxGuests}</p>
-              </InsideVenueDetails>
-              <StyledLink bgColor="#E0E0E0" color="black">
-                Take a look
-              </StyledLink>
+              <h4>{venue.name}</h4>
+              <p>
+                {venue.description && venue.description.length > 40
+                  ? `${venue.description.substring(0, 40)}...`
+                  : venue.description || "No description available"}
+              </p>
+              <p>Price: ${venue.price}</p>
+              <p>Max Guests: {venue.maxGuests}</p>
             </VenueDetails>
           </VenueCard>
         ))}
       </CardGrid>
+
+      {/* Modal */}
+      {selectedVenue && (
+        <VenueModal
+          venue={selectedVenue}
+          isOpen={!!selectedVenue}
+          onClose={() => setSelectedVenue(null)}
+        />
+      )}
     </MainContainer>
   );
 };
