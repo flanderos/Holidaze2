@@ -1,8 +1,9 @@
 import React from "react";
 import styled from "styled-components";
 import HeroImage from "../assets/images/landingpageimage.png";
-import { Link } from "react-router-dom";
 import { StyledLink } from "./globalcomponents/StyledLink";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 
 const StyledHeroImage = styled.section`
   margin: 0 auto;
@@ -50,6 +51,7 @@ const HeroSection = () => {
           </p>
           <StyledLink to="/venues" bgColor="white" color="black">
             See our venues
+            <FontAwesomeIcon icon={faArrowRight} />
           </StyledLink>
         </TextContainer>
       </StyledHeroImage>
