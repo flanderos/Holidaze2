@@ -1,5 +1,6 @@
 import React from "react";
 import styled from "styled-components";
+import { StyledLink } from "./globalcomponents/StyledLink";
 
 const Overlay = styled.div`
   position: fixed;
@@ -34,7 +35,8 @@ const CloseButton = styled.button`
   right: 10px;
   background: transparent;
   border: none;
-  font-size: 30px;
+  font-size: 40px;
+  font-weight: bold;
   cursor: pointer;
 `;
 
@@ -42,12 +44,20 @@ const ModalContent = styled.div`
   display: flex;
   flex-direction: column;
   gap: 20px;
+  max-height: 90vh;
+  overflow-y: auto;
+  padding-right: 10px;
 
   img {
     width: 100%;
     height: auto;
     max-height: 400px;
     border-radius: 10px;
+    object-fit: cover;
+    transition:
+      transform 0.3s ease,
+      filter 0.3s ease;
+    cursor: pointer;
   }
 `;
 
@@ -64,6 +74,9 @@ const VenueModal = ({ venue, isOpen, onClose }) => {
     meta,
     location,
     owner,
+    city,
+    country,
+    continent,
   } = venue;
 
   return (
@@ -115,6 +128,9 @@ const VenueModal = ({ venue, isOpen, onClose }) => {
               </p>
             </>
           )}
+          <StyledLink bgColor="#E0E0E0" color="black">
+            Visit
+          </StyledLink>
         </ModalContent>
       </Modal>
     </Overlay>
