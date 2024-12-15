@@ -1,6 +1,8 @@
 import React from "react";
 import NavBar from "./NavBar";
 import styled from "styled-components";
+import { useAuth } from "../context/AuthContext";
+import { getUserNameFromLocalStorage } from "../api/FetchUserName";
 
 const StyledHeader = styled.header`
   background-color: var(--color-primary);
@@ -34,12 +36,20 @@ const StyledSubtitle = styled.h2`
   font-weight: 400;
 `;
 
+const StyledGreeting = styled.h3`
+  font-size: 15px;
+  color: #fff;
+`;
+
 const Header = () => {
+  const userName = getUserNameFromLocalStorage();
+
   return (
     <StyledHeader>
       <Container>
         <StyledH1>Holidaze</StyledH1>
         <StyledSubtitle>Your Journey Starts Here</StyledSubtitle>
+        <StyledGreeting>Hello! {userName}</StyledGreeting>
       </Container>
       <NavBar />
     </StyledHeader>
