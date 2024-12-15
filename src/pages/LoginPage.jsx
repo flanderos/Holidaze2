@@ -61,7 +61,7 @@ const ErrorMessage = styled.p`
 
 const LoginForm = () => {
   const navigate = useNavigate();
-  const { logIn } = useAuth();
+  const { logIn } = useAuth(); // Bruk logIn fra AuthProvider
   const [errors, setErrors] = useState({});
   const [apiError, setApiError] = useState("");
 
@@ -81,8 +81,7 @@ const LoginForm = () => {
       newErrors.email = "Email must be a valid stud.noroff.no email address.";
     }
 
-    //password validation
-
+    // Password validation
     if (requestData.password.length < 8) {
       newErrors.password = "Password must be at least 8 characters.";
     }
@@ -108,9 +107,12 @@ const LoginForm = () => {
       }
 
       const responseData = await response.json();
-      console.log("Login successful:", responseData);
+      console.log("Login successful:", responseData.data);
 
-      logIn();
+      // Log in the user with token and user information
+      logIn(responseData.data.accessToken, responseData.data); // Pass token and user data
+
+      // Clear the form and navigate to the home page
       form.reset();
       setErrors({});
       setApiError("");
