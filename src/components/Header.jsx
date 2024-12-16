@@ -1,7 +1,6 @@
 import React from "react";
 import NavBar from "./NavBar";
 import styled from "styled-components";
-import { useAuth } from "../context/AuthContext";
 import { getUserNameFromLocalStorage } from "../api/FetchUserName";
 
 const StyledHeader = styled.header`
