@@ -136,13 +136,23 @@ const VenueList = () => {
       try {
         const API_URL =
           process.env.REACT_APP_API_URL || "https://v2.api.noroff.dev";
-        const response = await fetch(`${API_URL}/holidaze/venues`);
+        const response = await fetch(`${API_URL}/holidaze/venues?_owner=true`);
         if (!response.ok) {
           throw new Error("Failed to fetch venues");
         }
         const data = await response.json();
-        setVenues(data.data);
+
+        console.log("Fetched venues:", data.data);
+
+        const sortedVenues = data.data.sort((a, b) => {
+          const dateA = new Date(a.created || 0);
+          const dateB = new Date(b.created || 0);
+          return dateB - dateA;
+        });
+
+        setVenues(sortedVenues);
       } catch (err) {
+        console.error("Error fetching venues:", err);
         setError("An error occurred while fetching venues");
       } finally {
         setLoading(false);

@@ -1,6 +1,45 @@
 import React, { useEffect, useState } from "react";
 import styled from "styled-components";
 import Header from "../components/Header";
+import { API_URL } from "../config";
+import { API_KEY } from "../config";
+import { CreateVenueForm } from "../components/CreateVenueForm";
+
+// Linked List Implementation
+class Node {
+  constructor(data) {
+    this.data = data;
+    this.next = null;
+  }
+}
+
+class LinkedList {
+  constructor() {
+    this.head = null;
+    this.tail = null;
+  }
+
+  add(data) {
+    const newNode = new Node(data);
+    if (!this.head) {
+      this.head = newNode;
+      this.tail = newNode;
+    } else {
+      this.tail.next = newNode;
+      this.tail = newNode;
+    }
+  }
+
+  toArray() {
+    const result = [];
+    let current = this.head;
+    while (current) {
+      result.push(current.data);
+      current = current.next;
+    }
+    return result;
+  }
+}
 
 // Styled components
 const ProfileContainer = styled.div`
@@ -91,11 +130,10 @@ const Button = styled.button`
   }
 `;
 
-// Main component
 const ProfilePage = () => {
   const [profileData, setProfileData] = useState(null);
   const [isVenueManager, setIsVenueManager] = useState(false);
-  const [venues, setVenues] = useState([]);
+  const [venues, setVenues] = useState(new LinkedList());
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -111,8 +149,6 @@ const ProfilePage = () => {
   }, []);
 
   const checkVenueManagerStatus = async (name, token) => {
-    const API_URL = "https://v2.api.noroff.dev/holidaze";
-
     try {
       if (!name) {
         throw new Error(
@@ -123,23 +159,17 @@ const ProfilePage = () => {
       const response = await fetch(`${API_URL}/profiles/${name}`, {
         headers: {
           Authorization: `Bearer ${token}`,
-          "X-Noroff-API-Key": "25f25dab-635c-4b61-9f81-19f3baab8e25",
+          "X-Noroff-API-Key": API_KEY,
         },
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        console.error(`API Error: ${response.status}`, errorData);
-        if (response.status === 404) {
-          throw new Error(`User ${name} not found.`);
-        }
         throw new Error(
           `Failed to fetch venue manager status: ${response.status}`,
         );
       }
 
       const data = await response.json();
-      console.log("Venue manager status fetched successfully:", data);
       setIsVenueManager(data.venueManager);
 
       if (data.venueManager) {
@@ -147,22 +177,25 @@ const ProfilePage = () => {
       }
     } catch (error) {
       console.error("Error fetching venue manager status:", error.message);
+    } finally {
+      setLoading(false);
     }
   };
 
   const fetchUserVenues = async (name, token) => {
-    const API_URL = "https://v2.api.noroff.dev/holidaze";
     try {
       const response = await fetch(`${API_URL}/profiles/${name}/venues`, {
         headers: {
           Authorization: `Bearer ${token}`,
-          "X-Noroff-API-Key": "25f25dab-635c-4b61-9f81-19f3baab8e25",
+          "X-Noroff-API-Key": API_KEY,
         },
       });
 
       if (response.ok) {
         const data = await response.json();
-        setVenues(data.data || []);
+        const venueList = new LinkedList();
+        data.data.forEach((venue) => venueList.add(venue));
+        setVenues(venueList);
       } else {
         console.error("Failed to fetch venues:", response.status);
       }
@@ -173,14 +206,13 @@ const ProfilePage = () => {
 
   const becomeVenueManager = async () => {
     const token = localStorage.getItem("token");
-    const API_URL = "https://v2.api.noroff.dev/holidaze";
 
     try {
       const response = await fetch(`${API_URL}/profiles/${profileData.name}`, {
         method: "PUT",
         headers: {
           Authorization: `Bearer ${token}`,
-          "X-Noroff-API-Key": "25f25dab-635c-4b61-9f81-19f3baab8e25",
+          "X-Noroff-API-Key": API_KEY,
         },
         body: JSON.stringify({ venueManager: true }),
       });
@@ -199,8 +231,12 @@ const ProfilePage = () => {
     }
   };
 
-  if (loading) return <p>Loading profile...</p>;
+  if (loading) {
+    return <p>Loading profile...</p>;
+  }
   if (!profileData) return <p>No profile data found.</p>;
+
+  console.log(profileData);
 
   const { name, email, bio, avatar, banner } = profileData;
 
@@ -217,7 +253,7 @@ const ProfilePage = () => {
         </UserInfo>
         <MetaInfo>
           <p>
-            <strong>Venues:</strong> {venues.length}
+            <strong>Venues:</strong> {venues.toArray().length}
           </p>
         </MetaInfo>
         <VenueManagerSection>
@@ -225,16 +261,12 @@ const ProfilePage = () => {
             <>
               <h3>Your Venues</h3>
               <ul>
-                {venues.length > 0 ? (
-                  venues.map((venue) => (
-                    <li key={venue.id}>
-                      <strong>{venue.name}</strong>
-                      <p>{venue.description}</p>
-                    </li>
-                  ))
-                ) : (
-                  <p>You have no venues yet.</p>
-                )}
+                {venues.toArray().map((venue) => (
+                  <li key={venue.id}>
+                    <strong>{venue.name}</strong>
+                    <p>{venue.description}</p>
+                  </li>
+                ))}
               </ul>
             </>
           ) : (
@@ -244,6 +276,7 @@ const ProfilePage = () => {
             </>
           )}
         </VenueManagerSection>
+        <CreateVenueForm />
       </ProfileContainer>
     </div>
   );
