@@ -122,7 +122,7 @@ const RegisterPage = () => {
     }
 
     try {
-      const API_URL = process.env.REACT_APP_API_URL;
+      const API_URL = "https://v2.api.noroff.dev";
       const response = await fetch(`${API_URL}/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -139,7 +139,6 @@ const RegisterPage = () => {
       console.log("Registration successful:", responseData);
 
       // Lagre respons og variable for innlogget bruker i localStorage
-      localStorage.setItem("userProfile", JSON.stringify(responseData.data));
       localStorage.setItem("isLoggedIn", "true");
 
       alert("Registration successful!");

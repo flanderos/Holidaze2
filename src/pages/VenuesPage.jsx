@@ -25,7 +25,6 @@ const VenuePage = () => {
       <Header />
       <StyledSection>
         <StyledH1>Venues</StyledH1>
-
         <VenueList />
       </StyledSection>
       <Footer />
