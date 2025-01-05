@@ -14,12 +14,14 @@ const Container = styled.div`
   align-items: center;
 `;
 
+//REMEMBER to style these twp
+
 const BookingContainer = styled.section`
-  // BookingContainer styling...
+  // BookingContainer styling
 `;
 
 const UserBookings = styled.div`
-  // UserBookings styling...
+  // UserBookings styling
 `;
 
 const ProfilePage = () => {
@@ -105,7 +107,7 @@ const ProfilePage = () => {
           }}
         />
         <h2>My Bookings</h2>
-        <BookingContainer>
+        {/* <BookingContainer>
           {bookings.map((booking) => (
             <UserBookings key={booking.id}>
               <h4>{booking.venue.name}</h4>
@@ -121,7 +123,7 @@ const ProfilePage = () => {
               <p>Guests: {booking.guests}</p>
             </UserBookings>
           ))}
-        </BookingContainer>
+        </BookingContainer> */}
       </Container>
       <EditProfileModal
         isOpen={isModalOpen}
