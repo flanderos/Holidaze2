@@ -61,7 +61,7 @@ const ErrorMessage = styled.p`
 
 const LoginForm = () => {
   const navigate = useNavigate();
-  const { logIn } = useAuth(); // Bruk logIn fra AuthProvider
+  const { logIn } = useAuth();
   const [errors, setErrors] = useState({});
   const [apiError, setApiError] = useState("");
 
@@ -109,10 +109,8 @@ const LoginForm = () => {
       const responseData = await response.json();
       console.log("Login successful:", responseData.data);
 
-      // Log in the user with token and user information
-      logIn(responseData.data.accessToken, responseData.data); // Pass token and user data
+      logIn(responseData.data.accessToken, responseData.data);
 
-      // Clear the form and navigate to the home page
       form.reset();
       setErrors({});
       setApiError("");

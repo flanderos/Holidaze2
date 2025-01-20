@@ -32,28 +32,15 @@ const ErrorMessage = styled.div`
   font-size: 14px;
 `;
 
-const BookingForm = ({ venueId, maxGuests, onClose }) => {
+const BookingForm = ({ venueId, maxGuests, onClose, onBookingSuccess }) => {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [guests, setGuests] = useState(1);
   const [error, setError] = useState("");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleBooking = async (e) => {
     e.preventDefault();
-
-    // Validering
-    if (new Date(startDate) >= new Date(endDate)) {
-      setError("End date must be later than start date.");
-      return;
-    }
-
-    if (guests < 1 || guests > maxGuests) {
-      setError(`Guests must be between 1 and ${maxGuests}.`);
-      return;
-    }
-
-    setError("");
-
     const token = localStorage.getItem("token");
 
     try {
@@ -73,17 +60,19 @@ const BookingForm = ({ venueId, maxGuests, onClose }) => {
       });
 
       if (response.ok) {
+        const newBooking = await response.json();
         alert("Booking successful!");
+        onBookingSuccess(newBooking.data);
         onClose();
       } else {
-        const errorData = await response.json();
-        setError(errorData.message || "Booking failed.");
+        console.error("Booking failed");
       }
     } catch (error) {
       console.error("Error booking venue:", error);
-      setError("An error occurred while booking.");
     }
   };
+
+  const today = new Date().toISOString().split("T")[0];
 
   return (
     <BookingFormContainer onSubmit={handleBooking}>
@@ -93,6 +82,7 @@ const BookingForm = ({ venueId, maxGuests, onClose }) => {
         id="startDate"
         value={startDate}
         onChange={(e) => setStartDate(e.target.value)}
+        min={today}
         required
       />
       <label htmlFor="endDate">End Date:</label>
@@ -101,6 +91,7 @@ const BookingForm = ({ venueId, maxGuests, onClose }) => {
         id="endDate"
         value={endDate}
         onChange={(e) => setEndDate(e.target.value)}
+        min={startDate || today}
         required
       />
       <label htmlFor="guests">Number of Guests:</label>
@@ -114,7 +105,9 @@ const BookingForm = ({ venueId, maxGuests, onClose }) => {
         required
       />
       {error && <ErrorMessage>{error}</ErrorMessage>}
-      <SubmitButton type="submit">Book Venue</SubmitButton>
+      <SubmitButton type="submit" disabled={isSubmitting}>
+        {isSubmitting ? "Booking..." : "Book Venue"}
+      </SubmitButton>
     </BookingFormContainer>
   );
 };

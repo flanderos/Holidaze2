@@ -1,6 +1,5 @@
 import React from "react";
 import styled from "styled-components";
-import { Link } from "react-router-dom";
 import { StyledLink } from "../components/globalcomponents/StyledLink";
 import placeholder1 from "../assets/images/placeholder1.png";
 import placeholder2 from "../assets/images/placeholder2.png";
