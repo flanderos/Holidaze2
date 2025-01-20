@@ -14,19 +14,11 @@ const Container = styled.div`
   align-items: center;
 `;
 
-const BookingContainer = styled.section`
-  // BookingContainer styling...
-`;
-
-const UserBookings = styled.div`
-  // UserBookings styling...
-`;
-
 const ProfilePage = () => {
   const [profileData, setProfileData] = useState(null);
   const [venues, setVenues] = useState([]);
   const [bookings, setBookings] = useState([]);
-  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedVenue, setSelectedVenue] = useState(null);
   const [isVenueModalOpen, setIsVenueModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -94,7 +86,7 @@ const ProfilePage = () => {
         <ProfileCard
           profileData={profileData}
           venues={venues}
-          onEditClick={() => setIsModalOpen(true)}
+          onEditClick={() => setIsEditModalOpen(true)}
         />
         <h2>My Venues</h2>
         <UserVenues
@@ -105,36 +97,21 @@ const ProfilePage = () => {
           }}
         />
         <h2>My Bookings</h2>
-        <BookingContainer>
-          {bookings.map((booking) => (
-            <UserBookings key={booking.id}>
-              <h4>{booking.venue.name}</h4>
-              <img
-                src={booking.venue.media?.[0]?.url || "/placeholder-image.jpg"}
-                alt={booking.venue.name}
-                loading="lazy"
-              />
-              <p>
-                From: {new Date(booking.dateFrom).toLocaleDateString()} - To:{" "}
-                {new Date(booking.dateTo).toLocaleDateString()}
-              </p>
-              <p>Guests: {booking.guests}</p>
-            </UserBookings>
-          ))}
-        </BookingContainer>
       </Container>
+      {/* Edit Profile Modal */}
       <EditProfileModal
-        isOpen={isModalOpen}
+        isOpen={isEditModalOpen}
         profileData={profileData}
-        onClose={() => setIsModalOpen(false)}
+        onClose={() => setIsEditModalOpen(false)}
         onUpdate={(updatedData) => {
           setProfileData(updatedData);
           localStorage.setItem("userData", JSON.stringify(updatedData));
         }}
       />
+      {/* Venue Modal */}
       <VenueModal
-        isOpen={isVenueModalOpen}
         venue={selectedVenue}
+        isOpen={isVenueModalOpen}
         onClose={() => setIsVenueModalOpen(false)}
       />
     </>

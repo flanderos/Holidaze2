@@ -76,22 +76,21 @@ const RegisterPage = () => {
     e.preventDefault();
     const form = e.target;
 
-    // Bygg opp requestData med kun felt som har verdier
     const requestData = {
       name: form.username.value.trim(),
       email: form.email.value.trim(),
       password: form.password.value.trim(),
-      ...(form.bio.value.trim() && { bio: form.bio.value.trim() }), // Legg til bio hvis den har en verdi
+      ...(form.bio.value.trim() && { bio: form.bio.value.trim() }),
       ...(form.avatarUrl.value.trim() && {
         avatar: {
           url: form.avatarUrl.value.trim(),
-          alt: "Default avatar alt text", // Juster etter behov
+          alt: "useravatar",
         },
       }),
       ...(form.bannerUrl.value.trim() && {
         banner: {
           url: form.bannerUrl.value.trim(),
-          alt: "Default banner alt text", // Juster etter behov
+          alt: "userbanner",
         },
       }),
       venueManager: form.venuemananger.checked,
@@ -101,7 +100,6 @@ const RegisterPage = () => {
 
     const newErrors = {};
 
-    // Validering
     if (!/^[a-zA-Z0-9_]+$/.test(requestData.name)) {
       newErrors.username =
         "Name can only contain letters, numbers, and underscores (_).";
@@ -118,7 +116,7 @@ const RegisterPage = () => {
     setErrors(newErrors);
 
     if (Object.keys(newErrors).length > 0) {
-      return; // Avbryt innsending hvis det er valideringsfeil
+      return;
     }
 
     try {
@@ -138,11 +136,10 @@ const RegisterPage = () => {
       const responseData = await response.json();
       console.log("Registration successful:", responseData);
 
-      // Lagre respons og variable for innlogget bruker i localStorage
       localStorage.setItem("isLoggedIn", "true");
 
       alert("Registration successful!");
-      form.reset(); // Nullstill skjema etter vellykket innsending
+      form.reset();
     } catch (error) {
       console.error("Error:", error);
       alert("An error occurred while registering. Please try again.");

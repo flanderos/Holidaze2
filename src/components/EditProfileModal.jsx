@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
+import { API_URL, API_KEY } from "../config";
 
 const ModalOverlay = styled.div`
   position: fixed;
@@ -102,23 +103,20 @@ const EditProfileModal = ({ isOpen, onClose, profileData, onUpdate }) => {
     }
 
     try {
-      const response = await fetch(
-        `${process.env.REACT_APP_API_URL}/profiles/${profileData.name}`,
-        {
-          method: "PUT",
-          headers: {
-            Authorization: `Bearer ${token}`,
-            "X-Noroff-API-Key": process.env.REACT_APP_API_KEY,
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            avatar: updatedProfile.avatar
-              ? { url: updatedProfile.avatar }
-              : undefined,
-            bio: updatedProfile.bio,
-          }),
+      const response = await fetch(`${API_URL}/profiles/${profileData.name}`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "X-Noroff-API-Key": API_KEY,
+          "Content-Type": "application/json",
         },
-      );
+        body: JSON.stringify({
+          avatar: updatedProfile.avatar
+            ? { url: updatedProfile.avatar }
+            : undefined,
+          bio: updatedProfile.bio,
+        }),
+      });
 
       if (!response.ok) {
         throw new Error(`Failed to update profile: ${response.statusText}`);
