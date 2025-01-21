@@ -2,17 +2,30 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faUser } from "@fortawesome/free-solid-svg-icons";
+import loginBg from "../assets/images/loginpagebg2.png";
+import { Link } from "react-router-dom";
 
 const StyledContainer = styled.div`
-  background-color: #fff;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
   padding: 20px;
+  background-image: url(${loginBg});
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
 `;
 
 const StyledForm = styled.form`
+  background-color: transparent;
+  backdrop-filter: blur(10px);
+  color: #fff;
+  height: 500px;
+  width: 300px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -22,12 +35,19 @@ const StyledForm = styled.form`
   border-radius: 10px;
 `;
 
+const StyledH1 = styled.h1`
+  text-align: center;
+  text-decoration: underline;
+`;
+
 const StyledInput = styled.input`
   padding: 10px;
   border: 1px solid ${(props) => (props.isInvalid ? "red" : "#ccc")};
   border-radius: 5px;
-  font-size: 16px;
-  font-family: michroma;
+  font-family: poppins;
+  width: 90%;
+  padding: 10px;
+  margin: 10px;
 `;
 
 const StyledLabel = styled.label`
@@ -38,25 +58,39 @@ const StyledLabel = styled.label`
 
 const StyledButton = styled.button`
   padding: 10px;
-  background-color: var(--color-green, blue);
   color: black;
+  background-color: var(--color-primary);
   border: none;
   border-radius: 5px;
   font-size: 20px;
+  font-family: poppins;
   cursor: pointer;
-  width: 100%;
-  margin-top: 20px;
+  width: 97%;
+  margin: 30px 0px 10px 10px;
   transition: 0.3s;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 
   &:hover {
-    background-color: var(--color-grey, darkblue);
+    text-decoration: underline;
+  }
   }
 `;
 
 const ErrorMessage = styled.p`
   color: red;
   font-size: 12px;
+`;
+
+const StyledLink = styled(Link)`
+  color: var(--color-primary);
+  text-decoration: none;
+  padding: 5px;
+  transition: 0.3s;
+  border-radius: 5px;
+
+  &:hover {
+    text-decoration: underline;
+  }
 `;
 
 const LoginForm = () => {
@@ -123,8 +157,8 @@ const LoginForm = () => {
 
   return (
     <StyledContainer>
-      <h1>Log In</h1>
       <StyledForm onSubmit={handleSubmit}>
+        <StyledH1>Log In</StyledH1>
         {apiError && <ErrorMessage>{apiError}</ErrorMessage>}{" "}
         {/* Errormsg from the API */}
         <StyledLabel htmlFor="email">Email (Required)</StyledLabel>
@@ -133,6 +167,7 @@ const LoginForm = () => {
           id="email"
           name="email"
           isInvalid={!!errors.email}
+          placeholder="Enter your email here"
         />
         {errors.email && <ErrorMessage>{errors.email}</ErrorMessage>}
         <StyledLabel htmlFor="password">Password (Required)</StyledLabel>
@@ -141,9 +176,13 @@ const LoginForm = () => {
           id="password"
           name="password"
           isInvalid={!!errors.password}
+          placeholder="Enter your password here"
         />
         {errors.password && <ErrorMessage>{errors.password}</ErrorMessage>}
-        <StyledButton type="submit">Submit</StyledButton>
+        <StyledButton type="submit">Log in</StyledButton>
+        <p>
+          Not yet a user? <StyledLink to="/register">Register</StyledLink>
+        </p>
       </StyledForm>
     </StyledContainer>
   );
