@@ -6,12 +6,20 @@ import UserVenues from "../components/UserVenues";
 import VenueModal from "../components/Modal";
 import { API_URL, API_KEY } from "../config";
 import styled from "styled-components";
+import loginBg from "../assets/images/loginpagebg2.png";
 
 const Container = styled.div`
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
+  background-image: url(${loginBg});
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+  color: #fff;
+  padding: 20px;
 `;
 
 const ProfilePage = () => {

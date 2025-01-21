@@ -1,59 +1,115 @@
 import React from "react";
 import PropTypes from "prop-types";
 import styled from "styled-components";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faWrench } from "@fortawesome/free-solid-svg-icons";
 
 const Card = styled.div`
+  background-color: transparent;
+  backdrop-filter: blur(11px);
+  border-radius: 11px;
+  color: #fff;
+  padding: 20px;
+  width: 100%;
+  max-width: 800px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
   display: flex;
   flex-direction: column;
-  align-items: center;
-  border: 1px solid black;
-  margin-top: 50px;
-  padding: 10px;
+  gap: 20px;
+  margin: 0 auto;
 `;
 
-const H1 = styled.h1`
-  text-align: center;
+const Header = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+`;
+
+const Title = styled.h1`
+  font-size: 1.8rem;
+  margin: 0;
 `;
 
 const EditProfileButton = styled.button`
-  width: 200px;
-  border: 1px solid black;
-  background-color: white;
-  padding: 5px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: transparent;
+  border: 1px solid #fff;
+  color: #fff;
+  padding: 8px 16px;
   border-radius: 5px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition:
+    background-color 0.3s,
+    color 0.3s;
 
   &:hover {
-    box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 12px;
-    cursor: pointer;
+    background-color: #fff;
+    color: #333;
   }
 `;
 
 const ProfileCardContainer = styled.div`
   display: flex;
-  margin-top: 80px;
-`;
-
-const DetailsContainer = styled.div`
-  display: flex;
-  flex-direction: column;
+  flex-wrap: wrap;
+  gap: 20px;
   align-items: flex-start;
-  flex: 1;
 `;
 
 const ProfileImage = styled.img`
-  height: 200px;
-  width: 200px;
   flex: 1;
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 3px solid #fff;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+`;
+
+const DetailsContainer = styled.div`
+  flex: 2;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+
+  h4 {
+    font-size: 1.2rem;
+    margin-bottom: 8px;
+    border-bottom: 2px solid #fff;
+    padding-bottom: 4px;
+  }
+
+  p {
+    font-size: 0.9rem;
+    color: #ddd;
+  }
+
+  span {
+    font-weight: bold;
+    color: #fff;
+  }
 `;
 
 const AboutContainer = styled.div`
+  flex: 2;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  flex: 1;
-  margin-left: 5px;
-  margin-right: 5px;
-  max-width: 60%;
+  gap: 8px;
+
+  h4 {
+    font-size: 1.2rem;
+    margin-bottom: 8px;
+    border-bottom: 2px solid #fff;
+    padding-bottom: 4px;
+  }
+
+  p {
+    font-size: 0.9rem;
+    color: #ddd;
+  }
 `;
 
 const ProfileCard = ({ profileData, venues, onEditClick }) => {
@@ -61,20 +117,14 @@ const ProfileCard = ({ profileData, venues, onEditClick }) => {
 
   return (
     <Card>
-      <H1>Profile</H1>
-      <EditProfileButton onClick={onEditClick} aria-label="Edit Profile">
-        Edit Profile
-      </EditProfileButton>
+      <Header>
+        <Title>Profile</Title>
+        <EditProfileButton onClick={onEditClick} aria-label="Edit Profile">
+          <FontAwesomeIcon icon={faWrench} />
+          Edit Profile
+        </EditProfileButton>
+      </Header>
       <ProfileCardContainer>
-        <DetailsContainer>
-          <h4>Details</h4>
-          <h5>Name:</h5>
-          <p>{profileData.name}</p>
-          <h5>Email: </h5>
-          <p>{profileData.email}</p>
-          <h5>Venues</h5>
-          <p>{venues.length}</p>
-        </DetailsContainer>
         <ProfileImage
           src={profileData.avatar || "/default-avatar.jpg"}
           alt={`${profileData.name}'s profile`}
@@ -82,8 +132,20 @@ const ProfileCard = ({ profileData, venues, onEditClick }) => {
             e.target.src = "/default-avatar.jpg";
           }}
         />
+        <DetailsContainer>
+          <h4>Details</h4>
+          <p>
+            <span>Name:</span> {profileData.name}
+          </p>
+          <p>
+            <span>Email:</span> {profileData.email}
+          </p>
+          <p>
+            <span>Venues:</span> {venues.length}
+          </p>
+        </DetailsContainer>
         <AboutContainer>
-          <h5>About</h5>
+          <h4>About</h4>
           <p>{profileData.bio || "No bio available"}</p>
         </AboutContainer>
       </ProfileCardContainer>
