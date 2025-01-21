@@ -18,8 +18,11 @@ const Container = styled.div`
   background-position: center;
   background-repeat: no-repeat;
   min-height: 100vh;
-  color: #fff;
   padding: 20px;
+`;
+
+const StyledH2 = styled.h2`
+  color: #fff;
 `;
 
 const ProfilePage = () => {
@@ -96,7 +99,7 @@ const ProfilePage = () => {
           venues={venues}
           onEditClick={() => setIsEditModalOpen(true)}
         />
-        <h2>My Venues</h2>
+        <StyledH2>My Venues</StyledH2>
         <UserVenues
           venues={venues}
           onVenueClick={(venue) => {
@@ -104,7 +107,7 @@ const ProfilePage = () => {
             setIsVenueModalOpen(true);
           }}
         />
-        <h2>My Bookings</h2>
+        <StyledH2>My Bookings</StyledH2>
       </Container>
       {/* Edit Profile Modal */}
       <EditProfileModal
