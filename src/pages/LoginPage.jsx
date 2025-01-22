@@ -19,6 +19,7 @@ const StyledContainer = styled.div`
   background-position: center;
   background-repeat: no-repeat;
   min-height: 100vh;
+  position: sticky;
 `;
 
 const StyledForm = styled.form`
