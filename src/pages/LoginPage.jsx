@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import loginBg from "../assets/images/loginpagebg2.png";
 import { Link } from "react-router-dom";
+import Header from "../components/Header";
 
 const StyledContainer = styled.div`
   display: flex;
@@ -18,6 +19,7 @@ const StyledContainer = styled.div`
   background-position: center;
   background-repeat: no-repeat;
   min-height: 100vh;
+  position: sticky;
 `;
 
 const StyledForm = styled.form`
@@ -156,35 +158,38 @@ const LoginForm = () => {
   };
 
   return (
-    <StyledContainer>
-      <StyledForm onSubmit={handleSubmit}>
-        <StyledH1>Log In</StyledH1>
-        {apiError && <ErrorMessage>{apiError}</ErrorMessage>}{" "}
-        {/* Errormsg from the API */}
-        <StyledLabel htmlFor="email">Email (Required)</StyledLabel>
-        <StyledInput
-          type="email"
-          id="email"
-          name="email"
-          isInvalid={!!errors.email}
-          placeholder="Enter your email here"
-        />
-        {errors.email && <ErrorMessage>{errors.email}</ErrorMessage>}
-        <StyledLabel htmlFor="password">Password (Required)</StyledLabel>
-        <StyledInput
-          type="password"
-          id="password"
-          name="password"
-          isInvalid={!!errors.password}
-          placeholder="Enter your password here"
-        />
-        {errors.password && <ErrorMessage>{errors.password}</ErrorMessage>}
-        <StyledButton type="submit">Log in</StyledButton>
-        <p>
-          Not yet a user? <StyledLink to="/register">Register</StyledLink>
-        </p>
-      </StyledForm>
-    </StyledContainer>
+    <div>
+      <Header />
+      <StyledContainer>
+        <StyledForm onSubmit={handleSubmit}>
+          <StyledH1>Log In</StyledH1>
+          {apiError && <ErrorMessage>{apiError}</ErrorMessage>}{" "}
+          {/* Errormsg from the API */}
+          <StyledLabel htmlFor="email">Email (Required)</StyledLabel>
+          <StyledInput
+            type="email"
+            id="email"
+            name="email"
+            isInvalid={!!errors.email}
+            placeholder="Enter your email here"
+          />
+          {errors.email && <ErrorMessage>{errors.email}</ErrorMessage>}
+          <StyledLabel htmlFor="password">Password (Required)</StyledLabel>
+          <StyledInput
+            type="password"
+            id="password"
+            name="password"
+            isInvalid={!!errors.password}
+            placeholder="Enter your password here"
+          />
+          {errors.password && <ErrorMessage>{errors.password}</ErrorMessage>}
+          <StyledButton type="submit">Log in</StyledButton>
+          <p>
+            Not yet a user? <StyledLink to="/register">Register</StyledLink>
+          </p>
+        </StyledForm>
+      </StyledContainer>
+    </div>
   );
 };
 
