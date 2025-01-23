@@ -120,11 +120,6 @@ const FromDate = styled.div`
   flex-direction: column;
 `;
 
-const EndDate = styled.div`
-  display: flex;
-  flex-direction: column;
-`;
-
 const VenueModal = ({ venue, isOpen, onClose }) => {
   if (!isOpen) return null;
 

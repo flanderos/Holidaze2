@@ -3,9 +3,10 @@ import styled from "styled-components";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import VenueList from "../components/VenueList";
+import loginBg from "../assets/images/loginpagebg2.png";
 
 const StyledSection = styled.section`
-  background-color: #fff;
+  background-color: rgb(209, 209, 209);
   display: flex;
   justify-content: center;
   align-items: center;
