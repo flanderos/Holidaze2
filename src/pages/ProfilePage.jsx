@@ -7,6 +7,7 @@ import VenueModal from "../components/Modal";
 import { API_URL, API_KEY } from "../config";
 import styled from "styled-components";
 import loginBg from "../assets/images/loginpagebg2.png";
+import UserBookings from "../components/UserBookings";
 
 const Container = styled.div`
   display: flex;
@@ -108,6 +109,7 @@ const ProfilePage = () => {
           }}
         />
         <StyledH2>My Bookings</StyledH2>
+        <UserBookings />
       </Container>
       {/* Edit Profile Modal */}
       <EditProfileModal
