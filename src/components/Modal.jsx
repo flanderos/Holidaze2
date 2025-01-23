@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
+import VenueCalendar from "../components/VenueCalendar";
+import BookingForm from "./BookingForm";
 
 const Overlay = styled.div`
   position: fixed;
@@ -103,24 +105,24 @@ const Label = styled.span`
   font-weight: 600;
 `;
 
-const VisitButton = styled.button`
-  width: 100%;
-  padding: 0.5rem 1rem;
-  background-color: #e5e7eb;
-  color: black;
-  border: none;
-  border-radius: 0.5rem;
-  cursor: pointer;
-  transition: background-color 0.2s;
-
-  &:hover {
-    background-color: #d1d5db;
-  }
-`;
-
 const LoadingText = styled.p`
   text-align: center;
   font-size: 1.1rem;
+`;
+
+const CalendarContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
+`;
+
+const FromDate = styled.div`
+  display: flex;
+  flex-direction: column;
+`;
+
+const EndDate = styled.div`
+  display: flex;
+  flex-direction: column;
 `;
 
 const VenueModal = ({ venue, isOpen, onClose }) => {
@@ -131,7 +133,7 @@ const VenueModal = ({ venue, isOpen, onClose }) => {
       <ModalContainer onClick={(e) => e.stopPropagation()}>
         <CloseButton onClick={onClose}>&times;</CloseButton>
         <Content>
-          {!venue && <LoadingText>Laster inn...</LoadingText>}
+          {!venue && <LoadingText>Loading...</LoadingText>}
 
           {venue && (
             <>
@@ -147,43 +149,42 @@ const VenueModal = ({ venue, isOpen, onClose }) => {
 
               <Grid>
                 <div>
-                  <Label>Pris:</Label>
+                  <Label>Price:</Label>
                   <p>${venue.data.price}</p>
                 </div>
                 <div>
-                  <Label>Maks gjester:</Label>
+                  <Label>Max guests:</Label>
                   <p>{venue.data.maxGuests}</p>
                 </div>
                 <div>
-                  <Label>Vurdering:</Label>
+                  <Label>Rating:</Label>
                   <p>{venue.data.rating || "N/A"}</p>
                 </div>
               </Grid>
 
               <InfoSection>
-                <SectionTitle>Fasiliteter:</SectionTitle>
+                <SectionTitle>Facilities:</SectionTitle>
                 <Grid>
                   <p>
-                    <Label>WiFi:</Label> {venue.data.meta?.wifi ? "Ja" : "Nei"}
+                    <Label>WiFi:</Label> {venue.data.meta?.wifi ? "Yes" : "No"}
                   </p>
                   <p>
-                    <Label>Parkering:</Label>{" "}
-                    {venue.data.meta?.parking ? "Ja" : "Nei"}
+                    <Label>Parking:</Label>{" "}
+                    {venue.data.meta?.parking ? "Yes" : "No"}
                   </p>
                   <p>
-                    <Label>Frokost:</Label>{" "}
-                    {venue.data.meta?.breakfast ? "Ja" : "Nei"}
+                    <Label>Breakfest?:</Label>{" "}
+                    {venue.data.meta?.breakfast ? "Yes" : "No"}
                   </p>
                   <p>
-                    <Label>Kjæledyr:</Label>{" "}
-                    {venue.data.meta?.pets ? "Ja" : "Nei"}
+                    <Label>Pets?:</Label> {venue.data.meta?.pets ? "Yes" : "No"}
                   </p>
                 </Grid>
               </InfoSection>
 
               {venue.data.location && (
                 <InfoSection>
-                  <SectionTitle>Beliggenhet:</SectionTitle>
+                  <SectionTitle>Where:</SectionTitle>
                   <p>
                     {venue.data.location.address || "N/A"},{" "}
                     {venue.data.location.city || "N/A"},{" "}
@@ -194,19 +195,32 @@ const VenueModal = ({ venue, isOpen, onClose }) => {
 
               {venue.data.owner && (
                 <InfoSection>
-                  <SectionTitle>Eier:</SectionTitle>
+                  <SectionTitle>Owner:</SectionTitle>
                   <p>
-                    <Label>Navn:</Label> {venue.data.owner.name}
+                    <Label>Name:</Label> {venue.data.owner.name}
                   </p>
                   <p>
-                    <Label>E-post:</Label> {venue.data.owner.email}
+                    <Label>Email:</Label> {venue.data.owner.email}
                   </p>
                 </InfoSection>
               )}
 
-              <VisitButton>Besøk</VisitButton>
+              <CalendarContainer>
+                <FromDate>
+                  <h3>Start date</h3>
+                  <VenueCalendar />
+                </FromDate>
+              </CalendarContainer>
             </>
           )}
+          <BookingForm
+            venueId={venue.data.id}
+            maxGuests={venue.data.maxGuests}
+            onClose={onClose}
+            onBookingSuccess={(newBooking) =>
+              console.log("Booking successful:", newBooking)
+            }
+          />
         </Content>
       </ModalContainer>
     </Overlay>

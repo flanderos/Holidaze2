@@ -1,77 +1,149 @@
 import React, { useState } from "react";
-import Calendar from "react-calendar";
-import "react-calendar/dist/Calendar.css";
 import styled from "styled-components";
 
-const CalendarWrapper = styled.div`
-  .react-calendar {
-    width: 100%;
-    max-width: 600px;
-    margin: auto;
-    border: none;
-    border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  }
+// Styled components
+const CalendarContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+  font-family: poppins, sans-serif;
+`;
 
-  .booked-date {
-    background-color: #f8d7da !important;
-    color: #721c24 !important;
-    pointer-events: none;
-    opacity: 0.6;
-  }
+const CalendarHeader = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  max-width: 400px;
+  margin-bottom: 10px;
+`;
 
-  .react-calendar__tile--active {
-    background-color: #007bff !important;
-    color: white !important;
-  }
+const MonthYear = styled.h2`
+  margin: 0;
+`;
 
-  .react-calendar__tile:enabled:hover {
-    background-color: #e6f3ff !important;
+const NavigationButton = styled.button`
+  padding: 5px 10px;
+  font-size: 16px;
+  border: none;
+  background-color: #007bff;
+  color: white;
+  border-radius: 5px;
+  cursor: pointer;
+
+  &:hover {
+    background-color: #0056b3;
   }
 `;
 
-const VenueCalendar = ({ bookings, onDateSelect }) => {
-  const [selectedDates, setSelectedDates] = useState([]);
+const DaysGrid = styled.div`
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 5px;
+  width: 100%;
+  max-width: 400px;
+`;
 
-  const isDateBooked = (date) => {
-    return bookings.some((booking) => {
-      const start = new Date(booking.dateFrom);
-      const end = new Date(booking.dateTo);
-      return date >= start && date <= end;
-    });
-  };
+const Day = styled.div`
+  width: 100%;
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  font-size: 14px;
+  background-color: ${(props) => (props.isCurrentDay ? "#007bff" : "white")};
+  color: ${(props) => (props.isCurrentDay ? "white" : "black")};
+  font-weight: ${(props) => (props.isCurrentDay ? "bold" : "normal")};
 
-  const tileClassName = ({ date, view }) => {
-    if (view === "month" && isDateBooked(date)) {
-      return "booked-date";
+  &:hover {
+    background-color: ${(props) =>
+      props.isCurrentDay ? "#0056b3" : "#f1f1f1"};
+    cursor: pointer;
+  }
+`;
+
+const Weekday = styled.div`
+  font-weight: bold;
+  text-align: center;
+`;
+
+const weekDays = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
+
+const Calendar = () => {
+  const [currentDate, setCurrentDate] = useState(new Date());
+
+  const getDaysInMonth = (year, month) => {
+    const date = new Date(year, month, 1);
+    const days = [];
+
+    // Add blank days for the first week
+    const firstDayIndex = date.getDay();
+    for (let i = 0; i < firstDayIndex; i++) {
+      days.push(null);
     }
-    return null;
-  };
 
-  const tileDisabled = ({ date }) => {
-    return isDateBooked(date);
-  };
-
-  const handleDateChange = (dates) => {
-    if (Array.isArray(dates) && dates.every((date) => date instanceof Date)) {
-      setSelectedDates(dates);
-    } else {
-      console.error("Invalid dates:", dates);
+    // Add all days of the month
+    while (date.getMonth() === month) {
+      days.push(new Date(date));
+      date.setDate(date.getDate() + 1);
     }
+
+    return days;
   };
+
+  const days = getDaysInMonth(
+    currentDate.getFullYear(),
+    currentDate.getMonth(),
+  );
+
+  const handlePrevMonth = () => {
+    setCurrentDate(
+      new Date(currentDate.getFullYear(), currentDate.getMonth() - 1),
+    );
+  };
+
+  const handleNextMonth = () => {
+    setCurrentDate(
+      new Date(currentDate.getFullYear(), currentDate.getMonth() + 1),
+    );
+  };
+
+  const SetDate = () => {};
 
   return (
-    <CalendarWrapper>
-      <Calendar
-        onChange={handleDateChange}
-        value={selectedDates}
-        selectRange={true}
-        tileClassName={tileClassName}
-        tileDisabled={tileDisabled}
-        minDate={new Date()}
-      />
-    </CalendarWrapper>
+    <CalendarContainer>
+      <CalendarHeader>
+        <NavigationButton onClick={handlePrevMonth}>&lt;</NavigationButton>
+        <MonthYear>
+          {currentDate.toLocaleString("default", {
+            month: "long",
+          })}{" "}
+          {currentDate.getFullYear()}
+        </MonthYear>
+        <NavigationButton onClick={handleNextMonth}>&gt;</NavigationButton>
+      </CalendarHeader>
+      <DaysGrid>
+        {weekDays.map((day) => (
+          <Weekday key={day}>{day}</Weekday>
+        ))}
+        {days.map((day, index) =>
+          day ? (
+            <Day
+              key={index}
+              isCurrentDay={day.toDateString() === new Date().toDateString()}
+            >
+              {day.getDate()}
+            </Day>
+          ) : (
+            <Day key={index} />
+          ),
+        )}
+      </DaysGrid>
+    </CalendarContainer>
   );
 };
 
-export default VenueCalendar;
+export default Calendar;
