@@ -6,6 +6,7 @@ const BookingFormContainer = styled.form`
   display: flex;
   flex-direction: column;
   gap: 10px;
+  margin-top: 20px;
 `;
 
 const Input = styled.input`
@@ -37,11 +38,15 @@ const BookingForm = ({ venueId, maxGuests, onClose, onBookingSuccess }) => {
   const [endDate, setEndDate] = useState("");
   const [guests, setGuests] = useState(1);
   const [error, setError] = useState("");
-  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleBooking = async (e) => {
     e.preventDefault();
     const token = localStorage.getItem("token");
+
+    if (!startDate || !endDate || guests <= 0) {
+      setError("All fields must be filled correctly.");
+      return;
+    }
 
     try {
       const response = await fetch(`${API_URL}/bookings`, {
@@ -59,16 +64,19 @@ const BookingForm = ({ venueId, maxGuests, onClose, onBookingSuccess }) => {
         }),
       });
 
-      if (response.ok) {
-        const newBooking = await response.json();
-        alert("Booking successful!");
-        onBookingSuccess(newBooking.data);
-        onClose();
-      } else {
-        console.error("Booking failed");
+      if (!response.ok) {
+        const errorResponse = await response.json();
+        console.error("Error response:", errorResponse);
+        throw new Error("Booking failed.");
       }
+
+      const newBooking = await response.json();
+      alert("Booking successful!");
+      onBookingSuccess(newBooking.data);
+      onClose();
     } catch (error) {
-      console.error("Error booking venue:", error);
+      console.error("Booking failed:", error);
+      setError("An error occurred while booking. Please try again.");
     }
   };
 
@@ -105,9 +113,7 @@ const BookingForm = ({ venueId, maxGuests, onClose, onBookingSuccess }) => {
         required
       />
       {error && <ErrorMessage>{error}</ErrorMessage>}
-      <SubmitButton type="submit" disabled={isSubmitting}>
-        {isSubmitting ? "Booking..." : "Book Venue"}
-      </SubmitButton>
+      <SubmitButton type="submit">Book Venue</SubmitButton>
     </BookingFormContainer>
   );
 };
