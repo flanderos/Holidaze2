@@ -3,6 +3,7 @@ import Header from "../components/Header";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import loginBg from "../assets/images/loginpagebg2.png";
+import PageTitle from "../../src/utils/PageTitle";
 
 const StyledContainer = styled.div`
   background-color: #fff;
@@ -147,6 +148,7 @@ const RegisterPage = () => {
   return (
     <>
       <Header title="Holidaze" />
+      <PageTitle title="Holidaze Register" />
       <StyledContainer>
         <StyledForm onSubmit={handleSubmit}>
           <StyledH1>Register User</StyledH1>
