@@ -9,6 +9,7 @@ import styled from "styled-components";
 import loginBg from "../assets/images/loginpagebg2.png";
 import UserBookings from "../components/UserBookings";
 import PageTitle from "../../src/utils/PageTitle";
+import CreateVenueForm from "../components/CreateVenueForm";
 
 const Container = styled.div`
   display: flex;
@@ -127,6 +128,7 @@ const ProfilePage = () => {
           venues={venues}
           onEditClick={() => setIsEditModalOpen(true)}
         />
+        <CreateVenueForm />
 
         {/* Button to Become a Venue Manager */}
         {!isVenueManager && (
