@@ -1,0 +1,11 @@
+.p-datepicker-calendar .p-disabled {
+  background-color: #f0f0f0 !important;
+  color: #ff0000 !important;
+  text-decoration: line-through !important;
+  opacity: 0.6 !important;
+}
+
+.p-datepicker-calendar .p-disabled:hover {
+  background-color: #e0e0e0 !important;
+  cursor: not-allowed !important;
+}

@@ -24,7 +24,8 @@ const StyledForm = styled.form`
   background-color: transparent;
   backdrop-filter: blur(10px);
   color: #fff;
-  width: 300px;
+  width: 50%;
+  max-width: 800px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -32,6 +33,14 @@ const StyledForm = styled.form`
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   padding: 40px;
   border-radius: 10px;
+
+    @media (max-width: 1080px) {
+  
+    width: 90%;
+  }
+}
+
+  
 `;
 
 const StyledH1 = styled.h1`
