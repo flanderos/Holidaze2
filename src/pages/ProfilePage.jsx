@@ -44,6 +44,32 @@ const RegisterVenueManagerButton = styled.button`
   }
 `;
 
+const ToggleButton = styled.button`
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  margin: 20px 0;
+
+  &:hover {
+    background-color: #0056b3;
+  }
+`;
+
+const DropdownContainer = styled.div`
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px;
+  display: ${({ isOpen }) => (isOpen ? "block" : "none")};
+  transition: all 0.3s ease-in-out;
+`;
+
 const ProfilePage = () => {
   const [profileData, setProfileData] = useState(null);
   const [venues, setVenues] = useState([]);
@@ -56,6 +82,7 @@ const ProfilePage = () => {
   const [isVenueManager, setIsVenueManager] = useState(
     localStorage.getItem("isVenueManager") === "true",
   );
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const fetchProfileData = async () => {
     const userData = JSON.parse(localStorage.getItem("userData"));
@@ -128,9 +155,16 @@ const ProfilePage = () => {
           venues={venues}
           onEditClick={() => setIsEditModalOpen(true)}
         />
-        <CreateVenueForm />
 
-        {/* Button to Become a Venue Manager */}
+        <ToggleButton onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
+          {isDropdownOpen ? "Cancel Venue Creation" : "Create a New Venue"}
+        </ToggleButton>
+
+        {/* Dropdown for Create Venue Form */}
+        <DropdownContainer isOpen={isDropdownOpen}>
+          <CreateVenueForm />
+        </DropdownContainer>
+
         {!isVenueManager && (
           <RegisterVenueManagerButton onClick={handleBecomeVenueManager}>
             Become a Venue Manager

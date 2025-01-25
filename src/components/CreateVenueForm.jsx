@@ -3,41 +3,78 @@ import styled from "styled-components";
 import { API_URL, API_KEY } from "../config";
 
 const StyledForm = styled.form`
+  background-color: transparent;
+  backdrop-filter: blur(10px);
+  color: #fff;
+  min-width: 300px;
+  margin-top: 100px;
   display: flex;
+  width: 50%;
   flex-direction: column;
-  gap: 15px;
-  max-width: 600px;
-  margin: 0 auto;
+  justify-content: center;
+  align-items: flex-start;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   padding: 20px;
-  background-color: #f9f9f9;
   border-radius: 10px;
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px;
 `;
 
 const StyledInput = styled.input`
   padding: 10px;
-  border: 1px solid #ccc;
+  border: 1px solid ${(props) => (props.isInvalid ? "red" : "#ccc")};
   border-radius: 5px;
-  font-size: 16px;
+  font-family: poppins;
+  width: 97%;
+  padding: 10px;
+  margin: 10px;
+  outline: none;
+
+  &:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  }
+  &::placeholder {
+    color: #aaa;
+    font-style: italic;
+  }
 `;
 
 const StyledTextarea = styled.textarea`
   padding: 10px;
-  border: 1px solid #ccc;
+  border: 1px solid ${(props) => (props.isInvalid ? "red" : "#ccc")};
   border-radius: 5px;
-  font-size: 16px;
+  font-family: poppins;
+  width: 97%;
+  padding: 10px;
+  margin: 10px;
+  outline: none;
+
+  &:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  }
+  &::placeholder {
+    color: #aaa;
+    font-style: italic;
+  }
 `;
 
 const StyledButton = styled.button`
   padding: 10px;
-  background-color: #007bff;
-  color: white;
+  color: black;
+  background-color: var(--color-primary);
   border: none;
   border-radius: 5px;
+  font-size: 20px;
+  font-family: poppins;
   cursor: pointer;
+  width: 97%;
+  margin: 30px 0px 10px 10px;
+  transition: 0.3s;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 
   &:hover {
-    background-color: #0056b3;
+    text-decoration: underline;
+  }
   }
 `;
 
