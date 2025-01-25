@@ -164,9 +164,7 @@ const VenueList = () => {
     }
 
     try {
-      const response = await fetch(
-        `${API_URL}/holidaze/venues/${id}?_bookings=true`,
-      );
+      const response = await fetch(`${API_URL}/venues/${id}?_bookings=true`);
       if (!response.ok) {
         throw new Error("Failed to fetch venue details");
       }
