@@ -55,6 +55,16 @@ const StyledInput = styled.input`
   font-family: poppins;
   width: 90%;
   margin: 10px;
+  outline: none;
+
+  &:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  }
+  &::placeholder {
+    color: #aaa;
+    font-style: italic;
+  }
 `;
 
 const StyledTextarea = styled.textarea`
@@ -70,6 +80,52 @@ const StyledLabel = styled.label`
   font-size: 14px;
   font-weight: bold;
   padding: 5px;
+`;
+
+const CheckboxContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 10px 0;
+`;
+
+const StyledCheckbox = styled.input`
+  width: 20px;
+  height: 20px;
+  border: 2px solid #ffd446;
+  border-radius: 4px;
+  appearance: none;
+  outline: none;
+  cursor: pointer;
+  transition:
+    background-color 0.3s ease,
+    border-color 0.3s ease;
+
+  &:checked {
+    background-color: #ffd446;
+    border-color: #ffd446;
+  }
+
+  &:checked::before {
+    content: "✔";
+    display: block;
+    color: black;
+    font-size: 14px;
+    text-align: center;
+    line-height: 20px;
+  }
+
+  &:hover {
+    border-color: #ffd446;
+  }
+`;
+
+const StyledCheckboxLabel = styled.label`
+  font-size: 14px;
+  font-weight: 500;
+  color: #fff;
+  cursor: pointer;
+  transition: color 0.3s ease;
 `;
 
 const StyledButton = styled.button`
@@ -166,6 +222,7 @@ const RegisterPage = () => {
             type="text"
             id="username"
             name="username"
+            placeholder="enter your username here..."
             isInvalid={!!errors.username}
           />
           {errors.username && <ErrorMessage>{errors.username}</ErrorMessage>}
@@ -175,6 +232,7 @@ const RegisterPage = () => {
             type="email"
             id="email"
             name="email"
+            placeholder="enter your email here... @stud.noroff.no or noroff.no"
             isInvalid={!!errors.email}
           />
           {errors.email && <ErrorMessage>{errors.email}</ErrorMessage>}
@@ -184,6 +242,7 @@ const RegisterPage = () => {
             type="password"
             id="password"
             name="password"
+            placeholder="enter your password here..."
             isInvalid={!!errors.password}
           />
           {errors.password && <ErrorMessage>{errors.password}</ErrorMessage>}
@@ -198,12 +257,16 @@ const RegisterPage = () => {
           <StyledInput type="url" id="bannerUrl" name="bannerUrl" />
 
           <StyledLabel>
-            <StyledInput
-              type="checkbox"
-              id="venueManager"
-              name="venueManager"
-            />
-            Are you a Venue Manager?
+            <CheckboxContainer>
+              <StyledCheckbox
+                type="checkbox"
+                id="venueManager"
+                name="venueManager"
+              />
+              <StyledCheckboxLabel htmlFor="venueManager">
+                Are you a Venue Manager?
+              </StyledCheckboxLabel>
+            </CheckboxContainer>
           </StyledLabel>
 
           <StyledButton type="submit">Submit</StyledButton>
