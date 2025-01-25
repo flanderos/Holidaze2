@@ -10,6 +10,35 @@ const MainContainer = styled.div`
   padding: 20px;
 `;
 
+const SearchInput = styled.input`
+  width: 300px;
+  height: 40px;
+  border-radius: 8px;
+  border: 1px solid #ccc;
+  padding: 0 12px;
+  font-family: "Poppins", sans-serif;
+  font-size: 14px;
+  color: #333;
+  outline: none;
+  transition:
+    box-shadow 0.3s ease,
+    border-color 0.3s ease;
+
+  &:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  }
+
+  &::placeholder {
+    color: #aaa;
+    font-style: italic;
+  }
+
+  &:hover {
+    border-color: #007bff;
+  }
+`;
+
 const CardGrid = styled.div`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
@@ -77,8 +106,10 @@ const ErrorMessage = styled.p`
 
 const VenueList = () => {
   const [venues, setVenues] = useState([]);
+  const [filteredVenues, setFilteredVenues] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [searchTerm, setSearchTerm] = useState("");
   const [selectedVenue, setSelectedVenue] = useState(null);
 
   // Fetch all venues
@@ -102,6 +133,7 @@ const VenueList = () => {
           (a, b) => new Date(b.created) - new Date(a.created),
         );
         setVenues(sortedVenues);
+        setFilteredVenues(sortedVenues); // Initially, show all venues
       } catch (err) {
         setError("Error fetching venues. Please try again later.");
         console.error(err);
@@ -113,6 +145,17 @@ const VenueList = () => {
     fetchVenues();
   }, []);
 
+  // Filter venues based on the search term
+  const handleSearch = (e) => {
+    const term = e.target.value.toLowerCase();
+    setSearchTerm(term);
+
+    const filtered = venues.filter((venue) =>
+      venue.name?.toLowerCase().includes(term),
+    );
+    setFilteredVenues(filtered);
+  };
+
   // Fetch data for the "venuespecific" modal
   const fetchVenueDetails = async (id) => {
     if (!id) {
@@ -121,8 +164,6 @@ const VenueList = () => {
     }
 
     try {
-      const API_URL =
-        process.env.REACT_APP_API_URL || "https://v2.api.noroff.dev";
       const response = await fetch(
         `${API_URL}/holidaze/venues/${id}?_bookings=true`,
       );
@@ -141,8 +182,14 @@ const VenueList = () => {
 
   return (
     <MainContainer>
+      <SearchInput
+        type="text"
+        placeholder="Search venues by title..."
+        value={searchTerm}
+        onChange={handleSearch}
+      />
       <CardGrid>
-        {venues.map((venue) => (
+        {filteredVenues.map((venue) => (
           <VenueCard key={venue.id} onClick={() => fetchVenueDetails(venue.id)}>
             <VenueImage
               src={venue.media?.[0]?.url || "https://via.placeholder.com/300"}
