@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
-import VenueModal from "./Modal";
 import { API_URL, API_KEY } from "../config";
 import placeholder from "../assets/images/houseimagemissing.png";
 import UserBookingModal from "./UserBookingModal";
@@ -113,7 +112,7 @@ const UserBookings = () => {
       }
 
       const data = await response.json();
-      console.log(data);
+
       setBookings(data.data || []);
     } catch (err) {
       setError("Error fetching bookings. Please try again.");
@@ -126,10 +125,6 @@ const UserBookings = () => {
   useEffect(() => {
     fetchBookings();
   }, []);
-
-  const handleBookingClick = (booking) => {
-    setSelectedBooking(booking.venue);
-  };
 
   const closeModal = () => {
     setSelectedBooking(null);

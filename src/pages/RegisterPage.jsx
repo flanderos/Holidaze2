@@ -3,6 +3,7 @@ import Header from "../components/Header";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import loginBg from "../assets/images/loginpagebg2.png";
+import PageTitle from "../../src/utils/PageTitle";
 
 const StyledContainer = styled.div`
   background-color: #fff;
@@ -23,7 +24,8 @@ const StyledForm = styled.form`
   background-color: transparent;
   backdrop-filter: blur(10px);
   color: #fff;
-  width: 300px;
+  width: 50%;
+  max-width: 800px;
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -31,6 +33,14 @@ const StyledForm = styled.form`
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   padding: 40px;
   border-radius: 10px;
+
+    @media (max-width: 1080px) {
+  
+    width: 90%;
+  }
+}
+
+  
 `;
 
 const StyledH1 = styled.h1`
@@ -147,6 +157,7 @@ const RegisterPage = () => {
   return (
     <>
       <Header title="Holidaze" />
+      <PageTitle title="Holidaze Register" />
       <StyledContainer>
         <StyledForm onSubmit={handleSubmit}>
           <StyledH1>Register User</StyledH1>

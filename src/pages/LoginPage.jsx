@@ -7,6 +7,7 @@ import { faUser } from "@fortawesome/free-solid-svg-icons";
 import loginBg from "../assets/images/loginpagebg2.png";
 import { Link } from "react-router-dom";
 import Header from "../components/Header";
+import PageTitle from "../../src/utils/PageTitle";
 
 const StyledContainer = styled.div`
   display: flex;
@@ -160,6 +161,7 @@ const LoginForm = () => {
   return (
     <div>
       <Header />
+      <PageTitle title="Holidaze Log in" />
       <StyledContainer>
         <StyledForm onSubmit={handleSubmit}>
           <StyledH1>Log In</StyledH1>

@@ -8,6 +8,7 @@ import { API_URL, API_KEY } from "../config";
 import styled from "styled-components";
 import loginBg from "../assets/images/loginpagebg2.png";
 import UserBookings from "../components/UserBookings";
+import PageTitle from "../../src/utils/PageTitle";
 
 const Container = styled.div`
   display: flex;
@@ -94,6 +95,7 @@ const ProfilePage = () => {
   return (
     <>
       <Header />
+      <PageTitle title="Holidaze Profile" />
       <Container>
         <ProfileCard
           profileData={profileData}

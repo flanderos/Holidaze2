@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import VenueCalendar from "../components/VenueCalendar";
 import BookingForm from "./BookingForm";
+import { API_URL } from "../config";
 
 const Overlay = styled.div`
   position: fixed;
@@ -105,11 +106,6 @@ const Label = styled.span`
   font-weight: 600;
 `;
 
-const LoadingText = styled.p`
-  text-align: center;
-  font-size: 1.1rem;
-`;
-
 const CalendarContainer = styled.div`
   display: flex;
   justify-content: space-between;
@@ -121,6 +117,60 @@ const FromDate = styled.div`
 `;
 
 const VenueModal = ({ venue, isOpen, onClose }) => {
+  const [bookedDates, setBookedDates] = useState([]);
+  const [loadingDates, setLoadingDates] = useState(false);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    if (!isOpen || !venue?.data?.id) return;
+
+    const fetchBookedDates = async () => {
+      setLoadingDates(true);
+
+      try {
+        const token = localStorage.getItem("token");
+        const response = await fetch(
+          `${API_URL}/venues/${venue.data.id}?_bookings=true`,
+          {
+            headers: {
+              Authorization: `Bearer ${token}`,
+              "Content-Type": "application/json",
+            },
+          }
+        );
+
+        if (!response.ok) {
+          throw new Error("Failed to fetch bookings");
+        }
+
+        const data = await response.json();
+
+
+        const dates = data.data.bookings.map((booking) => {
+          const start = new Date(booking.dateFrom);
+          const end = new Date(booking.dateTo);
+          const bookedDateRange = [];
+
+
+          for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+            bookedDateRange.push(new Date(d));
+          }
+
+          return bookedDateRange;
+        }).flat();
+
+        setBookedDates(dates);
+      } catch (err) {
+        console.error("Error fetching bookings:", err);
+        setError("Unable to load booking dates.");
+      } finally {
+        setLoadingDates(false);
+      }
+    };
+
+    fetchBookedDates();
+  }, [isOpen, venue]);
+
   if (!isOpen) return null;
 
   return (
@@ -128,7 +178,7 @@ const VenueModal = ({ venue, isOpen, onClose }) => {
       <ModalContainer onClick={(e) => e.stopPropagation()}>
         <CloseButton onClick={onClose}>&times;</CloseButton>
         <Content>
-          {!venue && <LoadingText>Loading...</LoadingText>}
+          {!venue && <p>Loading...</p>}
 
           {venue && (
             <>
@@ -168,46 +218,28 @@ const VenueModal = ({ venue, isOpen, onClose }) => {
                     {venue.data.meta?.parking ? "Yes" : "No"}
                   </p>
                   <p>
-                    <Label>Breakfest?:</Label>{" "}
+                    <Label>Breakfast:</Label>{" "}
                     {venue.data.meta?.breakfast ? "Yes" : "No"}
                   </p>
                   <p>
-                    <Label>Pets?:</Label> {venue.data.meta?.pets ? "Yes" : "No"}
+                    <Label>Pets:</Label> {venue.data.meta?.pets ? "Yes" : "No"}
                   </p>
                 </Grid>
               </InfoSection>
 
-              {venue.data.location && (
-                <InfoSection>
-                  <SectionTitle>Where:</SectionTitle>
-                  <p>
-                    {venue.data.location.address || "N/A"},{" "}
-                    {venue.data.location.city || "N/A"},{" "}
-                    {venue.data.location.country || "N/A"}
-                  </p>
-                </InfoSection>
-              )}
-
-              {venue.data.owner && (
-                <InfoSection>
-                  <SectionTitle>Owner:</SectionTitle>
-                  <p>
-                    <Label>Name:</Label> {venue.data.owner.name}
-                  </p>
-                  <p>
-                    <Label>Email:</Label> {venue.data.owner.email}
-                  </p>
-                </InfoSection>
-              )}
-
               <CalendarContainer>
                 <FromDate>
-                  <h3>Start date</h3>
-                  <VenueCalendar />
+                  <h3>Unavailable Dates</h3>
+                  {loadingDates && <p>Loading dates...</p>}
+                  {error && <p style={{ color: "red" }}>{error}</p>}
+                  {!loadingDates && !error && (
+                    <VenueCalendar bookedDates={bookedDates} />
+                  )}
                 </FromDate>
               </CalendarContainer>
             </>
           )}
+
           <BookingForm
             venueId={venue.data.id}
             maxGuests={venue.data.maxGuests}
@@ -216,7 +248,9 @@ const VenueModal = ({ venue, isOpen, onClose }) => {
               console.log("Booking successful:", newBooking)
             }
           />
+
         </Content>
+
       </ModalContainer>
     </Overlay>
   );
