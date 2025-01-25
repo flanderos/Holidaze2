@@ -27,6 +27,22 @@ const StyledH2 = styled.h2`
   color: #fff;
 `;
 
+const RegisterVenueManagerButton = styled.button`
+  margin: 20px 0;
+  padding: 10px 20px;
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #357abd;
+  }
+`;
+
 const ProfilePage = () => {
   const [profileData, setProfileData] = useState(null);
   const [venues, setVenues] = useState([]);
@@ -36,6 +52,9 @@ const ProfilePage = () => {
   const [isVenueModalOpen, setIsVenueModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isVenueManager, setIsVenueManager] = useState(
+    localStorage.getItem("isVenueManager") === "true",
+  );
 
   const fetchProfileData = async () => {
     const userData = JSON.parse(localStorage.getItem("userData"));
@@ -84,6 +103,12 @@ const ProfilePage = () => {
     }
   };
 
+  const handleBecomeVenueManager = () => {
+    localStorage.setItem("isVenueManager", "true");
+    setIsVenueManager(true);
+    alert("You are now a Venue Manager!");
+  };
+
   useEffect(() => {
     fetchProfileData();
   }, []);
@@ -102,6 +127,14 @@ const ProfilePage = () => {
           venues={venues}
           onEditClick={() => setIsEditModalOpen(true)}
         />
+
+        {/* Button to Become a Venue Manager */}
+        {!isVenueManager && (
+          <RegisterVenueManagerButton onClick={handleBecomeVenueManager}>
+            Become a Venue Manager
+          </RegisterVenueManagerButton>
+        )}
+
         <StyledH2>My Venues</StyledH2>
         <UserVenues
           venues={venues}
@@ -113,6 +146,7 @@ const ProfilePage = () => {
         <StyledH2>My Bookings</StyledH2>
         <UserBookings />
       </Container>
+
       {/* Edit Profile Modal */}
       <EditProfileModal
         isOpen={isEditModalOpen}
@@ -123,6 +157,7 @@ const ProfilePage = () => {
           localStorage.setItem("userData", JSON.stringify(updatedData));
         }}
       />
+
       {/* Venue Modal */}
       <VenueModal
         venue={selectedVenue}
