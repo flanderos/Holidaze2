@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import VenueModal from "./Modal";
+import EditVenueForm from "./EditVenueForm"; // Nytt komponent
 import { API_URL, API_KEY } from "../config";
 
 const VenueContainer = styled.section`
@@ -72,6 +73,35 @@ const VenueDetails = styled.div`
   }
 `;
 
+const ButtonGroup = styled.div`
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+`;
+
+const ActionButton = styled.button`
+  padding: 8px 12px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 14px;
+  transition: 0.3s ease;
+
+  &:hover {
+    opacity: 0.8;
+  }
+
+  &.edit {
+    background-color: #4caf50;
+    color: white;
+  }
+
+  &.delete {
+    background-color: #f44336;
+    color: white;
+  }
+`;
+
 const ErrorMessage = styled.p`
   color: #dc3545;
   background-color: #f8d7da;
@@ -79,27 +109,11 @@ const ErrorMessage = styled.p`
   border-radius: 5px;
 `;
 
-const DeleteButton = styled.button`
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  background-color: red;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  padding: 5px 10px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-
-  &:hover {
-    background-color: darkred;
-  }
-`;
-
 const UserVenues = ({ venues, onVenueDeleted }) => {
   const [selectedVenue, setSelectedVenue] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [isEditModalOpen, setIsEditModalOpen] = useState(false);
 
   const fetchVenueDetails = async (id) => {
     if (!id) {
@@ -133,6 +147,16 @@ const UserVenues = ({ venues, onVenueDeleted }) => {
     }
   };
 
+  const handleEdit = (venue) => {
+    setSelectedVenue(venue);
+    setIsEditModalOpen(true);
+  };
+
+  const closeEditModal = () => {
+    setIsEditModalOpen(false);
+    setSelectedVenue(null);
+  };
+
   const handleDelete = async (venueId) => {
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this venue?",
@@ -155,19 +179,11 @@ const UserVenues = ({ venues, onVenueDeleted }) => {
       }
 
       alert("Venue deleted successfully!");
-      onVenueDeleted(venueId); // Update parent state
+      onVenueDeleted(venueId);
     } catch (err) {
       console.error("Error deleting venue:", err);
       alert("An error occurred while deleting the venue.");
     }
-  };
-
-  const handleVenueClick = (venueId) => {
-    fetchVenueDetails(venueId);
-  };
-
-  const closeModal = () => {
-    setSelectedVenue(null);
   };
 
   if (!venues || venues.length === 0) {
@@ -182,7 +198,7 @@ const UserVenues = ({ venues, onVenueDeleted }) => {
             <img
               src={venue.media?.[0]?.url || "https://via.placeholder.com/300"}
               alt={venue.name}
-              onClick={() => handleVenueClick(venue.id)}
+              onClick={() => fetchVenueDetails(venue.id)}
             />
             <VenueDetails>
               <h4>{venue.name}</h4>
@@ -194,20 +210,30 @@ const UserVenues = ({ venues, onVenueDeleted }) => {
               <p>Price: ${venue.price}</p>
               <p>Max Guests: {venue.maxGuests}</p>
             </VenueDetails>
-            <DeleteButton onClick={() => handleDelete(venue.id)}>
-              Delete
-            </DeleteButton>
+            <ButtonGroup>
+              <ActionButton className="edit" onClick={() => handleEdit(venue)}>
+                Edit
+              </ActionButton>
+              <ActionButton
+                className="delete"
+                onClick={() => handleDelete(venue.id)}
+              >
+                Delete
+              </ActionButton>
+            </ButtonGroup>
           </VenueCard>
         ))}
       </VenueContainer>
 
       {loading && <p>Loading venue details...</p>}
       {error && <ErrorMessage>{error}</ErrorMessage>}
-      {selectedVenue && (
-        <VenueModal
+
+      {/* Edit Venue Modal */}
+      {isEditModalOpen && (
+        <EditVenueForm
           venue={selectedVenue}
-          isOpen={Boolean(selectedVenue)}
-          onClose={closeModal}
+          onClose={closeEditModal}
+          onUpdate={() => window.location.reload()} // Refresh after editing
         />
       )}
     </>
