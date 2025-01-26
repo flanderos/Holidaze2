@@ -1,7 +1,6 @@
 import React from "react";
 import NavBar from "./NavBar";
 import styled from "styled-components";
-import { getUserNameFromLocalStorage } from "../api/FetchUserName";
 
 const StyledHeader = styled.header`
   background-color: var(--color-primary);

@@ -5,7 +5,6 @@ import { useAuth } from "../context/AuthContext";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faHome } from "@fortawesome/free-solid-svg-icons";
 import { faStar } from "@fortawesome/free-solid-svg-icons";
-import { faCalendarCheck } from "@fortawesome/free-solid-svg-icons";
 import { faUser } from "@fortawesome/free-solid-svg-icons";
 import { faPersonWalkingArrowRight } from "@fortawesome/free-solid-svg-icons";
 
@@ -85,7 +84,6 @@ const Hamburger = styled.div`
   }
 `;
 
-// this is for the dark and blurry background when the menu is activated
 const Backdrop = styled.div`
   position: fixed;
   top: 0;
