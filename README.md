@@ -1,7 +1,9 @@
-Holidaze - Accommodation Booking Front-End
+# Holidaze - Accommodation Booking Front-End
+
+
 Welcome to Holidaze, an accommodation booking platform. This repository contains the front-end application built as part of the Project Exam 2. The goal of this project is to deliver a modern and user-friendly platform for booking and managing venues using the Holidaze API. The platform caters to both customers and venue managers, with dedicated functionality for each user type.
 
-📖 Table of Contents
+# 📖 Table of Contents
 Project Goal
 Features
 Technical Specifications
