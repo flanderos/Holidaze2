@@ -77,6 +77,7 @@ const EditProfileModal = ({ isOpen, onClose, profileData, onUpdate }) => {
   const [updatedProfile, setUpdatedProfile] = useState({
     avatar: "",
     bio: "",
+    profilePicture: "",
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState(null);
@@ -86,6 +87,7 @@ const EditProfileModal = ({ isOpen, onClose, profileData, onUpdate }) => {
       setUpdatedProfile({
         avatar: profileData.avatar || "",
         bio: profileData.bio || "",
+        profilePicture: profileData.profilePicture || "",
       });
     }
   }, [profileData]);
@@ -103,6 +105,26 @@ const EditProfileModal = ({ isOpen, onClose, profileData, onUpdate }) => {
     }
 
     try {
+      const body = {};
+
+      if (updatedProfile.avatar) {
+        body.avatar = {
+          url: updatedProfile.avatar,
+          alt: `${profileData.name}'s avatar`,
+        };
+      }
+
+      if (updatedProfile.banner) {
+        body.banner = {
+          url: updatedProfile.banner,
+          alt: `${profileData.name}'s banner`,
+        };
+      }
+
+      if (updatedProfile.bio) {
+        body.bio = updatedProfile.bio;
+      }
+
       const response = await fetch(`${API_URL}/profiles/${profileData.name}`, {
         method: "PUT",
         headers: {
@@ -110,12 +132,7 @@ const EditProfileModal = ({ isOpen, onClose, profileData, onUpdate }) => {
           "X-Noroff-API-Key": API_KEY,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          avatar: updatedProfile.avatar
-            ? { url: updatedProfile.avatar }
-            : undefined,
-          bio: updatedProfile.bio,
-        }),
+        body: JSON.stringify(body),
       });
 
       if (!response.ok) {
@@ -125,8 +142,9 @@ const EditProfileModal = ({ isOpen, onClose, profileData, onUpdate }) => {
       const updatedData = await response.json();
       onUpdate({
         ...profileData,
-        avatar: updatedProfile.avatar,
-        bio: updatedProfile.bio,
+        avatar: updatedData.data.avatar?.url || profileData.avatar,
+        banner: updatedData.data.banner?.url || profileData.banner,
+        bio: updatedData.data.bio || profileData.bio,
       });
       onClose();
     } catch (error) {
@@ -148,7 +166,7 @@ const EditProfileModal = ({ isOpen, onClose, profileData, onUpdate }) => {
         <h2>Edit Profile</h2>
         {error && <p className="error-message">{error}</p>}
         <ModalForm onSubmit={handleEditProfile}>
-          <label htmlFor="avatar">Profile Picture URL:</label>
+          <label htmlFor="avatar">Avatar URL:</label>
           <ModalInput
             type="url"
             id="avatar"
@@ -158,6 +176,18 @@ const EditProfileModal = ({ isOpen, onClose, profileData, onUpdate }) => {
             }
             disabled={isSubmitting}
           />
+
+          <label htmlFor="banner">Banner URL:</label>
+          <ModalInput
+            type="url"
+            id="banner"
+            value={updatedProfile.banner}
+            onChange={(e) =>
+              setUpdatedProfile({ ...updatedProfile, banner: e.target.value })
+            }
+            disabled={isSubmitting}
+          />
+
           <label htmlFor="bio">About:</label>
           <ModalTextArea
             id="bio"
@@ -168,6 +198,7 @@ const EditProfileModal = ({ isOpen, onClose, profileData, onUpdate }) => {
             }
             disabled={isSubmitting}
           />
+
           <ModalSubmitButton type="submit" disabled={isSubmitting}>
             {isSubmitting ? "Saving..." : "Save Changes"}
           </ModalSubmitButton>
@@ -183,6 +214,7 @@ EditProfileModal.propTypes = {
   profileData: PropTypes.shape({
     name: PropTypes.string.isRequired,
     avatar: PropTypes.string,
+    profilePicture: PropTypes.string,
     bio: PropTypes.string,
   }).isRequired,
   onUpdate: PropTypes.func.isRequired,

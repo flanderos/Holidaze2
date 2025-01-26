@@ -137,10 +137,41 @@ const ProfilePage = () => {
     }
   };
 
-  const handleBecomeVenueManager = () => {
-    localStorage.setItem("isVenueManager", "true");
-    setIsVenueManager(true);
-    alert("You are now a Venue Manager!");
+  const handleBecomeVenueManager = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const userData = JSON.parse(localStorage.getItem("userData"));
+
+      if (!token || !userData?.name) {
+        alert("Authentication error. Please log in again.");
+        return;
+      }
+
+      // Oppdater brukerens status i API-et
+      const response = await fetch(`${API_URL}/profiles/${userData.name}`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "X-Noroff-API-Key": API_KEY,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          venueManager: true,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to update venue manager status in API.");
+      }
+
+      const updatedUser = await response.json();
+      localStorage.setItem("isVenueManager", "true");
+      setIsVenueManager(true);
+      alert("You are now a Venue Manager!");
+    } catch (error) {
+      console.error("Error updating venue manager status:", error);
+      alert("An error occurred. Please try again.");
+    }
   };
 
   useEffect(() => {
