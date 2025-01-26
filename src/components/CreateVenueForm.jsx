@@ -5,11 +5,10 @@ import { API_URL, API_KEY } from "../config";
 const StyledForm = styled.form`
   background-color: transparent;
   backdrop-filter: blur(10px);
-  color: #fff;
   min-width: 300px;
   margin-top: 100px;
   display: flex;
-  width: 50%;
+  width: 100%;
   flex-direction: column;
   justify-content: center;
   align-items: flex-start;
@@ -47,6 +46,7 @@ const StyledTextarea = styled.textarea`
   padding: 10px;
   margin: 10px;
   outline: none;
+  resize: none;
 
   &:focus {
     border-color: #007bff;

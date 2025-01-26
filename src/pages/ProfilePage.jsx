@@ -45,16 +45,22 @@ const RegisterVenueManagerButton = styled.button`
 `;
 
 const ToggleButton = styled.button`
-  padding: 10px 20px;
-  background-color: #007bff;
-  color: white;
+  padding: 10px;
+  color: black;
+  background-color: var(--color-primary);
   border: none;
   border-radius: 5px;
-  font-size: 16px;
-  margin: 20px 0;
+  font-size: 20px;
+  font-family: poppins;
+  cursor: pointer;
+
+  margin: 30px 0px 10px 10px;
+  transition: 0.3s;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 
   &:hover {
-    background-color: #0056b3;
+    text-decoration: underline;
+  }
   }
 `;
 
