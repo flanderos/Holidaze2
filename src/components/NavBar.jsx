@@ -124,9 +124,6 @@ const NavBar = () => {
             Venues
             <FontAwesomeIcon icon={faStar} />
           </StyledLink>
-          <StyledLink to="/bookings">
-            Bookings <FontAwesomeIcon icon={faCalendarCheck} />
-          </StyledLink>
           <StyledLink to="/profile">
             Profile <FontAwesomeIcon icon={faUser} />
           </StyledLink>
