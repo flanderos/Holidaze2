@@ -85,6 +85,7 @@ const DropdownContainer = styled.div`
 const ProfilePage = () => {
   const [profileData, setProfileData] = useState(null);
   const [venues, setVenues] = useState([]);
+  // eslint-disable-next-line
   const [bookings, setBookings] = useState([]);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedVenue, setSelectedVenue] = useState(null);
@@ -170,6 +171,7 @@ const ProfilePage = () => {
         throw new Error("Failed to update venue manager status in API.");
       }
 
+      // eslint-disable-next-line
       const updatedUser = await response.json();
       localStorage.setItem("isVenueManager", "true");
       setIsVenueManager(true);
@@ -182,6 +184,7 @@ const ProfilePage = () => {
 
   useEffect(() => {
     fetchProfileData();
+    setSelectedVenue(null);
   }, []);
 
   if (isLoading) return <div>Loading...</div>;

@@ -2,8 +2,6 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
-import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faUser } from "@fortawesome/free-solid-svg-icons";
 import loginBg from "../assets/images/loginpagebg2.png";
 import { Link } from "react-router-dom";
 import Header from "../components/Header";
