@@ -5,6 +5,7 @@ import { API_URL, API_KEY } from "../config";
 
 const MainContainer = styled.div`
   display: flex;
+  align-items: center;
   flex-direction: column;
   gap: 20px;
   padding: 20px;
@@ -128,7 +129,6 @@ const VenueList = () => {
         }
 
         const data = await response.json();
-        console.log(data.data[0].owner);
 
         const sortedVenues = data.data.sort(
           (a, b) => new Date(b.created) - new Date(a.created),
@@ -172,7 +172,7 @@ const VenueList = () => {
         throw new Error("Failed to fetch venue details");
       }
       const data = await response.json();
-      console.log(data.data.owner);
+
       setSelectedVenue(data);
     } catch (err) {
       console.error("Error fetching venue details:", err);

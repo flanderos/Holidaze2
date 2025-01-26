@@ -82,6 +82,7 @@ const UserVenueModal = ({ venue, isOpen, onClose }) => {
         }
 
         const data = await response.json();
+
         setBookedDates(data.bookings || []);
       } catch (err) {
         console.error("Error fetching booked dates:", err);

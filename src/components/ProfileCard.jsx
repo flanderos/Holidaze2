@@ -3,7 +3,6 @@ import PropTypes from "prop-types";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faWrench } from "@fortawesome/free-solid-svg-icons";
-import UserBookings from "../components/UserBookings";
 
 const Card = styled.div`
   background-color: transparent;
@@ -32,13 +31,13 @@ const Title = styled.h1`
 `;
 
 const EditProfileButton = styled.button`
+  font-family: poppins;
   display: flex;
   align-items: center;
   gap: 8px;
-  background-color: transparent;
-  border: 1px solid #fff;
-  color: #fff;
-  padding: 8px 16px;
+  background-color: var(--color-primary);
+  color: black;
+  padding: 10px;
   border-radius: 5px;
   font-size: 0.9rem;
   font-weight: 500;

@@ -292,9 +292,10 @@ const VenueModal = ({ venue, isOpen, onClose }) => {
             venueId={venue.data.id}
             maxGuests={venue.data.maxGuests}
             onClose={onClose}
-            onBookingSuccess={(newBooking) =>
-              console.log("Booking successful:", newBooking)
-            }
+            onBookingSuccess={(newBooking) => {
+              console.log("Booking successful:", newBooking);
+              onClose();
+            }}
           />
         </Content>
       </ModalContainer>

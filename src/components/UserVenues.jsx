@@ -1,8 +1,11 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import VenueModal from "./Modal";
-import EditVenueForm from "./EditVenueForm"; // Nytt komponent
+import EditVenueForm from "./EditVenueForm";
 import { API_URL, API_KEY } from "../config";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
+import { faCalendar } from "@fortawesome/free-solid-svg-icons";
 
 const VenueContainer = styled.section`
   display: grid;
@@ -86,24 +89,10 @@ const ActionButton = styled.button`
   cursor: pointer;
   font-size: 14px;
   transition: 0.3s ease;
+  background-color: var(--color-primary);
 
   &:hover {
-    opacity: 0.8;
-  }
-
-  &.edit {
-    background-color: #4caf50;
-    color: white;
-  }
-
-  &.delete {
-    background-color: #f44336;
-    color: white;
-  }
-
-  &.show-bookings {
-    background-color: #007bff;
-    color: white;
+    text-decoration: underline;
   }
 `;
 
@@ -175,15 +164,13 @@ const UserVenues = ({ venues, onVenueDeleted }) => {
 
       const data = await response.json();
 
-      console.log("Venue details with bookings:", data);
-
       setSelectedVenue(data);
       setBookedDates(
         data.data.bookings.map((booking) => ({
           from: booking.dateFrom,
           to: booking.dateTo,
         })),
-      ); // Oppdater bookedDates med booking-datoer
+      );
     } catch (err) {
       console.error("Error fetching venue details:", err);
       setError("Unable to load venue details. Please try again.");
@@ -262,13 +249,13 @@ const UserVenues = ({ venues, onVenueDeleted }) => {
             </VenueDetails>
             <ButtonGroup>
               <ActionButton className="edit" onClick={() => handleEdit(venue)}>
-                Edit
+                Edit <FontAwesomeIcon icon={faPenToSquare} />
               </ActionButton>
               <ActionButton
                 className="delete"
                 onClick={() => handleDelete(venue.id)}
               >
-                Delete
+                Delete <FontAwesomeIcon icon={faTrash} />
               </ActionButton>
               <ActionButton
                 className="show-bookings"
@@ -277,7 +264,7 @@ const UserVenues = ({ venues, onVenueDeleted }) => {
                   setIsBookingsModalOpen(true);
                 }}
               >
-                Show Bookings
+                Show Bookings <FontAwesomeIcon icon={faCalendar} />
               </ActionButton>
             </ButtonGroup>
           </VenueCard>

@@ -17,14 +17,21 @@ const Input = styled.input`
 
 const SubmitButton = styled.button`
   padding: 10px;
-  background-color: #007bff;
-  color: #fff;
+  color: black;
+  background-color: var(--color-primary);
   border: none;
   border-radius: 5px;
+  font-size: 20px;
+  font-family: poppins;
   cursor: pointer;
+  width: 97%;
+  margin: 30px 0px 10px 10px;
+  transition: 0.3s;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 
   &:hover {
-    background-color: #0056b3;
+    text-decoration: underline;
+  }
   }
 `;
 

@@ -83,7 +83,7 @@ const ErrorMessage = styled.p`
   font-size: 14px;
 `;
 
-export const CreateVenueForm = () => {
+export const CreateVenueForm = ({ onClose }) => {
   const [formData, setFormData] = useState({
     name: "",
     description: "",
@@ -187,8 +187,12 @@ export const CreateVenueForm = () => {
         alert("Failed to create venue. Check the input data.");
       } else {
         const data = await response.json();
-        console.log("Venue created successfully:", data);
         alert("Venue created successfully!");
+
+        // Lukk modal etter vellykket opprettelse
+        if (onClose) {
+          onClose();
+        }
       }
     } catch (error) {
       console.error("Error creating venue:", error);
