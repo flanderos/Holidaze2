@@ -12,6 +12,7 @@ import PageTitle from "../../src/utils/PageTitle";
 import CreateVenueForm from "../components/CreateVenueForm";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faBan } from "@fortawesome/free-solid-svg-icons";
 
 const Container = styled.div`
   display: flex;
@@ -200,14 +201,13 @@ const ProfilePage = () => {
 
         <ToggleButton onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
           {isDropdownOpen ? "Cancel Venue Creation" : "Create a New Venue"}{" "}
-          <FontAwesomeIcon icon={faPlus} />
+          <FontAwesomeIcon icon={isDropdownOpen ? faBan : faPlus} />
         </ToggleButton>
 
         {/* Dropdown for Create Venue Form */}
         <DropdownContainer isOpen={isDropdownOpen}>
-          <CreateVenueForm />
+          <CreateVenueForm onClose={() => setIsDropdownOpen(false)} />
         </DropdownContainer>
-
         {!isVenueManager && (
           <RegisterVenueManagerButton onClick={handleBecomeVenueManager}>
             Become a Venue Manager

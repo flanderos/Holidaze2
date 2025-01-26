@@ -164,15 +164,13 @@ const UserVenues = ({ venues, onVenueDeleted }) => {
 
       const data = await response.json();
 
-      console.log("Venue details with bookings:", data);
-
       setSelectedVenue(data);
       setBookedDates(
         data.data.bookings.map((booking) => ({
           from: booking.dateFrom,
           to: booking.dateTo,
         })),
-      ); // Oppdater bookedDates med booking-datoer
+      );
     } catch (err) {
       console.error("Error fetching venue details:", err);
       setError("Unable to load venue details. Please try again.");

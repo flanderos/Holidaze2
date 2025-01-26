@@ -154,7 +154,6 @@ const LoginForm = () => {
       }
 
       const responseData = await response.json();
-      console.log("Login successful:", responseData.data);
 
       logIn(responseData.data.accessToken, responseData.data);
 
