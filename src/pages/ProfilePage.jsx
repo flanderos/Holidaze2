@@ -171,6 +171,7 @@ const ProfilePage = () => {
         throw new Error("Failed to update venue manager status in API.");
       }
 
+      // eslint-disable-next-line
       const updatedUser = await response.json();
       localStorage.setItem("isVenueManager", "true");
       setIsVenueManager(true);

@@ -3,7 +3,6 @@ import styled from "styled-components";
 import Header from "../components/Header";
 import Footer from "../components/Footer";
 import VenueList from "../components/VenueList";
-import loginBg from "../assets/images/loginpagebg2.png";
 import PageTitle from "../../src/utils/PageTitle";
 
 const StyledSection = styled.section`
