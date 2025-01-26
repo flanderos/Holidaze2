@@ -16,17 +16,16 @@ const ModalOverlay = styled.div`
 `;
 
 const ModalContainer = styled.div`
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: #fff;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
   padding: 20px;
-  border-radius: 10px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
-  max-width: 500px;
-  width: 90%;
-  z-index: 1001;
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  min-height: 100vh;
+  position: sticky;
 `;
 
 const CloseButton = styled.button`
@@ -40,36 +39,77 @@ const CloseButton = styled.button`
 `;
 
 const ModalForm = styled.form`
+  background-color: transparent;
+  backdrop-filter: blur(10px);
+  color: #fff;
+  height: 500px;
+  width: 300px;
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  justify-content: center;
+  align-items: flex-start;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  padding: 20px;
+  border-radius: 10px;
 `;
 
 const ModalInput = styled.input`
   padding: 10px;
-  border: 1px solid #ddd;
+  border: 1px solid ${(props) => (props.isInvalid ? "red" : "#ccc")};
   border-radius: 5px;
-  font-size: 16px;
+  font-family: poppins;
+  width: 90%;
+  padding: 10px;
+  margin: 10px;
+  outline: none;
+
+  &:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  }
+  &::placeholder {
+    color: #aaa;
+    font-style: italic;
+  }
 `;
 
 const ModalTextArea = styled.textarea`
   padding: 10px;
-  border: 1px solid #ddd;
+  border: 1px solid ${(props) => (props.isInvalid ? "red" : "#ccc")};
   border-radius: 5px;
-  font-size: 16px;
+  font-family: poppins;
+  width: 90%;
+  padding: 10px;
+  margin: 10px;
+  outline: none;
   resize: none;
+
+  &:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  }
+  &::placeholder {
+    color: #aaa;
+    font-style: italic;
+  }
 `;
 
 const ModalSubmitButton = styled.button`
   padding: 10px;
-  background-color: #007bff;
-  color: #fff;
+  color: black;
+  background-color: var(--color-primary);
   border: none;
   border-radius: 5px;
+  font-size: 20px;
+  font-family: poppins;
   cursor: pointer;
+  width: 97%;
+  margin: 30px 0px 10px 10px;
+  transition: 0.3s;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 
   &:hover {
-    background-color: #0056b3;
+    text-decoration: underline;
   }
 `;
 
