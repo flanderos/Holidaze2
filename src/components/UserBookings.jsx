@@ -112,6 +112,7 @@ const UserBookings = () => {
       }
 
       const data = await response.json();
+      console.log(data.data);
 
       setBookings(data.data || []);
     } catch (err) {

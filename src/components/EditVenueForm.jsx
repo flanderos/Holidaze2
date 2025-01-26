@@ -26,6 +26,22 @@ const StyledTextarea = styled.textarea`
   border-radius: 5px;
 `;
 
+const StyledCheckboxGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+`;
+
+const StyledCheckbox = styled.label`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  input {
+    margin: 0;
+  }
+`;
+
 const StyledButton = styled.button`
   padding: 10px;
   background-color: #007bff;
@@ -45,11 +61,27 @@ const EditVenueForm = ({ venue, onClose, onUpdate }) => {
     description: venue?.description || "",
     price: venue?.price || "",
     maxGuests: venue?.maxGuests || "",
+    meta: {
+      wifi: venue?.meta?.wifi || false,
+      parking: venue?.meta?.parking || false,
+      breakfast: venue?.meta?.breakfast || false,
+      pets: venue?.meta?.pets || false,
+    },
   });
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({ ...formData, [name]: value });
+    const { name, value, type, checked } = e.target;
+    if (type === "checkbox") {
+      setFormData((prev) => ({
+        ...prev,
+        meta: {
+          ...prev.meta,
+          [name]: checked,
+        },
+      }));
+    } else {
+      setFormData({ ...formData, [name]: value });
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -111,6 +143,44 @@ const EditVenueForm = ({ venue, onClose, onUpdate }) => {
         value={formData.maxGuests}
         onChange={handleChange}
       />
+      <StyledCheckboxGroup>
+        <StyledCheckbox>
+          <input
+            type="checkbox"
+            name="wifi"
+            checked={formData.meta.wifi}
+            onChange={handleChange}
+          />
+          Wifi
+        </StyledCheckbox>
+        <StyledCheckbox>
+          <input
+            type="checkbox"
+            name="parking"
+            checked={formData.meta.parking}
+            onChange={handleChange}
+          />
+          Parking
+        </StyledCheckbox>
+        <StyledCheckbox>
+          <input
+            type="checkbox"
+            name="breakfast"
+            checked={formData.meta.breakfast}
+            onChange={handleChange}
+          />
+          Breakfast
+        </StyledCheckbox>
+        <StyledCheckbox>
+          <input
+            type="checkbox"
+            name="pets"
+            checked={formData.meta.pets}
+            onChange={handleChange}
+          />
+          Pets
+        </StyledCheckbox>
+      </StyledCheckboxGroup>
       <StyledButton type="submit">Update Venue</StyledButton>
       <StyledButton type="button" onClick={onClose}>
         Cancel

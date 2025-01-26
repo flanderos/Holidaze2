@@ -128,6 +128,7 @@ const VenueList = () => {
         }
 
         const data = await response.json();
+        console.log(data.data);
 
         const sortedVenues = data.data.sort(
           (a, b) => new Date(b.created) - new Date(a.created),

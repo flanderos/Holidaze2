@@ -100,6 +100,11 @@ const ActionButton = styled.button`
     background-color: #f44336;
     color: white;
   }
+
+  &.show-bookings {
+    background-color: #007bff;
+    color: white;
+  }
 `;
 
 const ErrorMessage = styled.p`
@@ -109,15 +114,46 @@ const ErrorMessage = styled.p`
   border-radius: 5px;
 `;
 
+const ModalOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+`;
+
+const ModalContent = styled.div`
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  max-width: 400px;
+  width: 90%;
+  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+`;
+
 const UserVenues = ({ venues, onVenueDeleted }) => {
   const [selectedVenue, setSelectedVenue] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
+  const [isBookingsModalOpen, setIsBookingsModalOpen] = useState(false);
+  const [bookedDates, setBookedDates] = useState([]);
 
   const fetchVenueDetails = async (id) => {
     if (!id) {
       console.error("Venue ID is missing");
+      return;
+    }
+
+    const isVenueManager = localStorage.getItem("isVenueManager") === "true";
+
+    if (!isVenueManager) {
+      console.error("User is not a Venue Manager");
       return;
     }
 
@@ -128,8 +164,8 @@ const UserVenues = ({ venues, onVenueDeleted }) => {
       const token = localStorage.getItem("token");
       const response = await fetch(`${API_URL}/venues/${id}?_bookings=true`, {
         headers: {
-          "X-Noroff-API-Key": API_KEY,
           Authorization: `Bearer ${token}`,
+          "X-Noroff-API-Key": API_KEY,
         },
       });
 
@@ -138,7 +174,16 @@ const UserVenues = ({ venues, onVenueDeleted }) => {
       }
 
       const data = await response.json();
+
+      console.log("Venue details with bookings:", data);
+
       setSelectedVenue(data);
+      setBookedDates(
+        data.data.bookings.map((booking) => ({
+          from: booking.dateFrom,
+          to: booking.dateTo,
+        })),
+      ); // Oppdater bookedDates med booking-datoer
     } catch (err) {
       console.error("Error fetching venue details:", err);
       setError("Unable to load venue details. Please try again.");
@@ -155,6 +200,11 @@ const UserVenues = ({ venues, onVenueDeleted }) => {
   const closeEditModal = () => {
     setIsEditModalOpen(false);
     setSelectedVenue(null);
+  };
+
+  const closeBookingsModal = () => {
+    setIsBookingsModalOpen(false);
+    setBookedDates([]);
   };
 
   const handleDelete = async (venueId) => {
@@ -220,6 +270,15 @@ const UserVenues = ({ venues, onVenueDeleted }) => {
               >
                 Delete
               </ActionButton>
+              <ActionButton
+                className="show-bookings"
+                onClick={() => {
+                  fetchVenueDetails(venue.id);
+                  setIsBookingsModalOpen(true);
+                }}
+              >
+                Show Bookings
+              </ActionButton>
             </ButtonGroup>
           </VenueCard>
         ))}
@@ -227,6 +286,28 @@ const UserVenues = ({ venues, onVenueDeleted }) => {
 
       {loading && <p>Loading venue details...</p>}
       {error && <ErrorMessage>{error}</ErrorMessage>}
+
+      {/* Bookings Modal */}
+      {isBookingsModalOpen && (
+        <ModalOverlay onClick={closeBookingsModal}>
+          <ModalContent onClick={(e) => e.stopPropagation()}>
+            <h3>Booked Dates</h3>
+            <ul>
+              {bookedDates.length > 0 ? (
+                bookedDates.map((date, index) => (
+                  <li key={index}>
+                    From: {new Date(date.from).toLocaleDateString()} To:{" "}
+                    {new Date(date.to).toLocaleDateString()}
+                  </li>
+                ))
+              ) : (
+                <p>No bookings available</p>
+              )}
+            </ul>
+            <button onClick={closeBookingsModal}>Close</button>
+          </ModalContent>
+        </ModalOverlay>
+      )}
 
       {/* Edit Venue Modal */}
       {isEditModalOpen && (
