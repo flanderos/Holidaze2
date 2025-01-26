@@ -1,70 +1,100 @@
-# Getting Started with Create React App
+# Holidaze - Accommodation Booking Front-End
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Welcome to Holidaze, an accommodation booking platform. This repository contains the front-end application built as part of the Project Exam 2. The goal of this project is to deliver a modern and user-friendly platform for booking and managing venues using the Holidaze API. The platform caters to both customers and venue managers, with dedicated functionality for each user type.
 
-## Available Scripts
+## 📖 Table of Contents
 
-In the project directory, you can run:
+Project Goal
+Features
+Technical Specifications
+User Stories
+Requirements
+Setup and Installation
+Links
+Acknowledgments
+🎯 Project Goal
+To demonstrate the skills learned over two years by planning, designing, and building a robust and visually appealing front-end application that meets technical and functional requirements. The application showcases proficiency in JavaScript, React, CSS frameworks, API integration, and deployment.
 
-### `npm start`
+### ✨ Features
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- 🏠 Customer-Facing Functionality
+- View a list of venues with detailed descriptions.
+- Search for venues by title.
+- View specific venue details, including a calendar of available dates.
+- Register as a customer using a valid @stud.noroff.no email.
+- Book venues and view upcoming bookings.
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+#### 🛠️ Admin-Facing Functionality (Venue Manager)
 
-### `npm test`
+- Register as a venue manager using a valid @stud.noroff.no email.
+- Create, update, and delete venues.
+- View bookings for venues managed by the user.
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+#### 👥 General User Functionality
 
-### `npm run build`
+- User authentication: login, logout, and session persistence.
+- Update user avatar.
+- Responsive design for seamless experience on all devices.
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### 🛠 Technical Specifications
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+#### Frameworks and Libraries
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+- JavaScript Framework: React (v18+)
+- CSS Framework: Styled Components
+- Hosting Service: Netlify
+- Design Application: Figma
+- Planning Application: Trello
+- API Integration
+  All data for the application is managed via the Noroff API. The API provides functionality for venues, bookings, and user management. Documentation is available in the Noroff API Documentation.
 
-### `npm run eject`
+### 📜 User Stories
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+#### Customers
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+- Browse Venues: View a list of all available venues.
+- Search Venues: Search for venues by title.
+- View Venue Details: View a venue's detailed description, facilities, and availability calendar.
+- Make Bookings: Book venues and manage upcoming bookings.
+- Account Management: Register, log in, log out, and update avatar.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+#### Venue Managers
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+- Create Venues: Add new venues to the platform.
+- Manage Venues: Update or delete venues they own.
+- View Bookings: View and manage bookings for their venues.
 
-## Learn More
+#### ✅ Requirements
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- Use React for the front end.
+- Use Styled Components for styling.
+- Application hosted on Netlify.
+- All functionality must use the Holidaze API.
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+## 🚀 Setup and Installation
 
-### Code Splitting
+Follow these steps to run the application locally:
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+1. Clone the repository:
+   git clone https://github.com/flanderos/holidaze.git
 
-### Analyzing the Bundle Size
+Install dependencies:
+npm install
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+Start the development server:
 
-### Making a Progressive Web App
+npm start
+Open your browser and navigate to http://localhost:3000.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+🔗 Links
 
-### Advanced Configuration
+- Gantt Chart: View Project Timeline
+- Design Prototype: Figma Design
+- Style Guide: Style Guide
+- Kanban Board: Trello Board
+- Repository: GitHub Repository
+- Hosted Application: Live Demo on Netlify
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+## 🙌 Acknowledgments
 
-### Deployment
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Special thanks to Noroff School of Technology and Digital Media for 4 good years of learning.
