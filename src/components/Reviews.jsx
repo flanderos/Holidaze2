@@ -17,10 +17,6 @@ const StyledDiv = styled.div`
   padding: 50px;
 `;
 
-const StyledH1 = styled.h1`
-  font-size: 40px;
-`;
-
 const StyledQuote = styled.blockquote`
   font-family: "Edu AU VIC WA NT Hand";
   font-size: 30px;

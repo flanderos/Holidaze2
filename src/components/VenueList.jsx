@@ -134,7 +134,7 @@ const VenueList = () => {
           (a, b) => new Date(b.created) - new Date(a.created),
         );
         setVenues(sortedVenues);
-        setFilteredVenues(sortedVenues); // Initially, show all venues
+        setFilteredVenues(sortedVenues);
       } catch (err) {
         setError("Error fetching venues. Please try again later.");
         console.error(err);
@@ -157,7 +157,6 @@ const VenueList = () => {
     setFilteredVenues(filtered);
   };
 
-  // Fetch data for the "venuespecific" modal
   const fetchVenueDetails = async (id) => {
     if (!id) {
       console.error("Venue ID is undefined");
