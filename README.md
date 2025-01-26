@@ -64,7 +64,7 @@ Clone the repository:
 bash
 Kopier
 Rediger
-git clone https://github.com/yourusername/holidaze.git
+git clone https://github.com/flanderos/holidaze.git
 cd holidaze
 Install dependencies:
 
