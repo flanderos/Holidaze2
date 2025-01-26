@@ -180,10 +180,11 @@ const ProfilePage = () => {
         <StyledH2>My Venues</StyledH2>
         <UserVenues
           venues={venues}
-          onVenueClick={(venue) => {
-            setSelectedVenue(venue);
-            setIsVenueModalOpen(true);
-          }}
+          onVenueDeleted={(deletedVenueId) =>
+            setVenues((prevVenues) =>
+              prevVenues.filter((v) => v.id !== deletedVenueId),
+            )
+          }
         />
         <StyledH2>My Bookings</StyledH2>
         <UserBookings />

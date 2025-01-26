@@ -31,6 +31,7 @@ const VenueCard = styled.div`
   flex-direction: column;
   align-items: center;
   text-align: center;
+  position: relative;
   transition: 0.3s;
 
   img {
@@ -78,7 +79,24 @@ const ErrorMessage = styled.p`
   border-radius: 5px;
 `;
 
-const UserVenues = ({ venues }) => {
+const DeleteButton = styled.button`
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  background-color: red;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 5px 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: darkred;
+  }
+`;
+
+const UserVenues = ({ venues, onVenueDeleted }) => {
   const [selectedVenue, setSelectedVenue] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
@@ -115,6 +133,35 @@ const UserVenues = ({ venues }) => {
     }
   };
 
+  const handleDelete = async (venueId) => {
+    const confirmDelete = window.confirm(
+      "Are you sure you want to delete this venue?",
+    );
+    if (!confirmDelete) return;
+
+    try {
+      const token = localStorage.getItem("token");
+      const response = await fetch(`${API_URL}/venues/${venueId}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "X-Noroff-API-Key": API_KEY,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to delete venue");
+      }
+
+      alert("Venue deleted successfully!");
+      onVenueDeleted(venueId); // Update parent state
+    } catch (err) {
+      console.error("Error deleting venue:", err);
+      alert("An error occurred while deleting the venue.");
+    }
+  };
+
   const handleVenueClick = (venueId) => {
     fetchVenueDetails(venueId);
   };
@@ -131,10 +178,11 @@ const UserVenues = ({ venues }) => {
     <>
       <VenueContainer>
         {venues.map((venue) => (
-          <VenueCard key={venue.id} onClick={() => handleVenueClick(venue.id)}>
+          <VenueCard key={venue.id}>
             <img
               src={venue.media?.[0]?.url || "https://via.placeholder.com/300"}
               alt={venue.name}
+              onClick={() => handleVenueClick(venue.id)}
             />
             <VenueDetails>
               <h4>{venue.name}</h4>
@@ -146,6 +194,9 @@ const UserVenues = ({ venues }) => {
               <p>Price: ${venue.price}</p>
               <p>Max Guests: {venue.maxGuests}</p>
             </VenueDetails>
+            <DeleteButton onClick={() => handleDelete(venue.id)}>
+              Delete
+            </DeleteButton>
           </VenueCard>
         ))}
       </VenueContainer>
