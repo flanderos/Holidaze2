@@ -77,11 +77,12 @@ npm start
 Open your browser and navigate to http://localhost:3000.
 
 🔗 Links
-Gantt Chart: View Project Timeline
-Design Prototype: Figma Design
-Style Guide: Style Guide
-Kanban Board: Trello Board
-Repository: GitHub Repository
-Hosted Application: Live Demo on Netlify
-🙌 Acknowledgments
-Special thanks to Noroff School of Technology and Digital Media for providing the API and the project brief and for 4 good years of learning.
+- Gantt Chart: View Project Timeline
+- Design Prototype: Figma Design
+- Style Guide: Style Guide
+- Kanban Board: Trello Board
+- Repository: GitHub Repository
+- Hosted Application: Live Demo on Netlify
+
+## 🙌 Acknowledgments
+Special thanks to Noroff School of Technology and Digital Media for 4 good years of learning.
