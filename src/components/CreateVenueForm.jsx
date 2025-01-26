@@ -186,7 +186,7 @@ export const CreateVenueForm = ({ onClose }) => {
         console.error("Error creating venue:", errorData);
         alert("Failed to create venue. Check the input data.");
       } else {
-        const data = await response.json();
+        /* const data = await response.json(); */ //Commented out to pass deploy
         alert("Venue created successfully!");
 
         // Lukk modal etter vellykket opprettelse

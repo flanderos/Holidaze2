@@ -85,6 +85,7 @@ const DropdownContainer = styled.div`
 const ProfilePage = () => {
   const [profileData, setProfileData] = useState(null);
   const [venues, setVenues] = useState([]);
+  // eslint-disable-next-line
   const [bookings, setBookings] = useState([]);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [selectedVenue, setSelectedVenue] = useState(null);
@@ -182,6 +183,7 @@ const ProfilePage = () => {
 
   useEffect(() => {
     fetchProfileData();
+    setSelectedVenue(null);
   }, []);
 
   if (isLoading) return <div>Loading...</div>;
