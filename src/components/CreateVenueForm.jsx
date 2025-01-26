@@ -3,42 +3,84 @@ import styled from "styled-components";
 import { API_URL, API_KEY } from "../config";
 
 const StyledForm = styled.form`
+  background-color: transparent;
+  backdrop-filter: blur(10px);
+  min-width: 300px;
+  margin-top: 100px;
   display: flex;
+  width: 100%;
   flex-direction: column;
-  gap: 15px;
-  max-width: 600px;
-  margin: 0 auto;
+  justify-content: center;
+  align-items: flex-start;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   padding: 20px;
-  background-color: #f9f9f9;
   border-radius: 10px;
-  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px;
 `;
 
 const StyledInput = styled.input`
   padding: 10px;
-  border: 1px solid #ccc;
+  border: 1px solid ${(props) => (props.isInvalid ? "red" : "#ccc")};
   border-radius: 5px;
-  font-size: 16px;
+  font-family: poppins;
+  width: 97%;
+  padding: 10px;
+  margin: 10px;
+  outline: none;
+
+  &:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  }
+  &::placeholder {
+    color: #aaa;
+    font-style: italic;
+  }
 `;
 
 const StyledTextarea = styled.textarea`
   padding: 10px;
-  border: 1px solid #ccc;
+  border: 1px solid ${(props) => (props.isInvalid ? "red" : "#ccc")};
   border-radius: 5px;
-  font-size: 16px;
+  font-family: poppins;
+  width: 97%;
+  padding: 10px;
+  margin: 10px;
+  outline: none;
+  resize: none;
+
+  &:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  }
+  &::placeholder {
+    color: #aaa;
+    font-style: italic;
+  }
 `;
 
 const StyledButton = styled.button`
   padding: 10px;
-  background-color: #007bff;
-  color: white;
+  color: black;
+  background-color: var(--color-primary);
   border: none;
   border-radius: 5px;
+  font-size: 20px;
+  font-family: poppins;
   cursor: pointer;
+  width: 97%;
+  margin: 30px 0px 10px 10px;
+  transition: 0.3s;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
 
   &:hover {
-    background-color: #0056b3;
+    text-decoration: underline;
   }
+  }
+`;
+
+const ErrorMessage = styled.p`
+  color: red;
+  font-size: 14px;
 `;
 
 export const CreateVenueForm = () => {
@@ -59,26 +101,56 @@ export const CreateVenueForm = () => {
     continent: "",
   });
 
+  const [errors, setErrors] = useState({});
+
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
+
     setFormData({
       ...formData,
       [name]: type === "checkbox" ? checked : value,
     });
   };
 
+  const validateForm = () => {
+    const newErrors = {};
+
+    if (!formData.name.trim()) newErrors.name = "Name is required.";
+    if (!formData.description.trim())
+      newErrors.description = "Description is required.";
+    if (!formData.price || isNaN(formData.price) || formData.price <= 0)
+      newErrors.price = "Price must be a positive number.";
+    if (
+      !formData.maxGuests ||
+      isNaN(formData.maxGuests) ||
+      formData.maxGuests <= 0
+    )
+      newErrors.maxGuests = "Max Guests must be a positive integer.";
+
+    if (
+      formData.mediaUrl &&
+      !/^(https?|ftp):\/\/[^\s/$.?#].[^\s]*$/i.test(formData.mediaUrl)
+    ) {
+      newErrors.mediaUrl = "Media URL must be a valid URL.";
+    }
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    if (!validateForm()) {
+      return;
+    }
 
     const venueData = {
       name: formData.name,
       description: formData.description,
-      media: [
-        {
-          url: formData.mediaUrl,
-          alt: `${formData.name} media`,
-        },
-      ],
+      media: formData.mediaUrl
+        ? [{ url: formData.mediaUrl, alt: `${formData.name} media` }]
+        : [],
       price: parseFloat(formData.price),
       maxGuests: parseInt(formData.maxGuests),
       meta: {
@@ -88,11 +160,11 @@ export const CreateVenueForm = () => {
         pets: formData.pets,
       },
       location: {
-        address: formData.address,
-        city: formData.city,
-        zip: formData.zip,
-        country: formData.country,
-        continent: formData.continent,
+        address: formData.address || null,
+        city: formData.city || null,
+        zip: formData.zip || null,
+        country: formData.country || null,
+        continent: formData.continent || null,
       },
     };
 
@@ -135,6 +207,8 @@ export const CreateVenueForm = () => {
         onChange={handleChange}
         required
       />
+      {errors.name && <ErrorMessage>{errors.name}</ErrorMessage>}
+
       <StyledTextarea
         name="description"
         placeholder="Description"
@@ -143,6 +217,8 @@ export const CreateVenueForm = () => {
         onChange={handleChange}
         required
       />
+      {errors.description && <ErrorMessage>{errors.description}</ErrorMessage>}
+
       <StyledInput
         type="url"
         name="mediaUrl"
@@ -150,6 +226,8 @@ export const CreateVenueForm = () => {
         value={formData.mediaUrl}
         onChange={handleChange}
       />
+      {errors.mediaUrl && <ErrorMessage>{errors.mediaUrl}</ErrorMessage>}
+
       <StyledInput
         type="number"
         name="price"
@@ -158,6 +236,8 @@ export const CreateVenueForm = () => {
         onChange={handleChange}
         required
       />
+      {errors.price && <ErrorMessage>{errors.price}</ErrorMessage>}
+
       <StyledInput
         type="number"
         name="maxGuests"
@@ -166,6 +246,8 @@ export const CreateVenueForm = () => {
         onChange={handleChange}
         required
       />
+      {errors.maxGuests && <ErrorMessage>{errors.maxGuests}</ErrorMessage>}
+
       <div>
         <label>
           <input
@@ -204,6 +286,7 @@ export const CreateVenueForm = () => {
           Pets
         </label>
       </div>
+
       <StyledInput
         type="text"
         name="address"
@@ -211,6 +294,7 @@ export const CreateVenueForm = () => {
         value={formData.address}
         onChange={handleChange}
       />
+
       <StyledInput
         type="text"
         name="city"
@@ -218,6 +302,7 @@ export const CreateVenueForm = () => {
         value={formData.city}
         onChange={handleChange}
       />
+
       <StyledInput
         type="text"
         name="zip"
@@ -225,6 +310,7 @@ export const CreateVenueForm = () => {
         value={formData.zip}
         onChange={handleChange}
       />
+
       <StyledInput
         type="text"
         name="country"
@@ -232,6 +318,7 @@ export const CreateVenueForm = () => {
         value={formData.country}
         onChange={handleChange}
       />
+
       <StyledInput
         type="text"
         name="continent"
@@ -239,7 +326,10 @@ export const CreateVenueForm = () => {
         value={formData.continent}
         onChange={handleChange}
       />
+
       <StyledButton type="submit">Create Venue</StyledButton>
     </StyledForm>
   );
 };
+
+export default CreateVenueForm;

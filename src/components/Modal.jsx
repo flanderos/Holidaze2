@@ -86,6 +86,35 @@ const Description = styled.p`
   margin-bottom: 1.5rem;
 `;
 
+const CreatorInfo = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 5px;
+
+  margin-bottom: 16px;
+  background-color: #f0f0f0;
+  border-radius: 10px;
+  width: fit-content;
+`;
+
+const CreatorAvatar = styled.img`
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  object-fit: cover;
+`;
+
+const CreatorName = styled.span`
+  font-weight: bold;
+  font-size: 1rem;
+`;
+
+const CreatorEmail = styled.span`
+  font-size: 0.9rem;
+  color: #4b5563;
+`;
+
 const Grid = styled.div`
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -136,7 +165,7 @@ const VenueModal = ({ venue, isOpen, onClose }) => {
               Authorization: `Bearer ${token}`,
               "Content-Type": "application/json",
             },
-          }
+          },
         );
 
         if (!response.ok) {
@@ -145,19 +174,23 @@ const VenueModal = ({ venue, isOpen, onClose }) => {
 
         const data = await response.json();
 
+        const dates = data.data.bookings
+          .map((booking) => {
+            const start = new Date(booking.dateFrom);
+            const end = new Date(booking.dateTo);
+            const bookedDateRange = [];
 
-        const dates = data.data.bookings.map((booking) => {
-          const start = new Date(booking.dateFrom);
-          const end = new Date(booking.dateTo);
-          const bookedDateRange = [];
+            for (
+              let d = new Date(start);
+              d <= end;
+              d.setDate(d.getDate() + 1)
+            ) {
+              bookedDateRange.push(new Date(d));
+            }
 
-
-          for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
-            bookedDateRange.push(new Date(d));
-          }
-
-          return bookedDateRange;
-        }).flat();
+            return bookedDateRange;
+          })
+          .flat();
 
         setBookedDates(dates);
       } catch (err) {
@@ -191,6 +224,21 @@ const VenueModal = ({ venue, isOpen, onClose }) => {
 
               <Title>{venue.data.name}</Title>
               <Description>{venue.data.description}</Description>
+
+              {/* Creator Information */}
+              {venue.data.owner && (
+                <CreatorInfo>
+                  <CreatorAvatar
+                    src={
+                      venue.data.owner.avatar?.url ||
+                      "https://via.placeholder.com/50"
+                    }
+                    alt={venue.data.owner.avatar?.alt || "Owner Avatar"}
+                  />
+                  <CreatorName>{venue.data.owner.name}</CreatorName>
+                  <CreatorEmail>{venue.data.owner.email}</CreatorEmail>
+                </CreatorInfo>
+              )}
 
               <Grid>
                 <div>
@@ -248,9 +296,7 @@ const VenueModal = ({ venue, isOpen, onClose }) => {
               console.log("Booking successful:", newBooking)
             }
           />
-
         </Content>
-
       </ModalContainer>
     </Overlay>
   );

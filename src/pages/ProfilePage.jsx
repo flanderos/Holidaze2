@@ -9,6 +9,7 @@ import styled from "styled-components";
 import loginBg from "../assets/images/loginpagebg2.png";
 import UserBookings from "../components/UserBookings";
 import PageTitle from "../../src/utils/PageTitle";
+import CreateVenueForm from "../components/CreateVenueForm";
 
 const Container = styled.div`
   display: flex;
@@ -27,6 +28,54 @@ const StyledH2 = styled.h2`
   color: #fff;
 `;
 
+const RegisterVenueManagerButton = styled.button`
+  margin: 20px 0;
+  padding: 10px 20px;
+  background-color: #4a90e2;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+
+  &:hover {
+    background-color: #357abd;
+  }
+`;
+
+const ToggleButton = styled.button`
+  padding: 10px;
+  color: black;
+  background-color: var(--color-primary);
+  border: none;
+  border-radius: 5px;
+  font-size: 20px;
+  font-family: poppins;
+  cursor: pointer;
+
+  margin: 30px 0px 10px 10px;
+  transition: 0.3s;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+
+  &:hover {
+    text-decoration: underline;
+  }
+  }
+`;
+
+const DropdownContainer = styled.div`
+  width: 100%;
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px;
+  display: ${({ isOpen }) => (isOpen ? "block" : "none")};
+  transition: all 0.3s ease-in-out;
+`;
+
 const ProfilePage = () => {
   const [profileData, setProfileData] = useState(null);
   const [venues, setVenues] = useState([]);
@@ -36,6 +85,10 @@ const ProfilePage = () => {
   const [isVenueModalOpen, setIsVenueModalOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [isVenueManager, setIsVenueManager] = useState(
+    localStorage.getItem("isVenueManager") === "true",
+  );
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const fetchProfileData = async () => {
     const userData = JSON.parse(localStorage.getItem("userData"));
@@ -84,6 +137,43 @@ const ProfilePage = () => {
     }
   };
 
+  const handleBecomeVenueManager = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      const userData = JSON.parse(localStorage.getItem("userData"));
+
+      if (!token || !userData?.name) {
+        alert("Authentication error. Please log in again.");
+        return;
+      }
+
+      // Oppdater brukerens status i API-et
+      const response = await fetch(`${API_URL}/profiles/${userData.name}`, {
+        method: "PUT",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "X-Noroff-API-Key": API_KEY,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          venueManager: true,
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to update venue manager status in API.");
+      }
+
+      const updatedUser = await response.json();
+      localStorage.setItem("isVenueManager", "true");
+      setIsVenueManager(true);
+      alert("You are now a Venue Manager!");
+    } catch (error) {
+      console.error("Error updating venue manager status:", error);
+      alert("An error occurred. Please try again.");
+    }
+  };
+
   useEffect(() => {
     fetchProfileData();
   }, []);
@@ -102,17 +192,35 @@ const ProfilePage = () => {
           venues={venues}
           onEditClick={() => setIsEditModalOpen(true)}
         />
+
+        <ToggleButton onClick={() => setIsDropdownOpen(!isDropdownOpen)}>
+          {isDropdownOpen ? "Cancel Venue Creation" : "Create a New Venue"}
+        </ToggleButton>
+
+        {/* Dropdown for Create Venue Form */}
+        <DropdownContainer isOpen={isDropdownOpen}>
+          <CreateVenueForm />
+        </DropdownContainer>
+
+        {!isVenueManager && (
+          <RegisterVenueManagerButton onClick={handleBecomeVenueManager}>
+            Become a Venue Manager
+          </RegisterVenueManagerButton>
+        )}
+
         <StyledH2>My Venues</StyledH2>
         <UserVenues
           venues={venues}
-          onVenueClick={(venue) => {
-            setSelectedVenue(venue);
-            setIsVenueModalOpen(true);
-          }}
+          onVenueDeleted={(deletedVenueId) =>
+            setVenues((prevVenues) =>
+              prevVenues.filter((v) => v.id !== deletedVenueId),
+            )
+          }
         />
         <StyledH2>My Bookings</StyledH2>
         <UserBookings />
       </Container>
+
       {/* Edit Profile Modal */}
       <EditProfileModal
         isOpen={isEditModalOpen}
@@ -123,6 +231,7 @@ const ProfilePage = () => {
           localStorage.setItem("userData", JSON.stringify(updatedData));
         }}
       />
+
       {/* Venue Modal */}
       <VenueModal
         venue={selectedVenue}
