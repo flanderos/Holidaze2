@@ -9,10 +9,24 @@ const BookingFormContainer = styled.form`
   margin-top: 20px;
 `;
 
-const Input = styled.input`
+const StyledInput = styled.input`
   padding: 10px;
-  border: 1px solid #ddd;
+  border: 1px solid;
   border-radius: 5px;
+  font-family: poppins;
+  width: 90%;
+  padding: 10px;
+  margin: 10px;
+  outline: none;
+
+  &:focus {
+    border-color: #007bff;
+    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+  }
+  &::placeholder {
+    color: #aaa;
+    font-style: italic;
+  }
 `;
 
 const SubmitButton = styled.button`
@@ -92,7 +106,7 @@ const BookingForm = ({ venueId, maxGuests, onClose, onBookingSuccess }) => {
   return (
     <BookingFormContainer onSubmit={handleBooking}>
       <label htmlFor="startDate">Start Date:</label>
-      <Input
+      <StyledInput
         type="date"
         id="startDate"
         value={startDate}
@@ -101,7 +115,7 @@ const BookingForm = ({ venueId, maxGuests, onClose, onBookingSuccess }) => {
         required
       />
       <label htmlFor="endDate">End Date:</label>
-      <Input
+      <StyledInput
         type="date"
         id="endDate"
         value={endDate}
@@ -110,7 +124,7 @@ const BookingForm = ({ venueId, maxGuests, onClose, onBookingSuccess }) => {
         required
       />
       <label htmlFor="guests">Number of Guests:</label>
-      <Input
+      <StyledInput
         type="number"
         id="guests"
         value={guests}

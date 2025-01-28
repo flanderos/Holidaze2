@@ -83,10 +83,7 @@ const CreatorInfo = styled.div`
   border-radius: 10px;
   width: fit-content;
   border-bottom: 1px solid black;
-
-  @media (max-width: 768px) {
-    width: 100%;
-  }
+  width: 95%;
 `;
 
 const CreatorAvatar = styled.img`
@@ -98,11 +95,15 @@ const CreatorAvatar = styled.img`
 
 const CreatorName = styled.span`
   font-weight: bold;
-  font-size: 1rem;
+  font-size: 16px;
+
+  @media (max-width: 768px) {
+    font-size: 14px;
+  }
 `;
 
 const CreatorEmail = styled.span`
-  font-size: 0.9rem;
+  font-size: 12px;
   color: #4b5563;
 `;
 
@@ -111,6 +112,11 @@ const Grid = styled.div`
   grid-template-columns: repeat(2, 1fr);
   gap: 1rem;
   margin-bottom: 1.5rem;
+  font-size: 16px;
+
+  @media (max-width: 768px) {
+    font-size: 12px;
+  }
 `;
 
 const InfoSection = styled.div`
@@ -128,12 +134,13 @@ const Label = styled.span`
 
 const CalendarContainer = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
+  background-color: #f0f0f0;
+  padding: 10px;
 `;
 
-const FromDate = styled.div`
-  display: flex;
-  flex-direction: column;
+const UnavailableDates = styled.div`
+  text-align: center;
 `;
 
 const VenueModal = ({ venue, isOpen, onClose }) => {
@@ -278,14 +285,14 @@ const VenueModal = ({ venue, isOpen, onClose }) => {
               </InfoSection>
 
               <CalendarContainer>
-                <FromDate>
+                <UnavailableDates>
                   <h3>Unavailable Dates</h3>
                   {loadingDates && <p>Loading dates...</p>}
                   {error && <p style={{ color: "red" }}>{error}</p>}
                   {!loadingDates && !error && (
                     <VenueCalendar bookedDates={bookedDates} />
                   )}
-                </FromDate>
+                </UnavailableDates>
               </CalendarContainer>
             </>
           )}
