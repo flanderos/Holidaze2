@@ -15,12 +15,22 @@ const StyledDiv = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  padding: 50px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  padding: 5px;
+
+  @media (max-width: 768px) {
+    width: 90%;
+  }
 `;
 
 const StyledQuote = styled.blockquote`
   font-size: 16px;
   font-weight: 200;
+
+  @media (max-width: 768px) {
+    width: 90%;
+  }
 `;
 
 const StyledBox = styled.div`
@@ -29,6 +39,13 @@ const StyledBox = styled.div`
   width: 100%;
   justify-content: center;
   gap: 20px;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: center;
+    margin-top: 20px;
+    gap: 0px;
+  
 `;
 
 const StyledLink = styled(Link)`
