@@ -122,8 +122,13 @@ const LoginForm = () => {
     const newErrors = {};
 
     // Email-regex and validation
-    if (!/^[a-zA-Z0-9._%+-]+@stud\.noroff\.no$/.test(requestData.email)) {
-      newErrors.email = "Email must be a valid stud.noroff.no email address.";
+    if (
+      !/^[a-zA-Z0-9._%+-]+@(stud\.noroff\.no|noroff\.no)$/.test(
+        requestData.email,
+      )
+    ) {
+      newErrors.email =
+        "Email must be a valid stud.noroff.no or noroff.no email address.";
     }
 
     // Password validation
