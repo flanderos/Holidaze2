@@ -51,7 +51,7 @@ const HeroSection = () => {
             planning a relaxing getaway, a weekend trip, or an unforgettable
             adventure.
           </p>
-          <StyledLink to="/venues" bgColor="white" color="black">
+          <StyledLink to="/venues" bgColor="#FFD446" color="black">
             See our venues
             <FontAwesomeIcon icon={faArrowRight} />
           </StyledLink>

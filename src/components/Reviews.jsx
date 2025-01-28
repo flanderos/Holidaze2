@@ -32,7 +32,7 @@ const StyledBox = styled.div`
 `;
 
 const StyledLink = styled(Link)`
-  color: #black;
+  color: black;
   font-weight: 600;
   background-color: var(--color-primary);
   text-decoration: none;
@@ -44,9 +44,9 @@ const StyledLink = styled(Link)`
   justify-content: center;
   align-items: center;
   &:hover {
-    color: white;
-    background-color: ${(props) =>
-      props.isLogout ? "red" : "var(--color-black)"};
+    background-color: black;
+    color: var(--color-primary);
+    border: 1px solid var(--color-primary);
   }
 `;
 
