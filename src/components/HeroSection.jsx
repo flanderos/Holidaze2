@@ -26,6 +26,7 @@ const TextContainer = styled.div`
   flex-direction: column;
   align-items: center;
   margin-left: 25px;
+  font-weight: 300;
 
   @media (max-width: 744px) {
     padding: 10px;
@@ -45,9 +46,10 @@ const HeroSection = () => {
         <TextContainer>
           <StyledH1>Your Journey Starts Here</StyledH1>
           <p>
-            Renting an arena for an event is like buying a mansion for a
-            sleepover—way too big, but hey, at least there’s space for the
-            pizza.
+            "Welcome to Holidaze – Your Platform for venues!" At Holidaze, you
+            can effortlessly browse and book amazing venues, whether you're
+            planning a relaxing getaway, a weekend trip, or an unforgettable
+            adventure.
           </p>
           <StyledLink to="/venues" bgColor="white" color="black">
             See our venues

@@ -15,6 +15,7 @@ export const StyledLink = styled(Link)`
   text-decoration: none;
   margin: 0 auto;
   font-family: montserrat;
+  margin-top: 20px;
 
   &:hover {
     cursor: pointer;

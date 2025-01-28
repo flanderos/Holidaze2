@@ -10,9 +10,14 @@ const StyledContainer = styled.section`
   background-color: #fff;
 `;
 
-const StyledParagraph = styled.p`
-  width: 60%;
-`;
+/* const StyledParagraph = styled.p`
+  display: flex;
+
+  @media (max-width: 768px) {
+
+  }
+}
+`; */
 
 const GridContainer = styled.div`
   display: grid;
@@ -32,11 +37,7 @@ const TopVenues = () => {
   return (
     <StyledContainer>
       <h1>Top Venues</h1>
-      <StyledParagraph>
-        Here are the top 3 venues to rent for your event, because nothing says
-        'I planned this last minute' quite like booking a giant space and hoping
-        people show up.
-      </StyledParagraph>
+      <p>Here are the top 3 venues to rent for your event.</p>
       <GridContainer>
         <StyledImage src={placeholder1} alt="Top Venue 1" />
         <StyledImage src={placeholder2} alt="Top Venue 2" />
