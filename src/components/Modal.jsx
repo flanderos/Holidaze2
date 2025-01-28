@@ -51,19 +51,6 @@ const Content = styled.div`
   height: 100%;
   overflow-y: auto;
   padding: 1.5rem;
-
-  &::-webkit-scrollbar {
-    width: 8px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: #f1f1f1;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: #888;
-    border-radius: 4px;
-  }
 `;
 
 const Image = styled.img`
@@ -76,14 +63,14 @@ const Image = styled.img`
 `;
 
 const Title = styled.h2`
-  font-size: 1.5rem;
+  font-size: 26px;
   font-weight: bold;
   margin-bottom: 1rem;
 `;
 
 const Description = styled.p`
   color: #4b5563;
-  margin-bottom: 1.5rem;
+  margin-bottom: 26px;
 `;
 
 const CreatorInfo = styled.div`
@@ -91,11 +78,15 @@ const CreatorInfo = styled.div`
   align-items: center;
   gap: 10px;
   padding: 5px;
-
   margin-bottom: 16px;
   background-color: #f0f0f0;
   border-radius: 10px;
   width: fit-content;
+  border-bottom: 1px solid black;
+
+  @media (max-width: 768px) {
+    width: 100%;
+  }
 `;
 
 const CreatorAvatar = styled.img`
@@ -149,6 +140,17 @@ const VenueModal = ({ venue, isOpen, onClose }) => {
   const [bookedDates, setBookedDates] = useState([]);
   const [loadingDates, setLoadingDates] = useState(false);
   const [error, setError] = useState(null);
+
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isOpen]);
 
   useEffect(() => {
     if (!isOpen || !venue?.data?.id) return;
