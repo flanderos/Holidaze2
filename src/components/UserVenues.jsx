@@ -116,6 +116,8 @@ const ModalOverlay = styled.div`
   z-index: 1000;
 `;
 
+//Uservenuemodal
+
 const ModalContent = styled.div`
   background: white;
   padding: 20px;
@@ -132,7 +134,6 @@ const UserVenues = ({ venues, onVenueDeleted }) => {
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
   const [isBookingsModalOpen, setIsBookingsModalOpen] = useState(false);
   const [bookedDates, setBookedDates] = useState([]);
-  const [isMainModalOpen, setIsMainModalOpen] = useState(false);
   const [openModalType, setOpenModalType] = useState(null);
 
   const fetchVenueDetails = async (id, modalType = "main") => {
@@ -161,10 +162,16 @@ const UserVenues = ({ venues, onVenueDeleted }) => {
 
       setSelectedVenue(data);
 
-      if (modalType === "main") {
+      // Hent bookings-data før modal åpnes
+      if (modalType === "bookings") {
+        const bookings = data.data.bookings.map((booking) => ({
+          from: booking.dateFrom,
+          to: booking.dateTo,
+        }));
+        setBookedDates(bookings);
+        setOpenModalType("bookings"); // ✅ Åpne modal ETTER at bookedDates er satt
+      } else {
         setOpenModalType("main");
-      } else if (modalType === "bookings") {
-        setOpenModalType("bookings");
       }
     } catch (err) {
       console.error("Error fetching venue details:", err);
@@ -173,6 +180,7 @@ const UserVenues = ({ venues, onVenueDeleted }) => {
       setLoading(false);
     }
   };
+
   const handleEdit = (venue) => {
     setSelectedVenue(venue);
     setIsEditModalOpen(true);
@@ -266,7 +274,7 @@ const UserVenues = ({ venues, onVenueDeleted }) => {
                 className="show-bookings"
                 onClick={(e) => {
                   e.stopPropagation();
-                  fetchVenueDetails(venue.id, "bookings"); // Åpner kun bookingmodalen!
+                  fetchVenueDetails(venue.id, "bookings"); // 🚀 Åpner kun bookings-modal
                 }}
               >
                 Show Bookings <FontAwesomeIcon icon={faCalendar} />
@@ -306,7 +314,7 @@ const UserVenues = ({ venues, onVenueDeleted }) => {
         <EditVenueForm
           venue={selectedVenue}
           onClose={closeEditModal}
-          onUpdate={() => window.location.reload()} // Refresh after editing
+          onUpdate={() => window.location.reload()}
         />
       )}
       {openModalType === "main" && selectedVenue && (
