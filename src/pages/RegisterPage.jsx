@@ -240,7 +240,16 @@ const RegisterPage = () => {
 
       if (!response.ok) {
         const errorData = await response.json();
-        throw new Error(errorData.message || "Failed to register.");
+
+        console.log(errorData);
+
+        const errorMessages = errorData.errors
+          .map((error) => error.message)
+          .join("\n");
+
+        alert(`Registration failed:\n${errorMessages}`);
+
+        return;
       }
 
       alert("Registration successful!");
