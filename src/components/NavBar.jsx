@@ -121,9 +121,11 @@ const NavBar = () => {
             Venues
             <FontAwesomeIcon icon={faStar} />
           </StyledLink>
-          <StyledLink to="/profile">
-            Profile <FontAwesomeIcon icon={faUser} />
-          </StyledLink>
+          {isLoggedIn && (
+            <StyledLink to="/profile">
+              Profile <FontAwesomeIcon icon={faUser} />
+            </StyledLink>
+          )}
           {isLoggedIn ? (
             <StyledLink onClick={logOut} isLogout>
               Log Out <FontAwesomeIcon icon={faPersonWalkingArrowRight} />
