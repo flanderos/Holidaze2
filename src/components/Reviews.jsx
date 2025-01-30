@@ -22,6 +22,14 @@ const StyledDiv = styled.div`
 
   @media (max-width: 768px) {
     width: 100%;
+    padding: 15px;
+    font-size: 14px;
+  }
+
+  @media (max-width: 480px) {
+    max-width: 90%;
+    padding: 10px;
+    font-size: 12px;
   }
 `;
 
