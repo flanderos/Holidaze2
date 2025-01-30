@@ -116,6 +116,26 @@ const ModalOverlay = styled.div`
   z-index: 1000;
 `;
 
+const CloseBookingModalButton = styled.button`
+  padding: 10px;
+  color: black;
+  background-color: var(--color-primary);
+  border: none;
+  border-radius: 5px;
+  font-size: 20px;
+  font-family: poppins;
+  cursor: pointer;
+  width: 97%;
+  margin: 30px 0px 10px 10px;
+  transition: 0.3s;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+
+  &:hover {
+    text-decoration: underline;
+  }
+  }
+`;
+
 //Uservenuemodal
 
 const ModalContent = styled.div`
@@ -297,7 +317,9 @@ const UserVenues = ({ venues, onVenueDeleted }) => {
                 <p>No bookings available</p>
               )}
             </ul>
-            <button onClick={() => setOpenModalType(null)}>Close</button>
+            <CloseBookingModalButton onClick={() => setOpenModalType(null)}>
+              Close
+            </CloseBookingModalButton>
           </ModalContent>
         </ModalOverlay>
       )}

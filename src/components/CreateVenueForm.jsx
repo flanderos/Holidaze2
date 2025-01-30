@@ -119,8 +119,15 @@ export const CreateVenueForm = ({ onClose }) => {
     if (!formData.name.trim()) newErrors.name = "Name is required.";
     if (!formData.description.trim())
       newErrors.description = "Description is required.";
-    if (!formData.price || isNaN(formData.price) || formData.price <= 0)
-      newErrors.price = "Price must be a positive number.";
+    if (
+      !formData.price ||
+      isNaN(formData.price) ||
+      formData.price <= 0 ||
+      formData.price > 10000
+    ) {
+      newErrors.price =
+        "Price must be a positive number and cannot exceed 10,000.";
+    }
     if (
       !formData.maxGuests ||
       isNaN(formData.maxGuests) ||
