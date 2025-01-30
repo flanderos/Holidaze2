@@ -153,8 +153,9 @@ const LoginForm = () => {
 
       if (!response.ok) {
         const errorResponse = await response.json();
-        console.error("API Response Error:", errorResponse);
-        throw new Error("Failed to log in. Please try again.");
+
+        alert(errorResponse.errors[0].message);
+        throw new Error(errorResponse.errors[0]);
       }
 
       const responseData = await response.json();
@@ -166,7 +167,6 @@ const LoginForm = () => {
       setApiError("");
       navigate("/");
     } catch (error) {
-      console.error("Error:", error);
       setApiError("Failed to log in. Please try again.");
     }
   };
