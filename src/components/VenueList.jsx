@@ -18,7 +18,7 @@ const SearchInput = styled.input`
   border: 1px solid #ccc;
   padding: 0 12px;
   font-family: "Poppins", sans-serif;
-  font-size: 14px;
+  font-size: 17px;
   color: #333;
   outline: none;
   transition:

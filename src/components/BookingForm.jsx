@@ -18,7 +18,7 @@ const StyledInput = styled.input`
   padding: 10px;
   margin: 10px;
   outline: none;
-  font-size: 16px;
+  font-size: 17px;
 
   -webkit-appearance: none;
   -moz-appearance: none;

@@ -7,6 +7,10 @@ const StyledContainer = styled.section`
   color: black;
   display: flex;
   flex-direction: column;
+  position: fixed;
+  width: 100%;
+  bottom: 0;
+  z-index: -1;
 `;
 const StyledDiv = styled.div`
   display:;

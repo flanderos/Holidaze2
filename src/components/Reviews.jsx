@@ -8,6 +8,7 @@ const StyledContainer = styled.section`
   align-items: center;
   background-color: black;
   color: white;
+  margin-bottom: 180px;
 `;
 
 const StyledDiv = styled.div`

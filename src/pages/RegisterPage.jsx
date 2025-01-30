@@ -57,6 +57,7 @@ const StyledInput = styled.input`
   width: 90%;
   margin: 10px;
   outline: none;
+  font-size: 17px;
 
   &:focus {
     border-color: #007bff;
