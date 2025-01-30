@@ -128,12 +128,13 @@ export const CreateVenueForm = ({ onClose }) => {
       newErrors.price =
         "Price must be a positive number and cannot exceed 10,000.";
     }
-    if (
-      !formData.maxGuests ||
-      isNaN(formData.maxGuests) ||
-      formData.maxGuests <= 0
-    )
-      newErrors.maxGuests = "Max Guests must be a positive integer.";
+    if (!formData.maxGuests || isNaN(formData.maxGuests)) {
+      newErrors.maxGuests = "Max Guests must be a number.";
+    } else if (formData.maxGuests <= 0) {
+      newErrors.maxGuests = "Max Guests must be a positive number.";
+    } else if (formData.maxGuests > 100) {
+      newErrors.maxGuests = "Max Guests cannot exceed 100.";
+    }
 
     if (
       formData.mediaUrl &&
@@ -197,7 +198,7 @@ export const CreateVenueForm = ({ onClose }) => {
         /* const data = await response.json(); */ //Commented out to pass deploy
         alert("Venue created successfully!");
 
-        // Lukk modal etter vellykket opprettelse
+        // Close modal if all is good
         if (onClose) {
           onClose();
         }
