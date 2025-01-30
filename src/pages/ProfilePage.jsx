@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import Header from "../components/Header";
+import Footer from "../components/Footer";
 import ProfileCard from "../components/ProfileCard";
 import EditProfileModal from "../components/EditProfileModal";
 import UserVenues from "../components/UserVenues";
@@ -25,6 +26,7 @@ const Container = styled.div`
   background-repeat: no-repeat;
   min-height: 100vh;
   padding: 20px;
+  margin-bottom: 180px;
 `;
 
 const StyledH2 = styled.h2`
@@ -247,6 +249,7 @@ const ProfilePage = () => {
         isOpen={isVenueModalOpen}
         onClose={() => setIsVenueModalOpen(false)}
       />
+      <Footer />
     </>
   );
 };
