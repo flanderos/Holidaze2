@@ -45,6 +45,7 @@ const CardGrid = styled.div`
   grid-template-columns: repeat(4, 1fr);
   gap: 20px;
   padding: 20px;
+  min-height: 50vh;
 
   @media (max-width: 1340px) {
     grid-template-columns: repeat(3, 1fr);
@@ -105,6 +106,17 @@ const ErrorMessage = styled.p`
   border-radius: 5px;
 `;
 
+const NoVenuesFound = styled.div`
+display-flex;
+justify-content: center;
+align-items: center;
+height: 400px;
+width: 100%;
+text-align: center;
+font-weight: bold;
+
+`;
+
 const VenueList = () => {
   const [venues, setVenues] = useState([]);
   const [filteredVenues, setFilteredVenues] = useState([]);
@@ -154,6 +166,7 @@ const VenueList = () => {
     const filtered = venues.filter((venue) =>
       venue.name?.toLowerCase().includes(term),
     );
+
     setFilteredVenues(filtered);
   };
 
@@ -189,26 +202,40 @@ const VenueList = () => {
         value={searchTerm}
         onChange={handleSearch}
       />
-      <CardGrid>
-        {filteredVenues.map((venue) => (
-          <VenueCard key={venue.id} onClick={() => fetchVenueDetails(venue.id)}>
-            <VenueImage
-              src={venue.media?.[0]?.url || "https://via.placeholder.com/300"}
-              alt={venue.name}
-            />
-            <VenueDetails>
-              <h4>{venue.name}</h4>
-              <p>
-                {venue.description?.substring(0, 40) ||
-                  "No description available"}
-                ...
-              </p>
-              <p>Price: ${venue.price}</p>
-              <p>Max Guests: {venue.maxGuests}</p>
-            </VenueDetails>
-          </VenueCard>
-        ))}
-      </CardGrid>
+
+      {/* Show the ERror message here*/}
+      {filteredVenues.length === 0 && (
+        <NoVenuesFound>
+          <p>No venues found for "{searchTerm}". Try another search term.</p>
+        </NoVenuesFound>
+      )}
+
+      {/* Show search results here */}
+      {filteredVenues.length > 0 && (
+        <CardGrid>
+          {filteredVenues.map((venue) => (
+            <VenueCard
+              key={venue.id}
+              onClick={() => fetchVenueDetails(venue.id)}
+            >
+              <VenueImage
+                src={venue.media?.[0]?.url || "https://via.placeholder.com/300"}
+                alt={venue.name}
+              />
+              <VenueDetails>
+                <h4>{venue.name}</h4>
+                <p>
+                  {venue.description?.substring(0, 40) ||
+                    "No description available"}
+                  ...
+                </p>
+                <p>Price: ${venue.price}</p>
+                <p>Max Guests: {venue.maxGuests}</p>
+              </VenueDetails>
+            </VenueCard>
+          ))}
+        </CardGrid>
+      )}
 
       {selectedVenue && (
         <VenueModal
