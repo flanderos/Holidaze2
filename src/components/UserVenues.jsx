@@ -132,7 +132,6 @@ const UserVenues = ({ venues, onVenueDeleted }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [isBookingsModalOpen, setIsBookingsModalOpen] = useState(false);
   const [bookedDates, setBookedDates] = useState([]);
   const [openModalType, setOpenModalType] = useState(null);
 
@@ -180,7 +179,6 @@ const UserVenues = ({ venues, onVenueDeleted }) => {
       setLoading(false);
     }
   };
-
   const handleEdit = (venue) => {
     setSelectedVenue(venue);
     setIsEditModalOpen(true);
@@ -189,11 +187,6 @@ const UserVenues = ({ venues, onVenueDeleted }) => {
   const closeEditModal = () => {
     setIsEditModalOpen(false);
     setSelectedVenue(null);
-  };
-
-  const closeBookingsModal = () => {
-    setIsBookingsModalOpen(false);
-    setBookedDates([]);
   };
 
   const handleDelete = async (venueId) => {
@@ -274,7 +267,7 @@ const UserVenues = ({ venues, onVenueDeleted }) => {
                 className="show-bookings"
                 onClick={(e) => {
                   e.stopPropagation();
-                  fetchVenueDetails(venue.id, "bookings"); // 🚀 Åpner kun bookings-modal
+                  fetchVenueDetails(venue.id, "bookings"); // Åpner kun bookingmodalen!
                 }}
               >
                 Show Bookings <FontAwesomeIcon icon={faCalendar} />
