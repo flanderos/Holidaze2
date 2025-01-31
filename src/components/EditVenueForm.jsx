@@ -107,8 +107,8 @@ const EditVenueForm = ({ venue, onClose, onUpdate }) => {
   const [formData, setFormData] = useState({
     name: venue?.name || "",
     description: venue?.description || "",
-    price: venue?.price || "",
-    maxGuests: venue?.maxGuests || "",
+    price: venue?.price || 0,
+    maxGuests: venue?.maxGuests || 0,
     meta: {
       wifi: venue?.meta?.wifi || false,
       parking: venue?.meta?.parking || false,
@@ -119,21 +119,24 @@ const EditVenueForm = ({ venue, onClose, onUpdate }) => {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    if (type === "checkbox") {
-      setFormData((prev) => ({
-        ...prev,
-        meta: {
-          ...prev.meta,
-          [name]: checked,
-        },
-      }));
-    } else {
-      setFormData({ ...formData, [name]: value });
-    }
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === "number" ? Number(value) : value,
+      meta: type === "checkbox" ? { ...prev.meta, [name]: checked } : prev.meta,
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const requestData = {
+      name: formData.name,
+      description: formData.description,
+      price: Number(formData.price),
+      maxGuests: Number(formData.maxGuests),
+      meta: formData.meta,
+    };
 
     try {
       const token = localStorage.getItem("token");
@@ -145,11 +148,13 @@ const EditVenueForm = ({ venue, onClose, onUpdate }) => {
           "X-Noroff-API-Key": API_KEY,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(requestData),
       });
 
+      const responseData = await response.json();
+
       if (!response.ok) {
-        throw new Error("Failed to update venue");
+        throw new Error(responseData.message || "Failed to update venue");
       }
 
       alert("Venue updated successfully!");

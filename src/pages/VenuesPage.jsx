@@ -12,7 +12,6 @@ const StyledSection = styled.section`
   align-items: center;
   flex-direction: column;
   width: 100%;
-  margin-bottom: 180px;
 `;
 
 const StyledH1 = styled.h1`
