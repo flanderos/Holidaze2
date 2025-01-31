@@ -50,6 +50,7 @@ const StyledInput = styled.input`
   padding: 10px;
   margin: 10px;
   outline: none;
+  font-size: 17px;
 
   &:focus {
     border-color: #007bff;
@@ -122,8 +123,13 @@ const LoginForm = () => {
     const newErrors = {};
 
     // Email-regex and validation
-    if (!/^[a-zA-Z0-9._%+-]+@stud\.noroff\.no$/.test(requestData.email)) {
-      newErrors.email = "Email must be a valid stud.noroff.no email address.";
+    if (
+      !/^[a-zA-Z0-9._%+-]+@(stud\.noroff\.no|noroff\.no)$/.test(
+        requestData.email,
+      )
+    ) {
+      newErrors.email =
+        "Email must be a valid stud.noroff.no or noroff.no email address.";
     }
 
     // Password validation
@@ -147,8 +153,9 @@ const LoginForm = () => {
 
       if (!response.ok) {
         const errorResponse = await response.json();
-        console.error("API Response Error:", errorResponse);
-        throw new Error("Failed to log in. Please try again.");
+
+        alert(errorResponse.errors[0].message);
+        throw new Error(errorResponse.errors[0]);
       }
 
       const responseData = await response.json();
@@ -160,7 +167,6 @@ const LoginForm = () => {
       setApiError("");
       navigate("/");
     } catch (error) {
-      console.error("Error:", error);
       setApiError("Failed to log in. Please try again.");
     }
   };

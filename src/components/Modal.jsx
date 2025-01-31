@@ -51,19 +51,6 @@ const Content = styled.div`
   height: 100%;
   overflow-y: auto;
   padding: 1.5rem;
-
-  &::-webkit-scrollbar {
-    width: 8px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: #f1f1f1;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: #888;
-    border-radius: 4px;
-  }
 `;
 
 const Image = styled.img`
@@ -76,14 +63,14 @@ const Image = styled.img`
 `;
 
 const Title = styled.h2`
-  font-size: 1.5rem;
+  font-size: 26px;
   font-weight: bold;
   margin-bottom: 1rem;
 `;
 
 const Description = styled.p`
   color: #4b5563;
-  margin-bottom: 1.5rem;
+  margin-bottom: 26px;
 `;
 
 const CreatorInfo = styled.div`
@@ -91,11 +78,12 @@ const CreatorInfo = styled.div`
   align-items: center;
   gap: 10px;
   padding: 5px;
-
   margin-bottom: 16px;
   background-color: #f0f0f0;
   border-radius: 10px;
   width: fit-content;
+  border-bottom: 1px solid black;
+  width: 95%;
 `;
 
 const CreatorAvatar = styled.img`
@@ -107,11 +95,15 @@ const CreatorAvatar = styled.img`
 
 const CreatorName = styled.span`
   font-weight: bold;
-  font-size: 1rem;
+  font-size: 16px;
+
+  @media (max-width: 768px) {
+    font-size: 14px;
+  }
 `;
 
 const CreatorEmail = styled.span`
-  font-size: 0.9rem;
+  font-size: 12px;
   color: #4b5563;
 `;
 
@@ -120,6 +112,11 @@ const Grid = styled.div`
   grid-template-columns: repeat(2, 1fr);
   gap: 1rem;
   margin-bottom: 1.5rem;
+  font-size: 16px;
+
+  @media (max-width: 768px) {
+    font-size: 12px;
+  }
 `;
 
 const InfoSection = styled.div`
@@ -137,18 +134,30 @@ const Label = styled.span`
 
 const CalendarContainer = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
+  background-color: #f0f0f0;
+  padding: 10px;
 `;
 
-const FromDate = styled.div`
-  display: flex;
-  flex-direction: column;
+const UnavailableDates = styled.div`
+  text-align: center;
 `;
 
 const VenueModal = ({ venue, isOpen, onClose }) => {
   const [bookedDates, setBookedDates] = useState([]);
   const [loadingDates, setLoadingDates] = useState(false);
   const [error, setError] = useState(null);
+
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [isOpen]);
 
   useEffect(() => {
     if (!isOpen || !venue?.data?.id) return;
@@ -276,14 +285,14 @@ const VenueModal = ({ venue, isOpen, onClose }) => {
               </InfoSection>
 
               <CalendarContainer>
-                <FromDate>
+                <UnavailableDates>
                   <h3>Unavailable Dates</h3>
                   {loadingDates && <p>Loading dates...</p>}
                   {error && <p style={{ color: "red" }}>{error}</p>}
                   {!loadingDates && !error && (
                     <VenueCalendar bookedDates={bookedDates} />
                   )}
-                </FromDate>
+                </UnavailableDates>
               </CalendarContainer>
             </>
           )}

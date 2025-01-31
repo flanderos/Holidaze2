@@ -1,6 +1,6 @@
 import React from "react";
 import styled from "styled-components";
-import HeroImage from "../assets/images/landingpageimage.png";
+import HeroImage from "../assets/images/landingpageimage.webp";
 import { StyledLink } from "./globalcomponents/StyledLink";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
@@ -17,45 +17,66 @@ const StyledHeroImage = styled.section`
   display: flex;
   justify-content: center;
   align-items: center;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+
+  @media (max-width: 768px) {
+    height: 400px;
+  }
+
+  @media (max-width: 480px) {
+    height: 300px;
+  }
 `;
 
 const TextContainer = styled.div`
-  color: #fff;
   max-width: 600px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  margin-left: 25px;
+  padding: 20px;
+  color: #fff;
+  font-weight: 300;
+  background: rgba(0, 0, 0, 0.5); /* Litt mørk bakgrunn for bedre lesbarhet */
+  border-radius: 10px;
+  font-size: 16px;
 
-  @media (max-width: 744px) {
+  @media (max-width: 768px) {
+    max-width: 80%;
+    padding: 15px;
+    font-size: 14px;
+  }
+
+  @media (max-width: 480px) {
+    max-width: 90%;
     padding: 10px;
-    align-items: center;
+    font-size: 12px;
   }
 `;
 
 const StyledH1 = styled.h1`
   font-size: 35px;
-  margin: 0;
+  margin-bottom: 10px;
+
+  @media (max-width: 480px) {
+    font-size: 26px;
+  }
 `;
 
 const HeroSection = () => {
   return (
-    <div>
-      <StyledHeroImage>
-        <TextContainer>
-          <StyledH1>Your Journey Starts Here</StyledH1>
-          <p>
-            Renting an arena for an event is like buying a mansion for a
-            sleepover—way too big, but hey, at least there’s space for the
-            pizza.
-          </p>
-          <StyledLink to="/venues" bgColor="white" color="black">
-            See our venues
-            <FontAwesomeIcon icon={faArrowRight} />
-          </StyledLink>
-        </TextContainer>
-      </StyledHeroImage>
-    </div>
+    <StyledHeroImage>
+      <TextContainer>
+        <StyledH1>Your Journey Starts Here</StyledH1>
+        <p>
+          "Welcome to Holidaze – Your Platform for venues!" At Holidaze, you can
+          effortlessly browse and book amazing venues, whether you're planning a
+          relaxing getaway, a weekend trip, or an unforgettable adventure.
+        </p>
+        <StyledLink to="/venues" bgColor="#FFD446" color="black">
+          See our venues
+          <FontAwesomeIcon icon={faArrowRight} />
+        </StyledLink>
+      </TextContainer>
+    </StyledHeroImage>
   );
 };
 

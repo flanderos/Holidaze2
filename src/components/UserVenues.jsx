@@ -116,6 +116,28 @@ const ModalOverlay = styled.div`
   z-index: 1000;
 `;
 
+const CloseBookingModalButton = styled.button`
+  padding: 10px;
+  color: black;
+  background-color: var(--color-primary);
+  border: none;
+  border-radius: 5px;
+  font-size: 20px;
+  font-family: poppins;
+  cursor: pointer;
+  width: 97%;
+  margin: 30px 0px 10px 10px;
+  transition: 0.3s;
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+
+  &:hover {
+    text-decoration: underline;
+  }
+  }
+`;
+
+//Uservenuemodal
+
 const ModalContent = styled.div`
   background: white;
   padding: 20px;
@@ -130,19 +152,12 @@ const UserVenues = ({ venues, onVenueDeleted }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [isBookingsModalOpen, setIsBookingsModalOpen] = useState(false);
   const [bookedDates, setBookedDates] = useState([]);
+  const [openModalType, setOpenModalType] = useState(null);
 
-  const fetchVenueDetails = async (id) => {
+  const fetchVenueDetails = async (id, modalType = "main") => {
     if (!id) {
       console.error("Venue ID is missing");
-      return;
-    }
-
-    const isVenueManager = localStorage.getItem("isVenueManager") === "true";
-
-    if (!isVenueManager) {
-      console.error("User is not a Venue Manager");
       return;
     }
 
@@ -165,12 +180,18 @@ const UserVenues = ({ venues, onVenueDeleted }) => {
       const data = await response.json();
 
       setSelectedVenue(data);
-      setBookedDates(
-        data.data.bookings.map((booking) => ({
+
+      // Hent bookings-data før modal åpnes
+      if (modalType === "bookings") {
+        const bookings = data.data.bookings.map((booking) => ({
           from: booking.dateFrom,
           to: booking.dateTo,
-        })),
-      );
+        }));
+        setBookedDates(bookings);
+        setOpenModalType("bookings"); // ✅ Åpne modal ETTER at bookedDates er satt
+      } else {
+        setOpenModalType("main");
+      }
     } catch (err) {
       console.error("Error fetching venue details:", err);
       setError("Unable to load venue details. Please try again.");
@@ -178,7 +199,6 @@ const UserVenues = ({ venues, onVenueDeleted }) => {
       setLoading(false);
     }
   };
-
   const handleEdit = (venue) => {
     setSelectedVenue(venue);
     setIsEditModalOpen(true);
@@ -187,11 +207,6 @@ const UserVenues = ({ venues, onVenueDeleted }) => {
   const closeEditModal = () => {
     setIsEditModalOpen(false);
     setSelectedVenue(null);
-  };
-
-  const closeBookingsModal = () => {
-    setIsBookingsModalOpen(false);
-    setBookedDates([]);
   };
 
   const handleDelete = async (venueId) => {
@@ -231,11 +246,13 @@ const UserVenues = ({ venues, onVenueDeleted }) => {
     <>
       <VenueContainer>
         {venues.map((venue) => (
-          <VenueCard key={venue.id}>
+          <VenueCard
+            onClick={() => fetchVenueDetails(venue.id, "main")}
+            key={venue.id}
+          >
             <img
               src={venue.media?.[0]?.url || "https://via.placeholder.com/300"}
               alt={venue.name}
-              onClick={() => fetchVenueDetails(venue.id)}
             />
             <VenueDetails>
               <h4>{venue.name}</h4>
@@ -248,20 +265,29 @@ const UserVenues = ({ venues, onVenueDeleted }) => {
               <p>Max Guests: {venue.maxGuests}</p>
             </VenueDetails>
             <ButtonGroup>
-              <ActionButton className="edit" onClick={() => handleEdit(venue)}>
+              <ActionButton
+                className="edit"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleEdit(venue);
+                }}
+              >
                 Edit <FontAwesomeIcon icon={faPenToSquare} />
               </ActionButton>
               <ActionButton
                 className="delete"
-                onClick={() => handleDelete(venue.id)}
+                onClick={(e) => {
+                  e.stopPropagation();
+                  handleDelete(venue.id);
+                }}
               >
                 Delete <FontAwesomeIcon icon={faTrash} />
               </ActionButton>
               <ActionButton
                 className="show-bookings"
-                onClick={() => {
-                  fetchVenueDetails(venue.id);
-                  setIsBookingsModalOpen(true);
+                onClick={(e) => {
+                  e.stopPropagation();
+                  fetchVenueDetails(venue.id, "bookings"); // Åpner kun bookingmodalen!
                 }}
               >
                 Show Bookings <FontAwesomeIcon icon={faCalendar} />
@@ -275,8 +301,8 @@ const UserVenues = ({ venues, onVenueDeleted }) => {
       {error && <ErrorMessage>{error}</ErrorMessage>}
 
       {/* Bookings Modal */}
-      {isBookingsModalOpen && (
-        <ModalOverlay onClick={closeBookingsModal}>
+      {openModalType === "bookings" && selectedVenue && (
+        <ModalOverlay onClick={() => setOpenModalType(null)}>
           <ModalContent onClick={(e) => e.stopPropagation()}>
             <h3>Booked Dates</h3>
             <ul>
@@ -291,7 +317,9 @@ const UserVenues = ({ venues, onVenueDeleted }) => {
                 <p>No bookings available</p>
               )}
             </ul>
-            <button onClick={closeBookingsModal}>Close</button>
+            <CloseBookingModalButton onClick={() => setOpenModalType(null)}>
+              Close
+            </CloseBookingModalButton>
           </ModalContent>
         </ModalOverlay>
       )}
@@ -301,8 +329,31 @@ const UserVenues = ({ venues, onVenueDeleted }) => {
         <EditVenueForm
           venue={selectedVenue}
           onClose={closeEditModal}
-          onUpdate={() => window.location.reload()} // Refresh after editing
+          onUpdate={() => window.location.reload()}
         />
+      )}
+      {openModalType === "main" && selectedVenue && (
+        <ModalOverlay onClick={() => setOpenModalType(null)}>
+          <ModalContent onClick={(e) => e.stopPropagation()}>
+            <h3>{selectedVenue.data.name}</h3>
+            <img
+              src={
+                selectedVenue.data.media?.[0]?.url ||
+                "https://via.placeholder.com/300"
+              }
+              alt={selectedVenue.data.name}
+              style={{
+                width: "100%",
+                borderRadius: "10px",
+                marginBottom: "10px",
+              }}
+            />
+            <p>{selectedVenue.data.description}</p>
+            <p>Price: ${selectedVenue.data.price}</p>
+            <p>Max Guests: {selectedVenue.data.maxGuests}</p>
+            <button onClick={() => setOpenModalType(null)}>Close</button>
+          </ModalContent>
+        </ModalOverlay>
       )}
     </>
   );

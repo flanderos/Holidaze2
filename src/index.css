@@ -1,6 +1,5 @@
 body {
   margin: 0 auto;
-  background-color: rgb(209, 209, 209);
   font-family: -apple-system, BlinkMacSystemFont, "Michroma", "Segoe UI",
     "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
     "Helvetica Neue", sans-serif;
@@ -11,6 +10,7 @@ body {
 html {
   box-sizing: border-box;
   margin: 0 auto;
+  /* overflow-x: hidden; */
 }
 
 code {

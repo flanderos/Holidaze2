@@ -26,6 +26,7 @@ const StyledInput = styled.input`
   padding: 10px;
   margin: 10px;
   outline: none;
+  font-size: 17px;
 
   &:focus {
     border-color: #007bff;
@@ -118,14 +119,22 @@ export const CreateVenueForm = ({ onClose }) => {
     if (!formData.name.trim()) newErrors.name = "Name is required.";
     if (!formData.description.trim())
       newErrors.description = "Description is required.";
-    if (!formData.price || isNaN(formData.price) || formData.price <= 0)
-      newErrors.price = "Price must be a positive number.";
     if (
-      !formData.maxGuests ||
-      isNaN(formData.maxGuests) ||
-      formData.maxGuests <= 0
-    )
-      newErrors.maxGuests = "Max Guests must be a positive integer.";
+      !formData.price ||
+      isNaN(formData.price) ||
+      formData.price <= 0 ||
+      formData.price > 10000
+    ) {
+      newErrors.price =
+        "Price must be a positive number and cannot exceed 10,000.";
+    }
+    if (!formData.maxGuests || isNaN(formData.maxGuests)) {
+      newErrors.maxGuests = "Max Guests must be a number.";
+    } else if (formData.maxGuests <= 0) {
+      newErrors.maxGuests = "Max Guests must be a positive number.";
+    } else if (formData.maxGuests > 100) {
+      newErrors.maxGuests = "Max Guests cannot exceed 100.";
+    }
 
     if (
       formData.mediaUrl &&
@@ -189,7 +198,7 @@ export const CreateVenueForm = ({ onClose }) => {
         /* const data = await response.json(); */ //Commented out to pass deploy
         alert("Venue created successfully!");
 
-        // Lukk modal etter vellykket opprettelse
+        // Close modal if all is good
         if (onClose) {
           onClose();
         }

@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 
 export const StyledLink = styled(Link)`
-  color: ${({ color }) => color || "white"};
+  color: ${({ color }) => color || "var(--color-primary"};
   padding: 15px;
   background-color: ${({ bgColor }) => bgColor || "black"};
   width: 200px;
@@ -15,6 +15,8 @@ export const StyledLink = styled(Link)`
   text-decoration: none;
   margin: 0 auto;
   font-family: montserrat;
+  margin-top: 20px;
+  font-weight: 500;
 
   &:hover {
     cursor: pointer;

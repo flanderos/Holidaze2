@@ -29,7 +29,7 @@ const StyledH1 = styled.h1`
 `;
 
 const StyledSubtitle = styled.h2`
-  font-size: 20px;
+  font-size: 14px;
   font-family: "Edu AU VIC WA NT Hand";
   font-weight: 400;
 `;

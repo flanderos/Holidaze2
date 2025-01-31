@@ -12,7 +12,6 @@ const StyledNavBar = styled.nav`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 10px 20px;
   position: relative;
   z-index: 2;
 `;
@@ -59,7 +58,7 @@ const StyledLink = styled(Link)`
 
 const Hamburger = styled.div`
   position: fixed;
-  right: 20px;
+  right: 35px;
   top: 20px;
   background-color: var(--color-primary);
   padding: 10px;
@@ -122,9 +121,11 @@ const NavBar = () => {
             Venues
             <FontAwesomeIcon icon={faStar} />
           </StyledLink>
-          <StyledLink to="/profile">
-            Profile <FontAwesomeIcon icon={faUser} />
-          </StyledLink>
+          {isLoggedIn && (
+            <StyledLink to="/profile">
+              Profile <FontAwesomeIcon icon={faUser} />
+            </StyledLink>
+          )}
           {isLoggedIn ? (
             <StyledLink onClick={logOut} isLogout>
               Log Out <FontAwesomeIcon icon={faPersonWalkingArrowRight} />

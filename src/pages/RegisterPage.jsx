@@ -24,7 +24,7 @@ const StyledForm = styled.form`
   background-color: transparent;
   backdrop-filter: blur(10px);
   color: #fff;
-  width: 50%;
+  width: 100%;
   max-width: 800px;
   display: flex;
   flex-direction: column;
@@ -34,13 +34,14 @@ const StyledForm = styled.form`
   padding: 40px;
   border-radius: 10px;
 
-    @media (max-width: 1080px) {
-  
-    width: 90%;
+  @media (max-width: 768px) {
+    padding: 20px;
   }
-}
 
-  
+  @media (max-width: 480px) {
+    width: 90%;
+    padding: 10px;
+  }
 `;
 
 const StyledH1 = styled.h1`
@@ -56,6 +57,7 @@ const StyledInput = styled.input`
   width: 90%;
   margin: 10px;
   outline: none;
+  font-size: 17px;
 
   &:focus {
     border-color: #007bff;
@@ -156,6 +158,36 @@ const RegisterPage = () => {
   const navigate = useNavigate();
   const [errors, setErrors] = useState({});
 
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    const newErrors = { ...errors };
+
+    if (name === "username" && !/^[a-zA-Z0-9_]+$/.test(value.trim())) {
+      newErrors.username =
+        "Name can only contain letters, numbers, and underscores.";
+    } else {
+      delete newErrors.username;
+    }
+
+    if (
+      name === "email" &&
+      !/^[a-zA-Z0-9._%+-]+@(stud\.noroff\.no|noroff\.no)$/.test(value.trim())
+    ) {
+      newErrors.email =
+        "Email must be a valid stud.noroff.no or noroff.no email address.";
+    } else {
+      delete newErrors.email;
+    }
+
+    if (name === "password" && value.length < 8) {
+      newErrors.password = "Password must be at least 8 characters.";
+    } else {
+      delete newErrors.password;
+    }
+
+    setErrors(newErrors);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const form = e.target;
@@ -164,13 +196,15 @@ const RegisterPage = () => {
       name: form.username.value.trim(),
       email: form.email.value.trim(),
       password: form.password.value.trim(),
-      ...(form.bio.value.trim() && { bio: form.bio.value.trim() }),
-      ...(form.avatarUrl.value.trim() && {
-        avatar: { url: form.avatarUrl.value.trim(), alt: "useravatar" },
-      }),
-      ...(form.bannerUrl.value.trim() && {
-        banner: { url: form.bannerUrl.value.trim(), alt: "userbanner" },
-      }),
+      bio: form.bio.value.trim() || "",
+      avatar: {
+        url: form.avatarUrl.value.trim() || "https://i.pravatar.cc/300",
+        alt: "avatar",
+      },
+      banner: {
+        url: form.bannerUrl.value.trim() || "https://i.pravatar.cc/300",
+        alt: "banner",
+      },
       venueManager: form.venueManager.checked,
     };
 
@@ -180,8 +214,13 @@ const RegisterPage = () => {
         "Name can only contain letters, numbers, and underscores.";
     }
 
-    if (!/^[a-zA-Z0-9._%+-]+@stud\.noroff\.no$/.test(requestData.email)) {
-      newErrors.email = "Email must be a valid stud.noroff.no email address.";
+    if (
+      !/^[a-zA-Z0-9._%+-]+@(stud\.noroff\.no|noroff\.no)$/.test(
+        requestData.email,
+      )
+    ) {
+      newErrors.email =
+        "Email must be a valid stud.noroff.no or noroff.no email address.";
     }
 
     if (requestData.password.length < 8) {
@@ -199,7 +238,19 @@ const RegisterPage = () => {
         body: JSON.stringify(requestData),
       });
 
-      if (!response.ok) throw new Error("Failed to register.");
+      if (!response.ok) {
+        const errorData = await response.json();
+
+        console.log(errorData);
+
+        const errorMessages = errorData.errors
+          .map((error) => error.message)
+          .join("\n");
+
+        alert(`Registration failed:\n${errorMessages}`);
+
+        return;
+      }
 
       alert("Registration successful!");
       form.reset();
@@ -217,17 +268,20 @@ const RegisterPage = () => {
       <StyledContainer>
         <StyledForm onSubmit={handleSubmit}>
           <StyledH1>Register User</StyledH1>
-          <StyledLabel htmlFor="username">Username (Required)</StyledLabel>
+          <StyledLabel htmlFor="username">Username</StyledLabel>
           <StyledInput
             type="text"
             id="username"
             name="username"
             placeholder="enter your username here..."
             isInvalid={!!errors.username}
+            onChange={handleInputChange}
           />
           {errors.username && <ErrorMessage>{errors.username}</ErrorMessage>}
 
-          <StyledLabel htmlFor="email">Email (Required)</StyledLabel>
+          <StyledLabel htmlFor="email">
+            Email (Required to be @STUD.NOROFF.NO))
+          </StyledLabel>
           <StyledInput
             type="email"
             id="email"
@@ -250,7 +304,9 @@ const RegisterPage = () => {
           <StyledLabel htmlFor="bio">Bio (Optional)</StyledLabel>
           <StyledTextarea id="bio" name="bio" rows="4" />
 
-          <StyledLabel htmlFor="avatarUrl">Avatar URL</StyledLabel>
+          <StyledLabel htmlFor="avatarUrl">
+            Avatar URL(Has to be a URL){" "}
+          </StyledLabel>
           <StyledInput type="url" id="avatarUrl" name="avatarUrl" />
 
           <StyledLabel htmlFor="bannerUrl">Banner URL</StyledLabel>
