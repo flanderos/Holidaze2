@@ -88,12 +88,12 @@ Open your browser and navigate to http://localhost:3000.
 
 🔗 Links
 
-- Gantt Chart: View Project Timeline
-- Design Prototype: Figma Design
-- Style Guide: Style Guide
-- Kanban Board: Trello Board
-- Repository: GitHub Repository
-- Hosted Application: Live Demo on Netlify
+
+- Design Prototype: https://www.figma.com/design/SIx85pWqpQ4auSRVHbGt2x/Holidaze-Design?node-id=0-1&t=1B6jbidPq4BLUBjM-1
+- Style Guide: https://www.figma.com/design/SIx85pWqpQ4auSRVHbGt2x/Holidaze-Design?node-id=0-1&t=1B6jbidPq4BLUBjM-1
+- Trello Board: https://trello.com/invite/b/671a9a6d5532ffb2ff29a363/ATTI69a02a552c0439f909c6f20f852c1a8f827118B0/project-exam2)
+- Repository: Its here!
+- Hosted Application: https://lustrous-dodol-b7681b.netlify.app/
 
 ## 🙌 Acknowledgments
 
