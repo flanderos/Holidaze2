@@ -1,5 +1,8 @@
 import React from "react";
 import styled from "styled-components";
+import { API_URL, API_KEY } from "../config";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faTrash } from "@fortawesome/free-solid-svg-icons";
 
 const Overlay = styled.div`
   position: fixed;
@@ -57,10 +60,55 @@ const VenueDetails = styled.div`
   }
 `;
 
-const UserBookingModal = ({ booking, isOpen, onClose }) => {
+const DeleteButton = styled.button`
+  background-color: red;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-top: 15px;
+  width: 100%;
+
+  &:hover {
+    background-color: darkred;
+  }
+`;
+
+const UserBookingModal = ({ booking, isOpen, onClose, onDelete }) => {
   if (!isOpen || !booking) return null;
 
   const { venue } = booking;
+
+  const handleDelete = async () => {
+    if (!window.confirm("Are you sure you want to delete this booking?"))
+      return;
+
+    try {
+      const token = localStorage.getItem("token");
+
+      const response = await fetch(`${API_URL}/bookings/${booking.id}`, {
+        method: "DELETE",
+        headers: {
+          Authorization: `Bearer ${token}`,
+          "X-Noroff-API-Key": API_KEY,
+          "Content-Type": "application/json",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to delete booking");
+      }
+
+      alert("Booking deleted successfully!");
+      onDelete(booking.id); // Fjerner bookingen fra UI
+      onClose(); // Lukker modalen
+    } catch (error) {
+      console.error("Error deleting booking:", error);
+      alert("Failed to delete booking. Please try again.");
+    }
+  };
 
   return (
     <Overlay $isOpen={isOpen} onClick={onClose}>
@@ -78,6 +126,12 @@ const UserBookingModal = ({ booking, isOpen, onClose }) => {
           <p>Max Guests: {venue.maxGuests}</p>
           <p>Rating: {venue.rating || "N/A"}</p>
         </VenueDetails>
+
+        {/* 🚀 Delete-knapp */}
+        <DeleteButton onClick={handleDelete}>
+          Cancel booking
+          <FontAwesomeIcon icon={faTrash} />
+        </DeleteButton>
       </ModalContainer>
     </Overlay>
   );

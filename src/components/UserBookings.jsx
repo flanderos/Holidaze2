@@ -130,6 +130,12 @@ const UserBookings = () => {
     setSelectedBooking(null);
   };
 
+  const handleDeleteBooking = (bookingId) => {
+    setBookings((prevBookings) =>
+      prevBookings.filter((b) => b.id !== bookingId),
+    );
+  };
+
   if (loading) return <p>Loading bookings...</p>;
   if (error) return <ErrorMessage>{error}</ErrorMessage>;
 
@@ -166,6 +172,7 @@ const UserBookings = () => {
           booking={selectedBooking}
           isOpen={!!selectedBooking}
           onClose={closeModal}
+          onDelete={handleDeleteBooking}
         />
       )}
     </>
