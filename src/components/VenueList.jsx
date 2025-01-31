@@ -70,10 +70,28 @@ const VenueCard = styled.div`
   align-items: center;
   text-align: center;
   transition: 0.3s;
+  width: 350px;
+  overflow: hidden;
+  white-space: normal;
+  text-overflow: ellipsis;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 
   &:hover {
     cursor: pointer;
     box-shadow: rgba(0, 0, 0, 0.1) 0px 4px 6px;
+  }
+
+  @media (max-width: 1500px) {
+    grid-template-columns: repeat(3, 1fr);
+  }
+
+  @media (max-width: 1150px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  @media (max-width: 900px) {
+    grid-template-columns: 1fr;
   }
 `;
 
@@ -88,6 +106,13 @@ const VenueImage = styled.img`
 const VenueDetails = styled.div`
   font-size: 14px;
   color: #555;
+  flex-grow: 1;
+  width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: normal;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
 
   h4 {
     font-size: 16px;
@@ -107,14 +132,29 @@ const ErrorMessage = styled.p`
 `;
 
 const NoVenuesFound = styled.div`
-display-flex;
-justify-content: center;
-align-items: center;
-height: 400px;
-width: 100%;
-text-align: center;
-font-weight: bold;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 400px;
+  width: 100%;
+  text-align: center;
+  font-weight: bold;
+`;
 
+const LoadMoreButton = styled.button`
+  background-color: #007bff;
+  color: white;
+  padding: 10px 15px;
+  border: none;
+  border-radius: 5px;
+  font-size: 1rem;
+  cursor: pointer;
+  margin-top: 20px;
+  transition: 0.3s;
+
+  &:hover {
+    background-color: #0056b3;
+  }
 `;
 
 const VenueList = () => {
@@ -124,17 +164,20 @@ const VenueList = () => {
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedVenue, setSelectedVenue] = useState(null);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
 
-  // Fetch all venues
+  // Fetch venues
   useEffect(() => {
     const fetchVenues = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`${API_URL}/venues?_owner=true`, {
-          headers: {
-            "X-Noroff-API-Key": API_KEY,
+        const response = await fetch(
+          `${API_URL}/venues?_owner=true&limit=100&page=${page}`,
+          {
+            headers: { "X-Noroff-API-Key": API_KEY },
           },
-        });
+        );
 
         if (!response.ok) {
           throw new Error("Failed to fetch venues");
@@ -142,11 +185,12 @@ const VenueList = () => {
 
         const data = await response.json();
 
-        const sortedVenues = data.data.sort(
-          (a, b) => new Date(b.created) - new Date(a.created),
-        );
-        setVenues(sortedVenues);
-        setFilteredVenues(sortedVenues);
+        if (data.data.length === 0) {
+          setHasMore(false); // Hide the "Load More" Button if there is no more Venues
+        } else {
+          setVenues((prev) => [...prev, ...data.data]);
+          setFilteredVenues((prev) => [...prev, ...data.data]);
+        }
       } catch (err) {
         setError("Error fetching venues. Please try again later.");
         console.error(err);
@@ -156,9 +200,9 @@ const VenueList = () => {
     };
 
     fetchVenues();
-  }, []);
+  }, [page]);
 
-  // Filter venues based on the search term
+  // Filter venues based on search
   const handleSearch = (e) => {
     const term = e.target.value.toLowerCase();
     setSearchTerm(term);
@@ -191,7 +235,7 @@ const VenueList = () => {
     }
   };
 
-  if (loading) return <p>Loading venues...</p>;
+  if (loading && venues.length === 0) return <p>Loading venues...</p>;
   if (error) return <ErrorMessage>{error}</ErrorMessage>;
 
   return (
@@ -203,14 +247,12 @@ const VenueList = () => {
         onChange={handleSearch}
       />
 
-      {/* Show the ERror message here*/}
       {filteredVenues.length === 0 && (
         <NoVenuesFound>
           <p>No venues found for "{searchTerm}". Try another search term.</p>
         </NoVenuesFound>
       )}
 
-      {/* Show search results here */}
       {filteredVenues.length > 0 && (
         <CardGrid>
           {filteredVenues.map((venue) => (
@@ -235,6 +277,12 @@ const VenueList = () => {
             </VenueCard>
           ))}
         </CardGrid>
+      )}
+
+      {hasMore && !loading && (
+        <LoadMoreButton onClick={() => setPage((prev) => prev + 1)}>
+          Load More
+        </LoadMoreButton>
       )}
 
       {selectedVenue && (

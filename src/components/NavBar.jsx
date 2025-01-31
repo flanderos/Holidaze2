@@ -80,6 +80,7 @@ const Hamburger = styled.div`
 
   @media (max-width: 768px) {
     display: flex;
+    right: 50px;
   }
 `;
 

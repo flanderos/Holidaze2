@@ -6,12 +6,13 @@ import VenueList from "../components/VenueList";
 import PageTitle from "../../src/utils/PageTitle";
 
 const StyledSection = styled.section`
-  background-color: rgb(209, 209, 209);
+  background-color: rgb(255, 255, 255);
   display: flex;
   justify-content: center;
   align-items: center;
   flex-direction: column;
   width: 100%;
+  margin-bottom: 200px;
 `;
 
 const StyledH1 = styled.h1`
