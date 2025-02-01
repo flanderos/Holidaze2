@@ -1,17 +1,19 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import EditVenueForm from "./EditVenueForm";
+import VenueModal from "./Modal"; // Import VenueModal
 import { API_URL, API_KEY } from "../config";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
-import { faTrash } from "@fortawesome/free-solid-svg-icons";
-import { faCalendar } from "@fortawesome/free-solid-svg-icons";
+import { faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
+import PlaceholderImage from "../assets/images/houseimagemissing.png";
 
 const VenueContainer = styled.section`
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 20px;
   padding: 20px;
+  width: 85%;
+  margin: 0 auto; /* Sentrerer gridet */
 
   @media (max-width: 1340px) {
     grid-template-columns: repeat(3, 1fr);
@@ -35,29 +37,31 @@ const VenueCard = styled.div`
   flex-direction: column;
   align-items: center;
   text-align: center;
-  position: relative;
   transition: 0.3s;
+  width: 100%;
 
   img {
     width: 100%;
-    height: 200px;
+    height: 220px;
     object-fit: cover;
     border-radius: 10px;
     margin-bottom: 10px;
   }
 
   h3 {
-    font-size: 16px;
-    margin: 5px 0;
+    font-size: 18px;
+    margin: 10px 0;
+    font-weight: bold;
   }
 
   p {
     margin: 5px 0;
+    color: #555;
   }
 
   &:hover {
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-    transform: scale(1.02);
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+    transform: scale(1.01);
     cursor: pointer;
   }
 `;
@@ -65,10 +69,16 @@ const VenueCard = styled.div`
 const VenueDetails = styled.div`
   font-size: 14px;
   color: #555;
+  background: #f8f8f8;
+  padding: 10px;
+  border-radius: 8px;
+  width: 100%;
+  text-align: center;
 
   h4 {
     font-size: 16px;
-    margin: 5px 0;
+    margin-bottom: 5px;
+    font-weight: bold;
   }
 
   p {
@@ -76,8 +86,37 @@ const VenueDetails = styled.div`
   }
 `;
 
+const BookingList = styled.div`
+  margin-top: 10px;
+  font-size: 14px;
+  color: #555;
+  background: #f8f8f8;
+  padding: 10px;
+  border-radius: 8px;
+  width: 100%;
+  text-align: center;
+
+  h4 {
+    font-size: 16px;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  li {
+    font-size: 14px;
+    margin-bottom: 5px;
+  }
+`;
+
 const ButtonGroup = styled.div`
   display: flex;
+  justify-content: center;
   gap: 10px;
   margin-top: 10px;
 `;
@@ -90,126 +129,86 @@ const ActionButton = styled.button`
   font-size: 14px;
   transition: 0.3s ease;
   background-color: var(--color-primary);
-
-  &:hover {
-    text-decoration: underline;
-  }
-`;
-
-const ErrorMessage = styled.p`
-  color: #dc3545;
-  background-color: #f8d7da;
-  padding: 10px;
-  border-radius: 5px;
-`;
-
-const ModalOverlay = styled.div`
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  z-index: 1000;
-`;
-
-const CloseBookingModalButton = styled.button`
-  padding: 10px;
   color: black;
-  background-color: var(--color-primary);
-  border: none;
-  border-radius: 5px;
-  font-size: 20px;
-  font-family: poppins;
-  cursor: pointer;
-  width: 97%;
-  margin: 30px 0px 10px 10px;
-  transition: 0.3s;
-  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  font-family: montserrat;
 
   &:hover {
     text-decoration: underline;
+    box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
   }
-  }
-`;
-
-//Uservenuemodal
-
-const ModalContent = styled.div`
-  background: white;
-  padding: 20px;
-  border-radius: 10px;
-  max-width: 400px;
-  width: 90%;
-  box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
 `;
 
 const UserVenues = ({ venues, onVenueDeleted }) => {
-  const [selectedVenue, setSelectedVenue] = useState(null);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
+  const [bookings, setBookings] = useState({});
+  const [isVenueModalOpen, setIsVenueModalOpen] = useState(false);
   const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-  const [bookedDates, setBookedDates] = useState([]);
-  const [openModalType, setOpenModalType] = useState(null);
+  const [selectedVenue, setSelectedVenue] = useState(null);
 
-  const fetchVenueDetails = async (id, modalType = "main") => {
-    if (!id) {
-      console.error("Venue ID is missing");
-      return;
-    }
+  useEffect(() => {
+    const fetchBookings = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        const venueIds = venues.map((venue) => venue.id);
+        const bookingData = {};
 
-    setLoading(true);
-    setError(null);
+        await Promise.all(
+          venueIds.map(async (id) => {
+            const response = await fetch(
+              `${API_URL}/venues/${id}?_bookings=true`,
+              {
+                headers: {
+                  Authorization: `Bearer ${token}`,
+                  "X-Noroff-API-Key": API_KEY,
+                },
+              },
+            );
 
-    try {
-      const token = localStorage.getItem("token");
-      const response = await fetch(`${API_URL}/venues/${id}?_bookings=true`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "X-Noroff-API-Key": API_KEY,
-        },
-      });
+            if (!response.ok) {
+              throw new Error(`Failed to fetch bookings for venue ${id}`);
+            }
 
-      if (!response.ok) {
-        throw new Error("Failed to fetch venue details");
+            const data = await response.json();
+            bookingData[id] =
+              data.data?.bookings?.map((booking) => ({
+                from: booking.dateFrom
+                  ? new Date(booking.dateFrom).toLocaleDateString()
+                  : "Unknown",
+                to: booking.dateTo
+                  ? new Date(booking.dateTo).toLocaleDateString()
+                  : "Unknown",
+              })) || [];
+          }),
+        );
+
+        setBookings(bookingData);
+      } catch (err) {
+        console.error("Error fetching bookings:", err);
       }
+    };
 
-      const data = await response.json();
-
-      setSelectedVenue(data);
-
-      // Hent bookings-data før modal åpnes
-      if (modalType === "bookings") {
-        const bookings = data.data.bookings.map((booking) => ({
-          from: booking.dateFrom,
-          to: booking.dateTo,
-        }));
-        setBookedDates(bookings);
-        setOpenModalType("bookings"); // ✅ Åpne modal ETTER at bookedDates er satt
-      } else {
-        setOpenModalType("main");
-      }
-    } catch (err) {
-      console.error("Error fetching venue details:", err);
-      setError("Unable to load venue details. Please try again.");
-    } finally {
-      setLoading(false);
+    if (venues.length > 0) {
+      fetchBookings();
     }
+  }, [venues]);
+
+  const handleOpenModal = (venue) => {
+    setSelectedVenue(venue);
+    setIsVenueModalOpen(true);
   };
-  const handleEdit = (venue) => {
+
+  const handleCloseModal = () => {
+    setIsVenueModalOpen(false);
+    setSelectedVenue(null);
+  };
+
+  const handleEdit = (venue, e) => {
+    e.stopPropagation();
     setSelectedVenue(venue);
     setIsEditModalOpen(true);
   };
 
-  const closeEditModal = () => {
-    setIsEditModalOpen(false);
-    setSelectedVenue(null);
-  };
-
-  const handleDelete = async (venueId) => {
+  const handleDelete = async (venueId, e) => {
+    e.stopPropagation();
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this venue?",
     );
@@ -238,122 +237,66 @@ const UserVenues = ({ venues, onVenueDeleted }) => {
     }
   };
 
-  if (!venues || venues.length === 0) {
-    return <p>No venues available for this user.</p>;
-  }
-
   return (
     <>
       <VenueContainer>
         {venues.map((venue) => (
-          <VenueCard
-            onClick={() => fetchVenueDetails(venue.id, "main")}
-            key={venue.id}
-          >
+          <VenueCard key={venue.id} onClick={() => handleOpenModal(venue)}>
             <img
-              src={venue.media?.[0]?.url || "https://via.placeholder.com/300"}
+              src={venue.media?.[0]?.url || PlaceholderImage}
               alt={venue.name}
             />
+            <h3>{venue.name}</h3>
+            <p>
+              {venue.description?.substring(0, 40) ||
+                "No description available"}
+              ...
+            </p>
             <VenueDetails>
-              <h4>{venue.name}</h4>
-              <p>
-                {venue.description?.substring(0, 40) ||
-                  "No description available"}
-                ...
-              </p>
-              <p>Price: ${venue.price}</p>
+              <h4>Price: ${venue.price}</h4>
               <p>Max Guests: {venue.maxGuests}</p>
             </VenueDetails>
+
+            <BookingList>
+              <h4>Booked Dates</h4>
+              {bookings[venue.id]?.length > 0 ? (
+                <ul>
+                  {bookings[venue.id].map((date, index) => (
+                    <li key={index}>
+                      {date.from} - {date.to}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p>No bookings</p>
+              )}
+            </BookingList>
+
             <ButtonGroup>
-              <ActionButton
-                className="edit"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleEdit(venue);
-                }}
-              >
+              <ActionButton onClick={(e) => handleEdit(venue, e)}>
                 Edit <FontAwesomeIcon icon={faPenToSquare} />
               </ActionButton>
-              <ActionButton
-                className="delete"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  handleDelete(venue.id);
-                }}
-              >
+              <ActionButton onClick={(e) => handleDelete(venue.id, e)}>
                 Delete <FontAwesomeIcon icon={faTrash} />
-              </ActionButton>
-              <ActionButton
-                className="show-bookings"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  fetchVenueDetails(venue.id, "bookings"); // Åpner kun bookingmodalen!
-                }}
-              >
-                Show Bookings <FontAwesomeIcon icon={faCalendar} />
               </ActionButton>
             </ButtonGroup>
           </VenueCard>
         ))}
+
+        {isEditModalOpen && selectedVenue && (
+          <EditVenueForm
+            venue={selectedVenue}
+            onClose={() => setIsEditModalOpen(false)}
+            onUpdate={() => window.location.reload()}
+          />
+        )}
       </VenueContainer>
-
-      {loading && <p>Loading venue details...</p>}
-      {error && <ErrorMessage>{error}</ErrorMessage>}
-
-      {/* Bookings Modal */}
-      {openModalType === "bookings" && selectedVenue && (
-        <ModalOverlay onClick={() => setOpenModalType(null)}>
-          <ModalContent onClick={(e) => e.stopPropagation()}>
-            <h3>Booked Dates</h3>
-            <ul>
-              {bookedDates.length > 0 ? (
-                bookedDates.map((date, index) => (
-                  <li key={index}>
-                    From: {new Date(date.from).toLocaleDateString()} To:{" "}
-                    {new Date(date.to).toLocaleDateString()}
-                  </li>
-                ))
-              ) : (
-                <p>No bookings available</p>
-              )}
-            </ul>
-            <CloseBookingModalButton onClick={() => setOpenModalType(null)}>
-              Close
-            </CloseBookingModalButton>
-          </ModalContent>
-        </ModalOverlay>
-      )}
-
-      {/* Edit Venue Modal */}
-      {isEditModalOpen && (
-        <EditVenueForm
-          venue={selectedVenue}
-          onClose={closeEditModal}
-          onUpdate={() => window.location.reload()}
+      {isVenueModalOpen && selectedVenue && (
+        <VenueModal
+          venue={{ data: selectedVenue }}
+          isOpen={true}
+          onClose={handleCloseModal}
         />
-      )}
-      {openModalType === "main" && selectedVenue && (
-        <ModalOverlay onClick={() => setOpenModalType(null)}>
-          <ModalContent onClick={(e) => e.stopPropagation()}>
-            <h3>{selectedVenue.data.name}</h3>
-            <img
-              src={
-                selectedVenue.data.media?.[0]?.url ||
-                "https://via.placeholder.com/300"
-              }
-              alt={selectedVenue.data.name}
-              style={{
-                width: "100%",
-                borderRadius: "10px",
-                marginBottom: "10px",
-              }}
-            />
-            <p>{selectedVenue.data.description}</p>
-            <p>Price: ${selectedVenue.data.price}</p>
-            <p>Max Guests: {selectedVenue.data.maxGuests}</p>
-            <button onClick={() => setOpenModalType(null)}>Close</button>
-          </ModalContent>
-        </ModalOverlay>
       )}
     </>
   );

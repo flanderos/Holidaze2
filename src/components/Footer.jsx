@@ -8,9 +8,10 @@ const StyledContainer = styled.section`
   display: flex;
   flex-direction: column;
   position: fixed;
-  width: 100%;
+  height: 200px;
   bottom: 0;
   z-index: -1;
+  width: 100%;
 `;
 const StyledDiv = styled.div`
   display:;

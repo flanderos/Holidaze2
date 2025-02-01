@@ -113,8 +113,6 @@ const UserBookings = () => {
 
       const data = await response.json();
 
-      console.log(data.data);
-
       setBookings(data.data || []);
     } catch (err) {
       setError("Error fetching bookings. Please try again.");
@@ -130,6 +128,12 @@ const UserBookings = () => {
 
   const closeModal = () => {
     setSelectedBooking(null);
+  };
+
+  const handleDeleteBooking = (bookingId) => {
+    setBookings((prevBookings) =>
+      prevBookings.filter((b) => b.id !== bookingId),
+    );
   };
 
   if (loading) return <p>Loading bookings...</p>;
@@ -168,6 +172,7 @@ const UserBookings = () => {
           booking={selectedBooking}
           isOpen={!!selectedBooking}
           onClose={closeModal}
+          onDelete={handleDeleteBooking}
         />
       )}
     </>

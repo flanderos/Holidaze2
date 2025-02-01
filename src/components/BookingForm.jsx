@@ -35,17 +35,18 @@ const SubmitButton = styled.button`
   color: black;
   background-color: var(--color-primary);
   border: none;
-  border-radius: 5px;
+  border-radius: 16px;
   font-size: 20px;
   font-family: poppins;
   cursor: pointer;
-  width: 97%;
+  width: 90%;
   margin: 30px 0px 10px 10px;
   transition: 0.3s;
-  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  
 
   &:hover {
     text-decoration: underline;
+box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   }
   }
 `;

@@ -2,6 +2,17 @@ import React, { useState } from "react";
 import styled from "styled-components";
 import { API_URL, API_KEY } from "../config";
 
+const Overlay = styled.div`
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(8px);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+`;
+
 const StyledForm = styled.form`
   background-color: #fff;
   backdrop-filter: blur(10px);
@@ -14,6 +25,10 @@ const StyledForm = styled.form`
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
   padding: 20px;
   border-radius: 10px;
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 
   @media (max-width: 768px) {
     width: 80%;
@@ -107,8 +122,8 @@ const EditVenueForm = ({ venue, onClose, onUpdate }) => {
   const [formData, setFormData] = useState({
     name: venue?.name || "",
     description: venue?.description || "",
-    price: venue?.price || "",
-    maxGuests: venue?.maxGuests || "",
+    price: venue?.price || 0,
+    maxGuests: venue?.maxGuests || 0,
     meta: {
       wifi: venue?.meta?.wifi || false,
       parking: venue?.meta?.parking || false,
@@ -119,21 +134,24 @@ const EditVenueForm = ({ venue, onClose, onUpdate }) => {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    if (type === "checkbox") {
-      setFormData((prev) => ({
-        ...prev,
-        meta: {
-          ...prev.meta,
-          [name]: checked,
-        },
-      }));
-    } else {
-      setFormData({ ...formData, [name]: value });
-    }
+
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === "number" ? Number(value) : value,
+      meta: type === "checkbox" ? { ...prev.meta, [name]: checked } : prev.meta,
+    }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+
+    const requestData = {
+      name: formData.name,
+      description: formData.description,
+      price: Number(formData.price),
+      maxGuests: Number(formData.maxGuests),
+      meta: formData.meta,
+    };
 
     try {
       const token = localStorage.getItem("token");
@@ -145,11 +163,13 @@ const EditVenueForm = ({ venue, onClose, onUpdate }) => {
           "X-Noroff-API-Key": API_KEY,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(formData),
+        body: JSON.stringify(requestData),
       });
 
+      const responseData = await response.json();
+
       if (!response.ok) {
-        throw new Error("Failed to update venue");
+        throw new Error(responseData.message || "Failed to update venue");
       }
 
       alert("Venue updated successfully!");
@@ -161,79 +181,81 @@ const EditVenueForm = ({ venue, onClose, onUpdate }) => {
   };
 
   return (
-    <StyledForm onSubmit={handleSubmit}>
-      <h2>Edit Venue</h2>
-      <StyledInput
-        type="text"
-        name="name"
-        placeholder="Venue Name"
-        value={formData.name}
-        onChange={handleChange}
-      />
-      <StyledTextarea
-        name="description"
-        placeholder="Description"
-        rows="4"
-        value={formData.description}
-        onChange={handleChange}
-      />
-      <StyledInput
-        type="number"
-        name="price"
-        placeholder="Price"
-        value={formData.price}
-        onChange={handleChange}
-      />
-      <StyledInput
-        type="number"
-        name="maxGuests"
-        placeholder="Max Guests"
-        value={formData.maxGuests}
-        onChange={handleChange}
-      />
-      <StyledCheckboxGroup>
-        <StyledCheckbox>
-          <input
-            type="checkbox"
-            name="wifi"
-            checked={formData.meta.wifi}
-            onChange={handleChange}
-          />
-          Wifi
-        </StyledCheckbox>
-        <StyledCheckbox>
-          <input
-            type="checkbox"
-            name="parking"
-            checked={formData.meta.parking}
-            onChange={handleChange}
-          />
-          Parking
-        </StyledCheckbox>
-        <StyledCheckbox>
-          <input
-            type="checkbox"
-            name="breakfast"
-            checked={formData.meta.breakfast}
-            onChange={handleChange}
-          />
-          Breakfast
-        </StyledCheckbox>
-        <StyledCheckbox>
-          <input
-            type="checkbox"
-            name="pets"
-            checked={formData.meta.pets}
-            onChange={handleChange}
-          />
-          Pets
-        </StyledCheckbox>
-      </StyledCheckboxGroup>
-      <StyledButton type="submit">Update Venue</StyledButton>
-      <StyledButton type="button" onClick={onClose}>
-        Cancel
-      </StyledButton>
-    </StyledForm>
+    <Overlay onClick={onClose}>
+      <StyledForm onSubmit={handleSubmit}>
+        <h2>Edit Venue</h2>
+        <StyledInput
+          type="text"
+          name="name"
+          placeholder="Venue Name"
+          value={formData.name}
+          onChange={handleChange}
+        />
+        <StyledTextarea
+          name="description"
+          placeholder="Description"
+          rows="4"
+          value={formData.description}
+          onChange={handleChange}
+        />
+        <StyledInput
+          type="number"
+          name="price"
+          placeholder="Price"
+          value={formData.price}
+          onChange={handleChange}
+        />
+        <StyledInput
+          type="number"
+          name="maxGuests"
+          placeholder="Max Guests"
+          value={formData.maxGuests}
+          onChange={handleChange}
+        />
+        <StyledCheckboxGroup>
+          <StyledCheckbox>
+            <input
+              type="checkbox"
+              name="wifi"
+              checked={formData.meta.wifi}
+              onChange={handleChange}
+            />
+            Wifi
+          </StyledCheckbox>
+          <StyledCheckbox>
+            <input
+              type="checkbox"
+              name="parking"
+              checked={formData.meta.parking}
+              onChange={handleChange}
+            />
+            Parking
+          </StyledCheckbox>
+          <StyledCheckbox>
+            <input
+              type="checkbox"
+              name="breakfast"
+              checked={formData.meta.breakfast}
+              onChange={handleChange}
+            />
+            Breakfast
+          </StyledCheckbox>
+          <StyledCheckbox>
+            <input
+              type="checkbox"
+              name="pets"
+              checked={formData.meta.pets}
+              onChange={handleChange}
+            />
+            Pets
+          </StyledCheckbox>
+        </StyledCheckboxGroup>
+        <StyledButton type="submit">Update Venue</StyledButton>
+        <StyledButton type="button" onClick={onClose}>
+          Cancel
+        </StyledButton>
+      </StyledForm>
+    </Overlay>
   );
 };
 
