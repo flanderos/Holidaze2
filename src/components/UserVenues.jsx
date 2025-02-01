@@ -12,7 +12,8 @@ const VenueContainer = styled.section`
   grid-template-columns: repeat(4, 1fr);
   gap: 20px;
   padding: 20px;
-  width: 80%;
+  width: 85%;
+  margin: 0 auto; /* Sentrerer gridet */
 
   @media (max-width: 1340px) {
     grid-template-columns: repeat(3, 1fr);
@@ -37,29 +38,51 @@ const VenueCard = styled.div`
   align-items: center;
   text-align: center;
   transition: 0.3s;
-  width: 300px;
+  width: 100%;
 
   img {
     width: 100%;
-    height: 200px;
+    height: 220px;
     object-fit: cover;
     border-radius: 10px;
     margin-bottom: 10px;
   }
 
   h3 {
-    font-size: 16px;
-    margin: 5px 0;
+    font-size: 18px;
+    margin: 10px 0;
+    font-weight: bold;
   }
 
   p {
     margin: 5px 0;
+    color: #555;
   }
 
   &:hover {
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-    transform: scale(1.02);
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
+    transform: scale(1.01);
     cursor: pointer;
+  }
+`;
+
+const VenueDetails = styled.div`
+  font-size: 14px;
+  color: #555;
+  background: #f8f8f8;
+  padding: 10px;
+  border-radius: 8px;
+  width: 100%;
+  text-align: center;
+
+  h4 {
+    font-size: 16px;
+    margin-bottom: 5px;
+    font-weight: bold;
+  }
+
+  p {
+    margin: 5px 0;
   }
 `;
 
@@ -71,24 +94,29 @@ const BookingList = styled.div`
   padding: 10px;
   border-radius: 8px;
   width: 100%;
+  text-align: center;
 
   h4 {
     font-size: 16px;
+    font-weight: bold;
     margin-bottom: 5px;
   }
 
   ul {
     list-style: none;
     padding: 0;
+    margin: 0;
   }
 
   li {
+    font-size: 14px;
     margin-bottom: 5px;
   }
 `;
 
 const ButtonGroup = styled.div`
   display: flex;
+  justify-content: center;
   gap: 10px;
   margin-top: 10px;
 `;
@@ -102,6 +130,7 @@ const ActionButton = styled.button`
   transition: 0.3s ease;
   background-color: var(--color-primary);
   color: black;
+  font-family: montserrat;
 
   &:hover {
     text-decoration: underline;
@@ -173,13 +202,13 @@ const UserVenues = ({ venues, onVenueDeleted }) => {
   };
 
   const handleEdit = (venue, e) => {
-    e.stopPropagation(); // Stopper klikk fra å åpne VenueModal
+    e.stopPropagation();
     setSelectedVenue(venue);
     setIsEditModalOpen(true);
   };
 
   const handleDelete = async (venueId, e) => {
-    e.stopPropagation(); // Stopper klikk fra å åpne VenueModal
+    e.stopPropagation();
     const confirmDelete = window.confirm(
       "Are you sure you want to delete this venue?",
     );
@@ -217,14 +246,16 @@ const UserVenues = ({ venues, onVenueDeleted }) => {
               src={venue.media?.[0]?.url || PlaceholderImage}
               alt={venue.name}
             />
-            <h4>{venue.name}</h4>
+            <h3>{venue.name}</h3>
             <p>
               {venue.description?.substring(0, 40) ||
                 "No description available"}
               ...
             </p>
-            <p>Price: ${venue.price}</p>
-            <p>Max Guests: {venue.maxGuests}</p>
+            <VenueDetails>
+              <h4>Price: ${venue.price}</h4>
+              <p>Max Guests: {venue.maxGuests}</p>
+            </VenueDetails>
 
             <BookingList>
               <h4>Booked Dates</h4>
@@ -251,21 +282,20 @@ const UserVenues = ({ venues, onVenueDeleted }) => {
             </ButtonGroup>
           </VenueCard>
         ))}
-      </VenueContainer>
 
+        {isEditModalOpen && selectedVenue && (
+          <EditVenueForm
+            venue={selectedVenue}
+            onClose={() => setIsEditModalOpen(false)}
+            onUpdate={() => window.location.reload()}
+          />
+        )}
+      </VenueContainer>
       {isVenueModalOpen && selectedVenue && (
         <VenueModal
           venue={{ data: selectedVenue }}
           isOpen={true}
           onClose={handleCloseModal}
-        />
-      )}
-
-      {isEditModalOpen && (
-        <EditVenueForm
-          venue={selectedVenue}
-          onClose={() => setIsEditModalOpen(false)}
-          onUpdate={() => window.location.reload()}
         />
       )}
     </>
