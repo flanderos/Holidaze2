@@ -46,7 +46,7 @@ const TopVenues = () => {
     <StyledContainer>
       <h1>Top Venues</h1>
       <StyledParagraph>
-        Here are the top 3 venues to rent for your event.
+        Here are some images of our amazing venues.
       </StyledParagraph>
       <GridContainer>
         <StyledImage src={placeholder1} alt="Top Venue 1" />
