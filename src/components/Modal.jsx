@@ -66,6 +66,17 @@ const Title = styled.h2`
   font-size: 26px;
   font-weight: bold;
   margin-bottom: 1rem;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  text-align: flex-start;
+
+  @media (max-width: 768px) {
+    font-size: 22px;
+  }
+
+  @media (max-width: 480px) {
+    font-size: 18px;
+  }
 `;
 
 const Description = styled.p`
@@ -84,6 +95,12 @@ const CreatorInfo = styled.div`
   width: fit-content;
   border-bottom: 1px solid black;
   width: 95%;
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    align-items: flex-start;
+    padding: 10px;
+  }
 `;
 
 const CreatorAvatar = styled.img`
