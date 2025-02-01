@@ -57,18 +57,22 @@ const StyledBox = styled.div`
   
 `;
 
-const StyledLink = styled(Link)`
-  color: black;
-  font-weight: 600;
-  background-color: var(--color-primary);
-  text-decoration: none;
-  padding: 5px;
-  transition: 0.3s;
-  border-radius: 16px;
-  width: 200px;
+export const StyledLink = styled(Link)`
   display: flex;
   justify-content: center;
   align-items: center;
+  text-decoration: none;
+  font-weight: 500;
+  font-family: "Montserrat", sans-serif;
+  padding: 5px;
+  transition: 0.3s;
+  border-radius: 25px;
+  width: 200px;
+
+  /* Standard farger */
+  color: ${({ color }) => color || "black"};
+  background-color: ${({ bgColor }) => bgColor || "var(--color-primary)"};
+
   &:hover {
     background-color: black;
     color: var(--color-primary);

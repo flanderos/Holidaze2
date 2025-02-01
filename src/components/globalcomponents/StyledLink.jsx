@@ -7,8 +7,7 @@ export const StyledLink = styled(Link)`
   background-color: ${({ bgColor }) => bgColor || "black"};
   width: 200px;
   border-radius: 25px;
-  font-family: "Michroma", sans-serif;
-  transition: 0.6s;
+  transition: 0.3s;
   display: flex;
   justify-content: center;
   align-items: center;
