@@ -166,15 +166,18 @@ const EditProfileModal = ({ isOpen, onClose, profileData, onUpdate }) => {
         body.bio = updatedProfile.bio;
       }
 
-      const response = await fetch(`${API_URL}/profiles/${profileData.name}`, {
-        method: "PUT",
-        headers: {
-          Authorization: `Bearer ${token}`,
-          "X-Noroff-API-Key": API_KEY,
-          "Content-Type": "application/json",
+      const response = await fetch(
+        `${API_URL}/profiles/${profileData.name}?timestamp=${Date.now()}`,
+        {
+          method: "PUT",
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "X-Noroff-API-Key": API_KEY,
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(body),
         },
-        body: JSON.stringify(body),
-      });
+      );
 
       if (!response.ok) {
         throw new Error(`Failed to update profile: ${response.statusText}`);
