@@ -23,6 +23,8 @@ const ModalContainer = styled.div`
   max-width: 500px;
   width: 90%;
   box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  max-height: 80vh;
+  overflow-y: auto;
 `;
 
 const CloseButton = styled.button`
@@ -31,7 +33,8 @@ const CloseButton = styled.button`
   right: 10px;
   background: none;
   border: none;
-  font-size: 1.5rem;
+  font-size: 40px;
+  font-weight: bold;
   cursor: pointer;
 `;
 
