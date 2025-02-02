@@ -181,8 +181,8 @@ const EditVenueForm = ({ venue, onClose, onUpdate }) => {
   };
 
   return (
-    <Overlay onClick={onClose}>
-      <StyledForm onSubmit={handleSubmit}>
+    <Overlay>
+      <StyledForm onSubmit={handleSubmit} onClick={(e) => e.stopPropagation()}>
         <h2>Edit Venue</h2>
         <StyledInput
           type="text"

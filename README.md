@@ -78,16 +78,19 @@ Follow these steps to run the application locally:
 1. Clone the repository:
    git clone https://github.com/flanderos/holidaze.git
 
-Install dependencies:
-npm install
+2. Navigate to correct folder
 
-Start the development server:
+3. Install dependencies:
 
-npm start
+   npm i
+
+4. Start the development server:
+
+   npm start
+
 Open your browser and navigate to http://localhost:3000.
 
 🔗 Links
-
 
 - Design Prototype: https://www.figma.com/design/SIx85pWqpQ4auSRVHbGt2x/Holidaze-Design?node-id=0-1&t=1B6jbidPq4BLUBjM-1
 - Style Guide: https://www.figma.com/design/SIx85pWqpQ4auSRVHbGt2x/Holidaze-Design?node-id=0-1&t=1B6jbidPq4BLUBjM-1

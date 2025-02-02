@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import EditVenueForm from "./EditVenueForm";
-import VenueModal from "./Modal"; // Import VenueModal
+import VenueModal from "./Modal";
 import { API_URL, API_KEY } from "../config";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
@@ -9,108 +9,107 @@ import PlaceholderImage from "../assets/images/houseimagemissing.png";
 
 const VenueContainer = styled.section`
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
-  padding: 20px;
-  width: 85%;
-  margin: 0 auto; /* Sentrerer gridet */
-
-  @media (max-width: 1340px) {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  @media (max-width: 1024px) {
-    grid-template-columns: repeat(2, 1fr);
-  }
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+  padding: 2rem;
+  width: min(95%, 1400px);
+  margin: 0 auto;
 
   @media (max-width: 768px) {
-    grid-template-columns: 1fr;
+    padding: 1rem;
+    gap: 1.5rem;
   }
 `;
 
 const VenueCard = styled.div`
-  background-color: #fff;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  padding: 20px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  text-align: center;
-  transition: 0.3s;
-  width: 100%;
+  position: relative;
 
   img {
     width: 100%;
-    height: 220px;
+    height: 240px;
     object-fit: cover;
-    border-radius: 10px;
-    margin-bottom: 10px;
+    transition: transform 0.3s ease;
   }
 
   h3 {
-    font-size: 18px;
-    margin: 10px 0;
-    font-weight: bold;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #2d3748;
+    margin: 1rem;
+    line-height: 1.4;
   }
 
   p {
-    margin: 5px 0;
-    color: #555;
+    color: #4a5568;
+    line-height: 1.6;
+    margin: 0 1rem;
   }
 
   &:hover {
-    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.15);
-    transform: scale(1.01);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
     cursor: pointer;
+
+    img {
+      transform: scale(1.05);
+    }
   }
 `;
 
 const VenueDetails = styled.div`
-  font-size: 14px;
-  color: #555;
-  background: #f8f8f8;
-  padding: 10px;
+  margin: 1rem;
+  padding: 1rem;
+  background: #f7fafc;
   border-radius: 8px;
-  width: 100%;
-  text-align: center;
 
   h4 {
-    font-size: 16px;
-    margin-bottom: 5px;
-    font-weight: bold;
+    color: #2d3748;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
   }
 
   p {
-    margin: 5px 0;
+    margin: 0.5rem 0;
+    color: #4a5568;
   }
 `;
 
 const BookingList = styled.div`
-  margin-top: 10px;
-  font-size: 14px;
-  color: #555;
-  background: #f8f8f8;
-  padding: 10px;
+  margin: 1rem;
+  padding: 1.5rem;
+  background: #f7fafc;
   border-radius: 8px;
-  width: 100%;
-  text-align: center;
+  flex-grow: 1;
 
   h4 {
-    font-size: 16px;
-    font-weight: bold;
-    margin-bottom: 5px;
+    color: #2d3748;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
   }
 
   ul {
-    list-style: none;
-    padding: 0;
     margin: 0;
+    padding: 0;
   }
 
   li {
-    font-size: 14px;
-    margin-bottom: 5px;
+    padding: 0.5rem 0;
+    border-bottom: 1px solid #e2e8f0;
+
+    &:last-child {
+      border-bottom: none;
+    }
   }
 `;
 
@@ -118,7 +117,7 @@ const ButtonGroup = styled.div`
   display: flex;
   justify-content: center;
   gap: 10px;
-  margin-top: 10px;
+  margin-bottom: 5px;
 `;
 
 const ActionButton = styled.button`

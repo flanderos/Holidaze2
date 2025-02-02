@@ -6,69 +6,81 @@ import UserBookingModal from "./UserBookingModal";
 
 const BookingContainer = styled.section`
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 20px;
-  padding: 20px;
-
-  @media (max-width: 1340px) {
-    grid-template-columns: repeat(3, 1fr);
-  }
-
-  @media (max-width: 1024px) {
-    grid-template-columns: repeat(2, 1fr);
-  }
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 2rem;
+  padding: 2rem;
+  width: min(95%, 1400px);
+  margin: 0 auto;
 
   @media (max-width: 768px) {
-    grid-template-columns: 1fr;
+    padding: 1rem;
+    gap: 1.5rem;
   }
 `;
 
 const BookingCard = styled.div`
-  background-color: #fff;
-  border: 1px solid #ddd;
-  border-radius: 10px;
-  padding: 20px;
+  background: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  overflow: hidden;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+  height: 100%;
   display: flex;
   flex-direction: column;
-  align-items: center;
-  text-align: center;
-  transition: 0.3s;
+  position: relative;
 
   img {
     width: 100%;
-    height: 200px;
+    height: 240px;
     object-fit: cover;
-    border-radius: 10px;
-    margin-bottom: 10px;
+    transition: transform 0.3s ease;
   }
 
   h3 {
-    font-size: 16px;
-    margin: 5px 0;
+    font-size: 1.25rem;
+    font-weight: 600;
+    color: #2d3748;
+    margin: 1rem;
+    line-height: 1.4;
   }
 
   p {
-    margin: 5px 0;
+    color: #4a5568;
+    line-height: 1.6;
+    margin: 0.5rem 1rem;
   }
 
   &:hover {
-    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-    transform: scale(1.02);
+    transform: translateY(-4px);
+    box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
     cursor: pointer;
+
+    img {
+      transform: scale(1.05);
+    }
   }
 `;
 
 const BookingDetails = styled.div`
-  font-size: 14px;
-  color: #555;
+  margin: 1rem;
+  padding: 1rem;
+  background: #f7fafc;
+  border-radius: 8px;
+  flex-grow: 1;
 
   h4 {
-    font-size: 16px;
-    margin: 5px 0;
+    color: #2d3748;
+    font-size: 1.1rem;
+    font-weight: 600;
+    margin-bottom: 0.75rem;
   }
 
   p {
-    margin: 5px 0;
+    color: #4a5568;
+    margin: 0.5rem 0;
+    line-height: 1.5;
   }
 `;
 

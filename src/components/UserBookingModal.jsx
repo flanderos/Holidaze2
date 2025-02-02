@@ -7,75 +7,156 @@ import { faTrash } from "@fortawesome/free-solid-svg-icons";
 const Overlay = styled.div`
   position: fixed;
   inset: 0;
-  background: rgba(0, 0, 0, 0.5);
-  backdrop-filter: blur(4px);
+  background: rgba(0, 0, 0, 0.75);
+  backdrop-filter: blur(8px);
   z-index: 50;
   display: ${({ $isOpen }) => ($isOpen ? "flex" : "none")};
   align-items: center;
   justify-content: center;
+  padding: 1rem;
+  opacity: ${({ $isOpen }) => ($isOpen ? 1 : 0)};
+  transition: opacity 0.3s ease-in-out;
 `;
 
 const ModalContainer = styled.div`
   position: relative;
   background: white;
-  border-radius: 12px;
-  padding: 20px;
-  max-width: 500px;
-  width: 90%;
-  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-  max-height: 80vh;
+  border-radius: 16px;
+  padding: 2rem;
+  max-width: 600px;
+  width: 95%;
+  box-shadow:
+    0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  max-height: 85vh;
   overflow-y: auto;
+  overflow-x: hidden;
+  transform: ${({ $isOpen }) => ($isOpen ? "scale(1)" : "scale(0.95)")};
+  transition: transform 0.3s ease-in-out;
+  box-sizing: border-box;
+
+  /* Stilig scrollbar */
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: #f1f1f1;
+    border-radius: 4px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #c1c1c1;
+    border-radius: 4px;
+
+    &:hover {
+      background: #a1a1a1;
+    }
+  }
 `;
 
 const CloseButton = styled.button`
   position: absolute;
-  top: 10px;
-  right: 10px;
-  background: none;
+  top: 1rem;
+  right: 1rem;
+  background: rgba(0, 0, 0, 0.1);
   border: none;
-  font-size: 40px;
-  font-weight: bold;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
   cursor: pointer;
+  transition: all 0.2s ease;
+  color: #4a5568;
+
+  &::before {
+    content: "×";
+    font-size: 24px;
+    line-height: 1;
+  }
+
+  &:hover {
+    background: rgba(0, 0, 0, 0.2);
+    transform: rotate(90deg);
+  }
 `;
 
 const VenueImage = styled.img`
   width: 100%;
-  height: auto;
-  border-radius: 10px;
-  margin-bottom: 20px;
+  height: 300px;
+  object-fit: cover;
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+
+  &:hover {
+    transform: scale(1.02);
+  }
 `;
 
 const VenueTitle = styled.h2`
-  font-size: 1.5rem;
-  margin-bottom: 10px;
+  font-size: 1.75rem;
+  font-weight: 600;
+  color: #2d3748;
+  margin-bottom: 1rem;
+  line-height: 1.3;
 `;
 
 const VenueDescription = styled.p`
-  font-size: 1rem;
-  margin-bottom: 20px;
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: #4a5568;
+  margin-bottom: 1.5rem;
 `;
 
 const VenueDetails = styled.div`
-  font-size: 0.9rem;
+  background: #f7fafc;
+  padding: 1.5rem;
+  border-radius: 12px;
+  margin-bottom: 1.5rem;
 
   p {
-    margin: 5px 0;
+    color: #4a5568;
+    margin: 0.75rem 0;
+    font-size: 1rem;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+
+    &:first-child {
+      margin-top: 0;
+    }
+
+    &:last-child {
+      margin-bottom: 0;
+    }
   }
 `;
 
 const DeleteButton = styled.button`
-  background-color: red;
+  background-color: #e53e3e;
   color: white;
-  padding: 10px 15px;
+  padding: 1rem 1.5rem;
   border: none;
-  border-radius: 5px;
+  border-radius: 8px;
+  font-family: montserrat;
   font-size: 1rem;
+  font-weight: 500;
   cursor: pointer;
-  margin-top: 15px;
   width: 100%;
+  transition: all 0.2s ease;
 
   &:hover {
-    background-color: darkred;
+    background-color: #c53030;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 6px rgba(229, 62, 62, 0.3);
+  }
+
+  &:active {
+    transform: translateY(0);
   }
 `;
 
@@ -105,8 +186,8 @@ const UserBookingModal = ({ booking, isOpen, onClose, onDelete }) => {
       }
 
       alert("Booking deleted successfully!");
-      onDelete(booking.id); // Fjerner bookingen fra UI
-      onClose(); // Lukker modalen
+      onDelete(booking.id);
+      onClose();
     } catch (error) {
       console.error("Error deleting booking:", error);
       alert("Failed to delete booking. Please try again.");
