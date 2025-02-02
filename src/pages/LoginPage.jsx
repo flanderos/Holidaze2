@@ -12,96 +12,158 @@ const StyledContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 20px;
+  padding: 40px 20px;
   background-image: url(${loginBg});
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   min-height: 100vh;
-  position: sticky;
+  position: relative;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6));
+    pointer-events: none;
+  }
 `;
 
 const StyledForm = styled.form`
-  background-color: transparent;
-  backdrop-filter: blur(10px);
+  position: relative;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(16px);
   color: #fff;
-  height: 500px;
-  width: 300px;
+  min-height: 500px;
+  width: 100%;
+  max-width: 400px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-  align-items: flex-start;
-  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-  padding: 20px;
-  border-radius: 10px;
+  gap: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  padding: 40px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+
+  @media (max-width: 480px) {
+    padding: 30px;
+    width: 90%;
+  }
 `;
 
 const StyledH1 = styled.h1`
   text-align: center;
-  text-decoration: underline;
-`;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 30px;
+  color: white;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  position: relative;
+  
+  &::after {
+    content: '';
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 3px;
+    background: var(--color-primary);
+    border-radius: 2px;
+}}`;
 
 const StyledInput = styled.input`
-  padding: 10px;
-  border: 1px solid ${(props) => (props.isInvalid ? "red" : "#ccc")};
-  border-radius: 5px;
-  font-family: poppins;
-  width: 90%;
-  padding: 10px;
-  margin: 10px;
+  width: 100%;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid
+    ${(props) => (props.isInvalid ? "#ff4d4f" : "rgba(255, 255, 255, 0.2)")};
+  border-radius: 12px;
+  font-family: "Poppins", sans-serif;
+  font-size: 16px;
+  color: white;
+  transition: all 0.3s ease;
   outline: none;
-  font-size: 17px;
+  font-family: poppins;
 
   &:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
   }
+
   &::placeholder {
-    color: #aaa;
+    color: rgba(255, 255, 255, 0.6);
     font-style: italic;
+  }
+
+  &:-webkit-autofill,
+  &:-webkit-autofill:hover,
+  &:-webkit-autofill:focus {
+    -webkit-text-fill-color: white;
+    -webkit-box-shadow: 0 0 0px 1000px rgba(0, 0, 0, 0.1) inset;
+    transition: background-color 5000s ease-in-out 0s;
   }
 `;
 
 const StyledLabel = styled.label`
   font-size: 14px;
-  font-weight: bold;
-  padding: 5px;
-`;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: -15px;
+\`;`;
 
 const StyledButton = styled.button`
-  padding: 10px;
+  width: 100%;
+  padding: 14px;
+  background: var(--color-primary);
   color: black;
-  background-color: var(--color-primary);
   border: none;
-  border-radius: 5px;
-  font-size: 20px;
-  font-family: poppins;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: 600;
+  font-family: "Poppins", sans-serif;
   cursor: pointer;
-  width: 97%;
-  margin: 30px 0px 10px 10px;
-  transition: 0.3s;
-  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  transition: all 0.3s ease;
+  margin-top: 20px;
 
   &:hover {
-    text-decoration: underline;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
   }
+
+  &:active {
+    transform: translateY(0);
   }
 `;
 
 const ErrorMessage = styled.p`
-  color: red;
-  font-size: 12px;
+  color: #ff4d4f;
+  font-size: 14px;
+  margin-top: -15px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  &::before {
+    content: "⚠";
+    font-size: 16px;
+  }
 `;
 
 const StyledLink = styled(Link)`
   color: var(--color-primary);
   text-decoration: none;
-  padding: 5px;
-  transition: 0.3s;
-  border-radius: 5px;
+  font-weight: 500;
+  transition: all 0.3s ease;
 
   &:hover {
-    text-decoration: underline;
+    text-decoration: none;
+    opacity: 0.8;
   }
 `;
 
