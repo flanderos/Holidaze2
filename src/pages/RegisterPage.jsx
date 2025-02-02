@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback } from "react";
 import Header from "../components/Header";
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
@@ -308,82 +308,136 @@ const ErrorMessage = styled.p`
   }
 `;
 
+const VALIDATION_RULES = {
+  username: {
+    required: true,
+    pattern: /^[a-zA-Z0-9_]+$/,
+    minLength: 3,
+    maxLength: 20,
+    messages: {
+      required: "Username is required",
+      pattern: "Username can only contain letters, numbers, and underscores",
+      length: "Username must be between 3 and 20 characters",
+    },
+  },
+  email: {
+    required: true,
+    pattern: /^[a-zA-Z0-9._%+-]+@(stud\.noroff\.no|noroff\.no)$/,
+    messages: {
+      required: "Email is required",
+      pattern: "Email must be a valid stud.noroff.no or noroff.no address",
+    },
+  },
+  password: {
+    required: true,
+    minLength: 8,
+    messages: {
+      required: "Password is required",
+      length: "Password must be at least 8 characters",
+    },
+  },
+  url: {
+    pattern: /^(https?:\/\/)?([\da-z.-]+)\.([a-z.]{2,6})([/\w .-]*)*\/?$/,
+    messages: {
+      pattern: "Please enter a valid URL",
+    },
+  },
+};
+
 const RegisterPage = () => {
   const navigate = useNavigate();
   const [errors, setErrors] = useState({});
+  const [formData, setFormData] = useState({
+    username: "",
+    email: "",
+    password: "",
+    bio: "",
+    avatarUrl: "",
+    bannerUrl: "",
+    venueManager: false,
+  });
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    const newErrors = { ...errors };
+  const validateField = useCallback((name, value) => {
+    const rules =
+      VALIDATION_RULES[
+        name === "avatarUrl" || name === "bannerUrl" ? "url" : name
+      ];
+    if (!rules) return "";
 
-    if (name === "username" && !/^[a-zA-Z0-9_]+$/.test(value.trim())) {
-      newErrors.username =
-        "Name can only contain letters, numbers, and underscores.";
-    } else {
-      delete newErrors.username;
+    const trimmedValue = value.trim();
+
+    if (rules.required && !trimmedValue) {
+      return rules.messages.required;
     }
 
-    if (
-      name === "email" &&
-      !/^[a-zA-Z0-9._%+-]+@(stud\.noroff\.no|noroff\.no)$/.test(value.trim())
-    ) {
-      newErrors.email =
-        "Email must be a valid stud.noroff.no or noroff.no email address.";
-    } else {
-      delete newErrors.email;
+    if (rules.pattern && trimmedValue && !rules.pattern.test(trimmedValue)) {
+      return rules.messages.pattern;
     }
 
-    if (name === "password" && value.length < 8) {
-      newErrors.password = "Password must be at least 8 characters.";
-    } else {
-      delete newErrors.password;
+    if (rules.minLength && trimmedValue.length < rules.minLength) {
+      return rules.messages.length;
     }
 
-    setErrors(newErrors);
-  };
+    if (rules.maxLength && trimmedValue.length > rules.maxLength) {
+      return rules.messages.length;
+    }
+
+    return "";
+  }, []);
+
+  const handleInputChange = useCallback(
+    (e) => {
+      const { name, value, type, checked } = e.target;
+      const inputValue = type === "checkbox" ? checked : value;
+
+      setFormData((prev) => ({
+        ...prev,
+        [name]: inputValue,
+      }));
+
+      if (type !== "checkbox") {
+        const error = validateField(name, value);
+        setErrors((prev) => ({
+          ...prev,
+          [name]: error,
+        }));
+      }
+    },
+    [validateField],
+  );
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const form = e.target;
+
+    // Validate all fields
+    const newErrors = {};
+    Object.keys(formData).forEach((field) => {
+      if (field !== "venueManager" && field !== "bio") {
+        const error = validateField(field, formData[field]);
+        if (error) newErrors[field] = error;
+      }
+    });
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return;
+    }
 
     const requestData = {
-      name: form.username.value.trim(),
-      email: form.email.value.trim(),
-      password: form.password.value.trim(),
-      bio: form.bio.value.trim() || "",
+      name: formData.username.trim(),
+      email: formData.email.trim(),
+      password: formData.password,
+      bio: formData.bio.trim(),
       avatar: {
-        url: form.avatarUrl.value.trim() || "https://i.pravatar.cc/300",
+        url: formData.avatarUrl.trim() || "https://i.pravatar.cc/300",
         alt: "avatar",
       },
       banner: {
-        url: form.bannerUrl.value.trim() || "https://i.pravatar.cc/300",
+        url: formData.bannerUrl.trim() || "https://i.pravatar.cc/300",
         alt: "banner",
       },
-      venueManager: form.venueManager.checked,
+      venueManager: formData.venueManager,
     };
-
-    const newErrors = {};
-    if (!/^[a-zA-Z0-9_]+$/.test(requestData.name)) {
-      newErrors.username =
-        "Name can only contain letters, numbers, and underscores.";
-    }
-
-    if (
-      !/^[a-zA-Z0-9._%+-]+@(stud\.noroff\.no|noroff\.no)$/.test(
-        requestData.email,
-      )
-    ) {
-      newErrors.email =
-        "Email must be a valid stud.noroff.no or noroff.no email address.";
-    }
-
-    if (requestData.password.length < 8) {
-      newErrors.password = "Password must be at least 8 characters.";
-    }
-
-    setErrors(newErrors);
-
-    if (Object.keys(newErrors).length > 0) return;
 
     try {
       const response = await fetch("https://v2.api.noroff.dev/auth/register", {
@@ -392,26 +446,21 @@ const RegisterPage = () => {
         body: JSON.stringify(requestData),
       });
 
+      const data = await response.json();
+
       if (!response.ok) {
-        const errorData = await response.json();
-
-        console.log(errorData);
-
-        const errorMessages = errorData.errors
-          .map((error) => error.message)
+        const errorMessage = data.errors
+          ?.map((error) => error.message)
           .join("\n");
-
-        alert(`Registration failed:\n${errorMessages}`);
-
-        return;
+        throw new Error(errorMessage || "Registration failed");
       }
 
-      alert("Registration successful!");
-      form.reset();
+      // Success
+      alert("Registration successful! Please log in.");
       navigate("/");
     } catch (err) {
-      console.error(err);
-      alert("Registration failed.");
+      alert(err.message);
+      console.error("Registration error:", err);
     }
   };
 
@@ -422,25 +471,29 @@ const RegisterPage = () => {
       <StyledContainer>
         <StyledForm onSubmit={handleSubmit}>
           <StyledH1>Register User</StyledH1>
+
           <StyledLabel htmlFor="username">Username</StyledLabel>
           <StyledInput
             type="text"
             id="username"
             name="username"
-            placeholder="enter your username here..."
-            isInvalid={!!errors.username}
+            value={formData.username}
             onChange={handleInputChange}
+            placeholder="Enter your username..."
+            isInvalid={!!errors.username}
           />
           {errors.username && <ErrorMessage>{errors.username}</ErrorMessage>}
 
           <StyledLabel htmlFor="email">
-            Email (Required to be @STUD.NOROFF.NO))
+            Email (Required @stud.noroff.no)
           </StyledLabel>
           <StyledInput
             type="email"
             id="email"
             name="email"
-            placeholder="enter your email here... @stud.noroff.no or noroff.no"
+            value={formData.email}
+            onChange={handleInputChange}
+            placeholder="your.name@stud.noroff.no"
             isInvalid={!!errors.email}
           />
           {errors.email && <ErrorMessage>{errors.email}</ErrorMessage>}
@@ -450,21 +503,46 @@ const RegisterPage = () => {
             type="password"
             id="password"
             name="password"
-            placeholder="enter your password here..."
+            value={formData.password}
+            onChange={handleInputChange}
+            placeholder="Minimum 8 characters"
             isInvalid={!!errors.password}
           />
           {errors.password && <ErrorMessage>{errors.password}</ErrorMessage>}
 
           <StyledLabel htmlFor="bio">Bio (Optional)</StyledLabel>
-          <StyledTextarea id="bio" name="bio" rows="4" />
+          <StyledTextarea
+            id="bio"
+            name="bio"
+            value={formData.bio}
+            onChange={handleInputChange}
+            rows="4"
+            placeholder="Tell us about yourself..."
+          />
 
-          <StyledLabel htmlFor="avatarUrl">
-            Avatar URL(Has to be a URL){" "}
-          </StyledLabel>
-          <StyledInput type="url" id="avatarUrl" name="avatarUrl" />
+          <StyledLabel htmlFor="avatarUrl">Avatar URL (Optional)</StyledLabel>
+          <StyledInput
+            type="url"
+            id="avatarUrl"
+            name="avatarUrl"
+            value={formData.avatarUrl}
+            onChange={handleInputChange}
+            placeholder="https://example.com/avatar.jpg"
+            isInvalid={!!errors.avatarUrl}
+          />
+          {errors.avatarUrl && <ErrorMessage>{errors.avatarUrl}</ErrorMessage>}
 
-          <StyledLabel htmlFor="bannerUrl">Banner URL</StyledLabel>
-          <StyledInput type="url" id="bannerUrl" name="bannerUrl" />
+          <StyledLabel htmlFor="bannerUrl">Banner URL (Optional)</StyledLabel>
+          <StyledInput
+            type="url"
+            id="bannerUrl"
+            name="bannerUrl"
+            value={formData.bannerUrl}
+            onChange={handleInputChange}
+            placeholder="https://example.com/banner.jpg"
+            isInvalid={!!errors.bannerUrl}
+          />
+          {errors.bannerUrl && <ErrorMessage>{errors.bannerUrl}</ErrorMessage>}
 
           <StyledLabel>
             <CheckboxContainer>
@@ -472,14 +550,18 @@ const RegisterPage = () => {
                 type="checkbox"
                 id="venueManager"
                 name="venueManager"
+                checked={formData.venueManager}
+                onChange={handleInputChange}
               />
               <StyledCheckboxLabel htmlFor="venueManager">
-                Are you a Venue Manager?
+                Register as a Venue Manager
               </StyledCheckboxLabel>
             </CheckboxContainer>
           </StyledLabel>
 
-          <StyledButton type="submit">Submit</StyledButton>
+          <StyledButton type="submit">
+            <span>Create Account</span>
+          </StyledButton>
         </StyledForm>
       </StyledContainer>
     </>
