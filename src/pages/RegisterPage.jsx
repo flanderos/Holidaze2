@@ -6,152 +6,306 @@ import loginBg from "../assets/images/loginpagebg2.png";
 import PageTitle from "../../src/utils/PageTitle";
 
 const StyledContainer = styled.div`
-  background-color: #fff;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  padding: 20px;
+  padding: 40px 20px;
   background-image: url(${loginBg});
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   min-height: 100vh;
-  position: sticky;
+  position: relative;
+
+  &::before {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.6));
+    pointer-events: none;
+  }
 `;
 
 const StyledForm = styled.form`
-  background-color: transparent;
-  backdrop-filter: blur(10px);
+  position: relative;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(16px);
   color: #fff;
   width: 100%;
-  max-width: 800px;
+  max-width: 600px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: flex-start;
-  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  gap: 20px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
   padding: 40px;
-  border-radius: 10px;
+  border-radius: 20px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
 
   @media (max-width: 768px) {
-    padding: 20px;
-  }
-
-  @media (max-width: 480px) {
+    padding: 30px;
     width: 90%;
-    padding: 10px;
   }
 `;
 
 const StyledH1 = styled.h1`
   text-align: center;
-  text-decoration: underline;
+  font-size: 2.5rem;
+  font-weight: 700;
+  margin-bottom: 30px;
+  color: white;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+  position: relative;
+
+  &::after {
+    content: "";
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 50px;
+    height: 3px;
+    background: var(--color-primary);
+    border-radius: 2px;
+  }
 `;
 
 const StyledInput = styled.input`
-  padding: 10px;
-  border: 1px solid ${(props) => (props.isInvalid ? "red" : "#ccc")};
-  border-radius: 5px;
-  font-family: poppins;
-  width: 90%;
-  margin: 10px;
+  width: 100%;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid
+    ${(props) => (props.isInvalid ? "#ff4d4f" : "rgba(255, 255, 255, 0.2)")};
+  border-radius: 12px;
+  font-family: "Poppins", sans-serif;
+  font-size: 16px;
+  color: white;
+  transition: all 0.3s ease;
   outline: none;
-  font-size: 17px;
+  margin: 0;
 
   &:focus {
-    border-color: #007bff;
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
   }
+
   &::placeholder {
-    color: #aaa;
+    color: rgba(255, 255, 255, 0.6);
     font-style: italic;
+  }
+
+  &:-webkit-autofill,
+  &:-webkit-autofill:hover,
+  &:-webkit-autofill:focus {
+    -webkit-text-fill-color: white;
+    -webkit-box-shadow: 0 0 0px 1000px rgba(0, 0, 0, 0.1) inset;
+    transition: background-color 5000s ease-in-out 0s;
   }
 `;
 
 const StyledTextarea = styled.textarea`
-  padding: 10px;
-  border: 1px solid ${(props) => (props.isInvalid ? "red" : "#ccc")};
-  border-radius: 5px;
-  font-family: poppins;
-  width: 90%;
-  margin: 10px;
+  width: 100%;
+  padding: 12px 16px;
+  background: rgba(255, 255, 255, 0.1);
+  border: 2px solid rgba(255, 255, 255, 0.2);
+  border-radius: 12px;
+  font-family: "Poppins", sans-serif;
+  font-size: 16px;
+  color: white;
+  transition: all 0.3s ease;
+  outline: none;
+  resize: vertical;
+  min-height: 120px;
+  margin: 0;
+
+  &:focus {
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.1);
+  }
+
+  &::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+    font-style: italic;
+  }
 `;
 
 const StyledLabel = styled.label`
   font-size: 14px;
-  font-weight: bold;
-  padding: 5px;
+  font-weight: 500;
+  color: rgba(255, 255, 255, 0.9);
+  margin-bottom: -15px;
 `;
 
 const CheckboxContainer = styled.div`
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 12px;
   margin: 10px 0;
+  padding: 8px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: rgba(255, 255, 255, 0.15);
+  }
 `;
 
 const StyledCheckbox = styled.input`
-  width: 20px;
-  height: 20px;
-  border: 2px solid #ffd446;
-  border-radius: 4px;
+  width: 22px;
+  height: 22px;
+  border: 2px solid rgba(255, 255, 255, 0.3);
+  border-radius: 6px;
   appearance: none;
   outline: none;
   cursor: pointer;
-  transition:
-    background-color 0.3s ease,
-    border-color 0.3s ease;
+  transition: all 0.3s ease;
+  position: relative;
+  background: rgba(255, 255, 255, 0.1);
 
   &:checked {
-    background-color: #ffd446;
-    border-color: #ffd446;
+    background-color: var(--color-primary);
+    border-color: var(--color-primary);
   }
 
   &:checked::before {
-    content: "✔";
-    display: block;
+    content: "✓";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
     color: black;
     font-size: 14px;
-    text-align: center;
-    line-height: 20px;
+    font-weight: bold;
   }
 
   &:hover {
-    border-color: #ffd446;
+    border-color: var(--color-primary);
   }
 `;
 
 const StyledCheckboxLabel = styled.label`
-  font-size: 14px;
+  font-size: 16px;
   font-weight: 500;
-  color: #fff;
+  color: white;
   cursor: pointer;
   transition: color 0.3s ease;
+
+  &:hover {
+    color: var(--color-primary);
+  }
 `;
 
 const StyledButton = styled.button`
-  padding: 10px;
+  width: 100%;
+  padding: 14px;
+  background: var(--color-primary);
   color: black;
-  background-color: var(--color-primary);
   border: none;
-  border-radius: 5px;
-  font-size: 20px;
-  font-family: poppins;
+  border-radius: 12px;
+  font-size: 18px;
+  font-weight: 600;
+  font-family: "Poppins", sans-serif;
   cursor: pointer;
-  width: 97%;
-  margin: 30px 0px 10px 10px;
-  transition: 0.3s;
-  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  transition: all 0.3s ease;
+  margin-top: 20px;
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+
+  &::before,
+  &::after {
+    content: "";
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    background: white;
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  &::before {
+    top: 0;
+    left: -100%;
+  }
+
+  &::after {
+    bottom: 0;
+    right: -100%;
+  }
+
+  & > span {
+    position: relative;
+    z-index: 2;
+
+    &::before,
+    &::after {
+      content: "";
+      position: absolute;
+      height: 100%;
+      width: 2px;
+      background: white;
+      opacity: 0;
+      transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    &::before {
+      top: -100%;
+      left: 0;
+    }
+
+    &::after {
+      bottom: -100%;
+      right: 0;
+    }
+  }
 
   &:hover {
-    text-decoration: underline;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+
+    &::before {
+      opacity: 1;
+      left: 0;
+    }
+
+    &::after {
+      opacity: 1;
+      right: 0;
+    }
+
+    & > span::before {
+      opacity: 1;
+      top: 0;
+    }
+
+    & > span::after {
+      opacity: 1;
+      bottom: 0;
+    }
+  }
+
+  &:active {
+    transform: translateY(0);
   }
 `;
 
 const ErrorMessage = styled.p`
-  color: red;
-  font-size: 12px;
+  color: #ff4d4f;
+  font-size: 14px;
+  margin-top: -15px;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+
+  &::before {
+    content: "⚠";
+    font-size: 16px;
+  }
 `;
 
 const RegisterPage = () => {
