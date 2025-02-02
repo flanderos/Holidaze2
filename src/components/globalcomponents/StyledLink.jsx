@@ -2,7 +2,7 @@ import styled from "styled-components";
 import { Link } from "react-router-dom";
 
 export const StyledLink = styled(Link)`
-  color: ${({ color }) => color || "var(--color-primary"};
+  color: ${({ color }) => color || "var(--color-primary)"};
   padding: 15px;
   background-color: ${({ bgColor }) => bgColor || "black"};
   width: 200px;
@@ -22,7 +22,7 @@ export const StyledLink = styled(Link)`
     box-shadow:
       rgba(50, 50, 93, 0.25) 0px 13px 27px -5px,
       rgba(0, 0, 0, 0.3) 0px 8px 16px -8px;
-    background-color: black;
+    background-color: ${({ $isLogout }) => ($isLogout ? "red" : "black")};
     color: var(--color-primary);
     border: 1px solid var(--color-primary);
   }

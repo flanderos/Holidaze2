@@ -186,8 +186,8 @@ const UserBookingModal = ({ booking, isOpen, onClose, onDelete }) => {
       }
 
       alert("Booking deleted successfully!");
-      onDelete(booking.id); // Fjerner bookingen fra UI
-      onClose(); // Lukker modalen
+      onDelete(booking.id);
+      onClose();
     } catch (error) {
       console.error("Error deleting booking:", error);
       alert("Failed to delete booking. Please try again.");

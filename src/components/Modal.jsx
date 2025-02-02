@@ -3,6 +3,7 @@ import styled from "styled-components";
 import VenueCalendar from "../components/VenueCalendar";
 import BookingForm from "./BookingForm";
 import { API_URL } from "../config";
+import PlaceHolder from "../assets/images/placeholder1.png";
 
 const Overlay = styled.div`
   position: fixed;
@@ -314,10 +315,7 @@ const VenueModal = ({ venue, isOpen, onClose }) => {
               {venue.data.owner && (
                 <CreatorInfo>
                   <CreatorAvatar
-                    src={
-                      venue.data.owner.avatar?.url ||
-                      "https://via.placeholder.com/50"
-                    }
+                    src={venue.data.owner.avatar?.url || PlaceHolder}
                     alt={venue.data.owner.avatar?.alt || "Owner Avatar"}
                   />
                   <CreatorName>{venue.data.owner.name}</CreatorName>
@@ -377,13 +375,13 @@ const VenueModal = ({ venue, isOpen, onClose }) => {
             venueId={venue.data.id}
             maxGuests={venue.data.maxGuests}
             bookedDates={bookedDates}
-            setBookedDates={setBookedDates} // 🟢 Send funksjonen videre
+            setBookedDates={setBookedDates}
             onClose={onClose}
             onBookingSuccess={(newBooking) => {
               console.log("Booking successful:", newBooking);
               setBookedDates((prevDates) => [
                 ...prevDates,
-                ...newBooking.dateRange, // 🔥 Oppdater bookedDates med nye bookede datoer
+                ...newBooking.dateRange,
               ]);
               onClose();
             }}

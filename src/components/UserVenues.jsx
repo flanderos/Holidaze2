@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import styled from "styled-components";
 import EditVenueForm from "./EditVenueForm";
-import VenueModal from "./Modal"; // Import VenueModal
+import VenueModal from "./Modal";
 import { API_URL, API_KEY } from "../config";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPenToSquare, faTrash } from "@fortawesome/free-solid-svg-icons";
