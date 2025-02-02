@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import { API_URL, API_KEY } from "../config";
+import { useMemo } from "react";
 
 const BookingFormContainer = styled.form`
   display: flex;
@@ -56,18 +57,52 @@ const ErrorMessage = styled.div`
   font-size: 14px;
 `;
 
-const BookingForm = ({ venueId, maxGuests, onClose, onBookingSuccess }) => {
+const BookingForm = ({
+  venueId,
+  maxGuests,
+  bookedDates,
+  setBookedDates,
+  onClose,
+  onBookingSuccess,
+}) => {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [guests, setGuests] = useState(1);
   const [error, setError] = useState("");
+  const [isBooking, setIsBooking] = useState(false); // Hindrer dobbeltbooking
+
+  // ✅ Flytt `useMemo` til toppen av komponenten
+  const isAlreadyBooked = useMemo(() => {
+    if (!startDate || !endDate || bookedDates.length === 0) return false;
+
+    const selectedDates = [];
+    let currentDate = new Date(startDate);
+    const finalDate = new Date(endDate);
+
+    while (currentDate <= finalDate) {
+      selectedDates.push(currentDate.toISOString().split("T")[0]);
+      currentDate.setDate(currentDate.getDate() + 1);
+    }
+
+    return selectedDates.some((date) => bookedDates.includes(date));
+  }, [startDate, endDate, bookedDates]);
 
   const handleBooking = async (e) => {
     e.preventDefault();
+    if (isBooking) return;
+    setIsBooking(true);
+
     const token = localStorage.getItem("token");
 
     if (!startDate || !endDate || guests <= 0) {
       setError("All fields must be filled correctly.");
+      setIsBooking(false);
+      return;
+    }
+
+    if (isAlreadyBooked) {
+      setError("One or more of the selected dates are already booked.");
+      setIsBooking(false);
       return;
     }
 
@@ -95,15 +130,18 @@ const BookingForm = ({ venueId, maxGuests, onClose, onBookingSuccess }) => {
 
       const newBooking = await response.json();
       alert("Booking successful!");
+
+      setBookedDates((prevDates) => [...prevDates, ...newBooking.dateRange]);
+
       onBookingSuccess(newBooking.data);
       onClose();
     } catch (error) {
       console.error("Booking failed:", error);
       setError("An error occurred while booking. Please try again.");
+    } finally {
+      setIsBooking(false);
     }
   };
-
-  const today = new Date().toISOString().split("T")[0];
 
   return (
     <BookingFormContainer onSubmit={handleBooking}>
@@ -113,7 +151,7 @@ const BookingForm = ({ venueId, maxGuests, onClose, onBookingSuccess }) => {
         id="startDate"
         value={startDate}
         onChange={(e) => setStartDate(e.target.value)}
-        min={today}
+        min={new Date().toISOString().split("T")[0]}
         required
       />
       <label htmlFor="endDate">End Date:</label>
@@ -122,7 +160,7 @@ const BookingForm = ({ venueId, maxGuests, onClose, onBookingSuccess }) => {
         id="endDate"
         value={endDate}
         onChange={(e) => setEndDate(e.target.value)}
-        min={startDate || today}
+        min={startDate || new Date().toISOString().split("T")[0]}
         required
       />
       <label htmlFor="guests">Number of Guests:</label>
@@ -136,7 +174,9 @@ const BookingForm = ({ venueId, maxGuests, onClose, onBookingSuccess }) => {
         required
       />
       {error && <ErrorMessage>{error}</ErrorMessage>}
-      <SubmitButton type="submit">Book Venue</SubmitButton>
+      <SubmitButton type="submit" disabled={isBooking || isAlreadyBooked}>
+        {isBooking ? "Booking..." : "Book Venue"}
+      </SubmitButton>
     </BookingFormContainer>
   );
 };
