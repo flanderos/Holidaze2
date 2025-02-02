@@ -2,7 +2,6 @@ import React, { useState, useEffect, useCallback, useRef } from "react";
 import styled from "styled-components";
 import VenueModal from "./Modal";
 import { API_URL, API_KEY } from "../config";
-import PlaceHolder from "../assets/images/placeholder2.png";
 
 const MainContainer = styled.div`
   display: flex;
@@ -12,24 +11,29 @@ const MainContainer = styled.div`
   padding: 20px;
 `;
 
+const SearchWrapper = styled.div`
+  position: relative;
+  width: 100%;
+  max-width: 500px;
+  margin: 0 auto;
+`;
+
 const SearchInput = styled.input`
-  width: 300px;
-  height: 40px;
+  width: 100%;
+  height: 45px;
   border-radius: 8px;
-  border: 1px solid #ccc;
-  padding: 0 12px;
+  border: 1px solid #ddd;
+  padding: 0 45px 0 15px;
   font-family: "Poppins", sans-serif;
-  font-size: 17px;
+  font-size: 16px;
   color: #333;
   outline: none;
-  transition:
-    box-shadow 0.3s ease,
-    border-color 0.3s ease;
-  margin-bottom: 20px;
+  transition: all 0.2s ease;
+  background-color: white;
 
   &:focus {
     border-color: #007bff;
-    box-shadow: 0 0 5px rgba(0, 123, 255, 0.5);
+    box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
   }
 
   &::placeholder {
@@ -39,6 +43,25 @@ const SearchInput = styled.input`
 
   &:hover {
     border-color: #007bff;
+  }
+
+  &:disabled {
+    background-color: #f5f5f5;
+    cursor: not-allowed;
+  }
+`;
+
+const SearchIcon = styled.div`
+  position: absolute;
+  right: 15px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #666;
+  pointer-events: none;
+
+  svg {
+    width: 18px;
+    height: 18px;
   }
 `;
 
@@ -288,12 +311,10 @@ const VenueList = () => {
       const value = e.target.value;
       setSearchTerm(value);
 
-      // Clear existing timeout
       if (searchTimeout.current) {
         clearTimeout(searchTimeout.current);
       }
 
-      // If search is empty, reset to default venues
       if (!value.trim()) {
         setIsSearching(false);
         const initialVenues = await fetchVenues(1);
@@ -303,33 +324,35 @@ const VenueList = () => {
         return;
       }
 
-      // Set timeout for debouncing
       searchTimeout.current = setTimeout(async () => {
         try {
           setIsSearching(true);
           setLoading(true);
 
           const response = await fetch(
-            `${API_URL}/venues?_owner=true&name_like=${encodeURIComponent(value.trim())}`,
+            `${API_URL}/venues/search?q=${encodeURIComponent(value.trim())}`,
             {
-              headers: { "X-Noroff-API-Key": API_KEY },
+              headers: {
+                "Content-Type": "application/json",
+                "X-Noroff-API-Key": API_KEY,
+              },
             },
           );
 
           if (!response.ok) {
-            throw new Error("Search failed");
+            throw new Error("Søket feilet");
           }
 
           const data = await response.json();
-          setVenues(data.data);
-          setHasMore(false); // Disable pagination during search
+          setVenues(data.data || []);
+          setHasMore(false);
         } catch (err) {
-          setError("Search failed. Please try again.");
+          setError("Søket feilet. Vennligst prøv igjen.");
           console.error(err);
         } finally {
           setLoading(false);
         }
-      }, 500);
+      }, 300);
     },
     [fetchVenues],
   );
@@ -366,12 +389,31 @@ const VenueList = () => {
 
   return (
     <MainContainer>
-      <SearchInput
-        type="text"
-        placeholder="Search venues by name..."
-        value={searchTerm}
-        onChange={handleSearch}
-      />
+      <SearchWrapper>
+        <SearchInput
+          type="text"
+          placeholder="Søk etter venue navn eller beskrivelse..."
+          value={searchTerm}
+          onChange={handleSearch}
+          disabled={loading}
+        />
+        <SearchIcon>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            width="18"
+            height="18"
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="2"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+          >
+            <circle cx="11" cy="11" r="8" />
+            <line x1="21" y1="21" x2="16.65" y2="16.65" />
+          </svg>
+        </SearchIcon>
+      </SearchWrapper>
 
       {venues.length === 0 ? (
         <NoVenuesFound>
@@ -386,7 +428,9 @@ const VenueList = () => {
                 onClick={() => fetchVenueDetails(venue.id)}
               >
                 <VenueImage
-                  src={venue.media?.[0]?.url || PlaceHolder}
+                  src={
+                    venue.media?.[0]?.url || "https://via.placeholder.com/300"
+                  }
                   alt={venue.name}
                 />
                 <VenueDetails>
