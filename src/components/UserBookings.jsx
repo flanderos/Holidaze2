@@ -91,6 +91,10 @@ const ErrorMessage = styled.p`
   border-radius: 5px;
 `;
 
+const StyledP = styled.p`
+  color: white;
+`;
+
 const UserBookings = () => {
   const [bookings, setBookings] = useState([]);
   const [selectedBooking, setSelectedBooking] = useState(null);
@@ -152,7 +156,7 @@ const UserBookings = () => {
   if (error) return <ErrorMessage>{error}</ErrorMessage>;
 
   if (!bookings.length) {
-    return <p>No bookings available.</p>;
+    return <StyledP>No bookings available.</StyledP>;
   }
 
   return (
